@@ -1,0 +1,26 @@
+TLNUnreal/TLNUnreal/resources/*
+*.exp
+*.lib
+
+*.slxc
+*.mexw64
+slprj/*
+
+vehicleDetectorYOLOv2Model.mat
+
+# 编译生成的C++代码
+VisionVehicleDetector_ert_rtw/*
+
+# 编译生成的可执行文件
+*.exe
+
+# 车道线保持所录制的视频
+*.avi
+*.mp4
+
+# 自动泊车服务生成的中间文件
+demo/ParkingValet/*.mat
+demo/ParkingValet/slprj/*
+
+# 编辑.m文件过程中产生的临时文件
+*.asv
