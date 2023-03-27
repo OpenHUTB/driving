@@ -1,292 +1,133 @@
+	
+
+基于 `Matlab` (main.m)构建智能交通测试系统，
+包括虚幻引擎、代码生成、计算机视觉、深度学习等。
 
 
-# 计划
-
-## 随笔
-* 与[车道保持](https://ww2.mathworks.cn/help/driving/ug/highway-lane-following.html) 等闭环系统集成
-
-* 不同音乐流派的神经基础（类似IT中的激活模式）：位置在哪里？+激活模式
-
-
-## 待做
-
-### TODO
-* 对`init_proj.m`中的密码进行加密
-
-* 搭建自己的网络文件服务器，大小2T，需要对外提供直链（能够wget拉取并测试），网速保证
-
-* 启后台服务，定时晚上十点半查看服务器工程是否干净，不干净就发邮件提醒
-```shell script
-10:30定时查看本地，git status
-只有.md等文件有修改时候，直接pull->push
-如果有其他文件修改，则发腾讯企业邮箱提醒
-```
-* 就在手机端用aidlux进行处理。
-
-
-### 研究
-* 把 中颞/下颞，即 T2/T3（或者PB） 的皮层激活信息提取出来；
-  
-  （1）目前是提取每个Run的ROI -> 提取所有Run的ROI取平均？
-       每个Run都要和第一个镜像对齐
-
-  （2）对所有数据进行预处理
-
-* 将大脑皮层每个区域的激活作为深度网络每层输出，用来进行反向传播训练(ideas.md -> 中间层进行训练)。
-* 抽取应用到核磁共振中的音频的深度特征
-* 人脸识别网络架构是否起作用，类脑人脸识别网络。
-* 音频视频融合、韦尼克区相似性
-
-* 毕业论文
-* 第六章中加入相机、载体图，智能驾驶视频的结果。标注并测试性能。
-
-* 人集中太多、速度太快，发起警告；性能优化；
-* 手机端浏览器（或打开小程序自动注册到服务器）发送请求并显示
-
-
-* 加速音乐分类训练和测试的速度
-
-* 深度模型的激活 和 脑区激活（4个）的对比
-
-* 将CorNet代码用于音乐分类
-
-## 长远
-* 在当前运行的源代码中插入程序运行结果；
-* 文档、论文、PPT都集成到代码注释里面；
-
-* 翻译神经科学原理第六版的感知部分（视觉、听觉）
-
-* [持续集成](ai/note/it/ci.md)部署工程（ci.sh）：安装git、jetken，拉取代码、调用初始化工程；
-
-* 初始化工程脚本（init.sh和init.bat：用于保存git密码、viso转裁剪过的pdf（可选））；
-
-* 安装操作系统后初始化系统脚本，linux已经有了，需要加上初始化windows虚拟机部分：安装虚拟机、拉取镜像、共享目录、开机自启；
-
-* 使用 Simulink自带的 Simulink Performance Advisor工具，帮助发现影响仿真速度的瓶颈
-
-
-# 工程
-构建三维测试环境、大脑仿真模型。
-
-## 目录结构
-```
-ai      笔记和通用工具代码
-brain   建模大脑功能、探索意识的物质基础（神经科学）
-data    数据目录（从网络下载的输入数据文件、中间文件和输出，从版本控制中排除）
-	data    链接到压缩数据集所在的目录（放比较大或者无法用git管理的文件，code目录类似）
-	code    链接到软件（包括可执行文件（756G+虚拟机的250G）或者源代码）所在的目录（和data目录一样也是压缩包）
-driving 自动驾驶仿真（基于 `Matlab` 的高速公路车道线跟随(main.m)构建一套自己的自动驾驶测试系统，为类脑驾驶模型提供参考。包括 Unreal Engine、代码生成、计算机视觉、深度学习、类脑视觉等。）
-mot     多目标跟踪（计算机视觉）
-other   其他工程（智能驾驶、机器人、无人机、示例等工程）
-a       推送所有的修改（包括查看状态：a s，拉取文件：a u）
+# 环境配置
+在`matlab`中运行脚本
+```commandline
+main.mlx
 ```
 
-
-
-
-## 注意
-* git和pycharm都忽略data目录；
-* 使用安卓手机的Aidlux平台进行编辑，然后通过apt-get install git进行工具安装；
-* 可以利用可折叠蓝牙键盘进行编辑；
-
-# 原则
-* 只包含文本格式文件；
-* 尽量自动化（并发）、智能；
-* 使用 Pycharm 进行管理维护，windows下使用notepad++进行简单修改；
-* 上传到 [gitee](https://gitee.com/dong_666/dong) 并可以通过 AidLux 或 Web IDE 进行编辑；
-* 用文件后缀来区分不同文件类型（可执行脚本可能省略.sh后缀）；
-* 工程中重复文件用相对路径软链接表示；
-* 主系统为Ubuntu，装win10虚拟机，虚拟机中放只有windows才有的必备软件和需要仔细阅读的电子书，大文件（大于1G）上传云和移动硬盘
-* 目录 data/code/ 下的软件如果加入新的版本就应该把不使用的老版本删除（仍然保留经典的稳定版本）；尽量使用不需要安装的绿色版本软件；
-* 永远在路上，并保证每次提交都能发布；
-* 导入文献（HTML、PDF）等，经过加工后通过 `Matlab` 导出 Word、Latex、PPT（使用代码取代 Excel）。
-* Win10下的目录：C:\BaiduSyncdisk、C:\Users\Administrator\AppData\Local\Temp
+虚幻引擎和相关数据[下载链接](链接：https://pan.baidu.com/s/1y194-A2m0s9IUwuRWAttYw) ，提取码：dong。
+其中 `matlab_2022b_win_run.zip` 为matlab运行版本，
+`RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip` 为RoadRunner的运行版本，
+`RoadRunner.zip`为RoadRunner工程，`AutoVrtlEnv.zip`为虚幻引擎工程（需要从matlab中打开）。
 
 
 # 内容
+## 需求
+Requirement Toolbox
 
-## 目标
-认识自己：
-1. 我是谁：神经（意识的物质基础、量子）、心理（个体行为）、社会（群体意识形态、文明）；
-2. 从哪儿来：历史、考古（进化）、地质（生物）、宇宙（广义相对论）；
-3. 将到哪去（预测并按照理想改变未来）。
-
-时间、空间、意识及其起源
-
-## 知识体系
-时空： 《时间地图》
-
-### 演化
-[天文]()：《宇宙系列》、《高等天文学》、《宇宙学》、《恒星演化》、《广义相对论》
-
-[地质](geology.md)：《地球的故事》、
-
-生命：《生命进化的跃升》、
-
-人类：《第三种黑猩猩：人类的身世和未来》、
-
-大脑：《脑的进化——自我意识的创生》、（《进化的大脑：赋予我们爱情、记忆和美梦》）
+* 加入交通灯逻辑、城市场景
 
 
-### 心理
-文化：个体、群体
+## 设计
+虚幻引擎+RoadRunner的局部路网建模
 
-个体心理：《津巴多普通心理学》、认知科普：《大脑认知系列9册》、《脑与认知系列15册》
+1. 检测单个摄像头的图像，并显示和返回检测结果；
+2. 配置4个方向的摄像头，进行车辆的检测；
+3. 计算红绿灯的配时方案，并进行红绿灯的设置；
+4. 测试车辆按地图选点进行移动，看到红灯停、绿灯行，以及避让等功能；
+5. 加入更多的车辆进行交通拥堵的模拟
+6. 统计优化前和优化后的结果。
 
-[群体心理](population.md)：《社会心理学》、《社会学》
-
-神经：《生物心理学》、《认知神经科学 关于心智的生物学》
-
-#### 个体意识
-循环：心理->神经->意识（有意识、无意识）；
-群体意识？；
-
-神经：《意识探秘：意识的神经科学研究》
-
-脑： 《脑与意识》
-
-人： 《人的意识》
-
-解释：《意识的解释》
-
-
-### 神经
-个体：《探索脑 第2版》、《神经科学原理第六版》、科普：《追寻记忆的痕迹》
-
-群体？：《前额叶皮层》、分布式强化学习
-
-《认知、大脑和意识》
-
-
-
-
-
-
-
-## 工作
-包括学术（科研）、技术（教学）、艺术（服务社会）。
-
-### 科研
-1. 类脑感知（深度学习、神经科学、视觉和听觉）。——科研
-
-视觉、听觉感知；辅助运动皮层规划；前运动皮层决策；初级运动皮层控制。
-
-2. 计算机视觉（图像处理和计算机视觉）    ———教学
-
-3. 智能驾驶（自动驾驶、机器人和自主系统） ———服务社会
-
-
-### 教学
-
-1. 个人（脑）：视觉、听觉、语言
-2. 教学（人与群体）；心理学：学习
-3. 群体（群体）；社会（政治）：分布式强化学习
-
-### 服务社会 
-项目：
-青基(35) 
-面上(, 57) 
-优青(38, 200) 
-杰青(45, 400)
-院士
-
-
-
-# 其他
-每一项工作有先后、互为融合。
-1. 学术（论文: latex、matlab，拼写和语法检查）；
-2. 技术（代码: matlab,python）；
-3. 艺术（绘图：matlab、ppt、Tikz）；
-
-
-`matlab` 调用 `latex` 编译生成图和论文，使用符号工具生成latex公式。
-
-根据图文生成ppt。调用谷歌翻译成中文latex，然后修改（latex转word，插入到word中的指定位置）。
-
-
-
-
-# 工作环境
-
-## 工作流程
-从时间上进行分解，保证自动化（参考optim工程）。
-1. 本地开发（Matlab、Pycharm）；
-2. gitee 服务器；
-3. Jenkins [持续集成]：参考 `ci.md`。
-
-### 目录
-1. 数据：C:\data （从云盘/D:\data 中解压数据到C:\data，做完删除，结果需要保存）
-2. 软件：C:\matlab_2022b （可执行文件）
-3. 工作：C:\BaiduSyncdisk\work （代码、操作）
-
-### Jenkins 配置
-[Matlab配置](https://github.com/jenkinsci/matlab-plugin/blob/master/examples/Run-MATLAB-Tests.md) 
-
-轮询构建（每分钟检查是否有代码更新，一旦有更新就开始构建）
+RoadRunner Scenario+Carla的全局路网建模
+7. 参考[例子](https://ww2.mathworks.cn/help/driving/ug/autonomous-emergency-braking-with-high-fidelity-vehicle-dynamics.html) 进行Simulink、RoadRunner、Unreal的联合仿真。
 ```commandline
-H/1 * * * *
+C:\BaiduSyncdisk\workspace\demo\Examples\R2022b\autonomous_control\AutonomousEmergencyBrakingWithRoadRunnerScenarioExample
+C:\BaiduSyncdisk\workspace\demo\Examples\R2022b\autonomous_control\AEBWithHighFidelityDynamicsExample_2023a
 ```
-### 发布
-Docker
-
-[网页测试](http://115.157.195.140:9988/webapps/home/session.html?app=optim)
-
-[软件发布](http://115.157.195.140/data2/whd/workspace/optim/deploy/optim.exe)
 
 
-## 工作架构
-从系统的逻辑先后进行组织（自顶向下，从抽象到具体）。
-全部使用matlab代码实现。
-1. 需求（系统工程：Requirements Toolsbox、Stateflow、System Composer）；
-2. 设计（Simulink）；
-3. 代码（代码生成，能运行并部署在硬件上）。
-
-## 硬件
-### 磁盘
-1. 操作系统（固态硬盘，大于500G）
-2. 工作空间（固态硬盘，可以和操作系统在一个硬盘）
-3. 虚拟机（固态硬盘，大于300G）
-4. 数据硬盘（机械硬盘，大于3T）
-
-### 网络
-
-
-## 语言
-1. Matlab 2018a（Python3.6）, 2022a（[Python3.9](https://www.python.org/ftp/python/3.9.13/python-3.9.13-amd64.exe)）
-2. Python 3.6 (Anaconda, Pycharm 2021.3.2 Community Edition)
-3. Latex(TeX Live 2017/Debian, Texstudio 4.2.2), Markdown
-4. Shell（windows下用bash git和matlab脚本代替）、Java 8、 C/C++ 11、.Net、PHP 5
+## 实现
+各个阶段形成一个闭环。
 
 
 
-# 简历
-[ORCID](https://orcid.org/0000-0002-4614-5817)
+### 场景
+基于[城市场景](demo/TLNWithUnrealExample)，利用虚幻引擎来构建学校场景。
+[AirSim](https://github.com/microsoft/AirSim) 
+[Road Runner](https://zhuanlan.zhihu.com/p/165376866) 
+[51VR](https://www.51aes.com/) 
+
+### 感知
+1. [使用虚幻引擎设计车道线检测器](https://ww2.mathworks.cn/help/driving/ug/design-of-lane-marker-detector-in-3d-simulation-environment.html) 
+2. 车辆检测
+3. 行人检测
+4. [前向车辆传感器融合](https://ww2.mathworks.cn/help/driving/ug/forward-vehicle-sensor-fusion.html) 
+5. 可行驶区域
+6. 地图
+全局地图：从云端获得或者本地逐步构建全局地图。
+局部地图：SLAM。
+
+### 规划
+1. 全局路径规划
+
+### 决策
+1. 局部轨迹规划
+2. 决策逻辑
+
+### 控制
+由横向和纵向的决策生成转向角（方向盘）和加速度（油门）控制。
+1. [设计基于模型的控制器](https://ww2.mathworks.cn/help/mpc/ref/mpcdesigner-app.html) ，生成横向和纵向的决策。
+[在Simulink中设计基于模型的控制器](https://ww2.mathworks.cn/help/mpc/gs/designing-a-model-predictive-controller-for-a-simulink-plant.html) 
+[路径跟随控制系统](https://ww2.mathworks.cn/help/mpc/ref/pathfollowingcontrolsystem.html) 
+2. 强化学习，[DDPG路径跟随控制](https://ww2.mathworks.cn/help/deeplearning/ug/train-ddpg-agent-for-path-following-control.html) 
 
 
+### 机械
+车辆动力学仿真
+买一台可以程序控制的电动车。
+[在 Simulink 和 Gazebo 中使用移动机械手设计和模拟仓库取放应用程序](demo/DesignAndSimulateAMobileManipulatorExample/DesignAndSimulateAMobileManipulatorExample.mlx)
+
+### 评估
+性能评估并反馈
 
 
+## 部署
+[车道标记检测器代码生成](https://ww2.mathworks.cn/help/driving/ug/generate-code-for-lane-marker-detector.html) 
+[视觉车辆检测器代码生成](https://ww2.mathworks.cn/help/driving/ug/generate-code-for-vision-vehicle-detector.html) 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## 测试
+[高速公路车道跟随的自动测试](https://ww2.mathworks.cn/help/driving/ug/automate-testing-for-highway-lane-following.html) 
+[自动测试](demo\AutomateTestingForHighwayLaneFollowingExample\AutomateTestingForHighwayLaneFollowingExample.m)
 
 
 
 
 
+# 问题
+## 编译器
+```
+Toolchain 'LCC-win64 v2.4.1 | gmake (64-bit Windows)' does not contain a build tool named 'C++ Compiler'.
+```
+安装 MinGW-w64 编译器：
+主页 > 附加功能 > 获取附加功能，搜索 MinGW 或从功能菜单中选择。
 
+## 不需要另外安装虚幻引擎成功运行是工具箱的原因
+matlab自带的3D仿真引擎（4.26，不包括3D编辑器）位于：
+matlab_2022b\toolbox\shared\sim3d_projects\automotive_project\UE4\WindowsNoEditor
+
+openExample('autonomous_control/TLNWithUnrealExample')
+
+
+## 场景
+```
+函数或变量 'scenario_VVD_01_Curve_FiveVehicles' 无法识别。
+```
+需要在 Matlab 界面打开工程 `VisionVehicleDetector/VisionVehicleDetectorVisionVehicleDetector.prj`
+
+matlab自带虚幻引擎（无编辑器）目录：
+```commandline
+matlab_2022b\toolbox\shared\sim3d_projects\automotive_project\UE4\WindowsNoEditor\VehicleSimulation.exe
+```
+
+
+和Editor进行协同仿真，需要 
+```commandline
+USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位于AutoVrtlEnv\Content\Maps）
+```
 
