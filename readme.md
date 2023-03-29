@@ -1,20 +1,7 @@
 	
 
-基于 `Matlab` (main.m)构建智能交通测试系统，
-包括虚幻引擎、代码生成、计算机视觉、深度学习等。
-
-
-# 环境配置
-在`matlab`中运行脚本
-```commandline
-main.mlx
-```
-
-虚幻引擎和相关数据[下载链接](https://pan.baidu.com/s/1y194-A2m0s9IUwuRWAttYw) ，提取码：dong。
-其中 `RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip` 为RoadRunner的运行版本，
-`RoadRunner.zip`为RoadRunner工程，`AutoVrtlEnv.zip`为虚幻引擎工程（需要从matlab中打开），
-`matlab_2022b_win_run.zip` 为matlab运行版本。
-
+构建智能交通测试系统，
+包括虚幻引擎、计算机视觉、深度学习等。
 
 # 入门
 [RoadRunner使用文档](https://ww2.mathworks.cn/help/roadrunner/index.html)
@@ -22,11 +9,31 @@ main.mlx
 [RoadRunner Scenario使用文档](https://ww2.mathworks.cn/help/roadrunner-scenario/index.html)
 
 
+# 环境配置
+
+虚幻引擎和相关数据[下载链接](https://pan.baidu.com/s/1y194-A2m0s9IUwuRWAttYw) ，提取码：dong。
+其中 `RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip` 为RoadRunner的运行版本，
+`RoadRunner.zip`为RoadRunner工程，`AutoVrtlEnv.zip`为虚幻引擎工程（需要从matlab中打开），
+`matlab_2022b_win_run.zip` 为matlab运行版本。
+
+在`matlab`中运行脚本
+```commandline
+main.mlx
+```
+
+
 # 内容
 
-## 设计
-### 虚幻引擎+RoadRunner的局部路网建模
+## 社区场景建模
+基于RoadRunner和虚幻引擎进行场景的建模，任务包括：
+1. 建模咸嘉新村及周围的道路；
+2. 建模湖南工商大学及周围的道路；
 
+操作指南：
+1. [导入底图](https://ww2.mathworks.cn/help/roadrunner/ug/build-roads-using-openstreetmap-data.html) 
+
+## 局部路网建模
+基于虚幻引擎和RoadRunner进行场景的建模，任务包括：r
 1. 检测单个摄像头的图像，并显示和返回检测结果；
 2. 配置4个方向的摄像头，进行车辆的检测；
 3. 计算红绿灯的配时方案，并进行红绿灯的设置；
@@ -34,11 +41,12 @@ main.mlx
 5. 加入更多的车辆进行交通拥堵的模拟
 6. 统计优化前和优化后的结果。
 
-### RoadRunner Scenario+Carla的全局路网建模
-7. 参考[例子](https://ww2.mathworks.cn/help/driving/ug/autonomous-emergency-braking-with-high-fidelity-vehicle-dynamics.html) 进行Simulink、RoadRunner、Unreal的联合仿真。
+## 全局路网建模
+基于RoadRunner Scenario和Carla进行城市级的场景建模，任务包括：
+1. 参考[例子](https://ww2.mathworks.cn/help/driving/ug/autonomous-emergency-braking-with-high-fidelity-vehicle-dynamics.html) 进行Simulink、RoadRunner、Unreal的联合仿真。
 ```commandline
-C:\BaiduSyncdisk\workspace\demo\Examples\R2022b\autonomous_control\AutonomousEmergencyBrakingWithRoadRunnerScenarioExample
-C:\BaiduSyncdisk\workspace\demo\Examples\R2022b\autonomous_control\AEBWithHighFidelityDynamicsExample_2023a
+Examples\R2022b\autonomous_control\AutonomousEmergencyBrakingWithRoadRunnerScenarioExample
+Examples\R2022b\autonomous_control\AEBWithHighFidelityDynamicsExample_2023a
 ```
 
 
