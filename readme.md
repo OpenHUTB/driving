@@ -21,6 +21,9 @@
 main.mlx
 ```
 
+## 贡献指南
+[提交Pull Request流程](https://zhuanlan.zhihu.com/p/153381521) 。 
+
 
 # 内容
 
@@ -33,7 +36,7 @@ main.mlx
 1. [导入底图](https://ww2.mathworks.cn/help/roadrunner/ug/build-roads-using-openstreetmap-data.html) 
 
 ## 局部路网建模
-基于虚幻引擎和RoadRunner进行场景的建模，任务包括：r
+基于虚幻引擎和RoadRunner进行场景的建模，任务包括：
 1. 检测单个摄像头的图像，并显示和返回检测结果；
 2. 配置4个方向的摄像头，进行车辆的检测；
 3. 计算红绿灯的配时方案，并进行红绿灯的设置；
