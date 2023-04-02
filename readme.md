@@ -149,6 +149,9 @@ matlab_2022b\toolbox\shared\sim3d_projects\automotive_project\UE4\WindowsNoEdito
 USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位于AutoVrtlEnv\Content\Maps）
 ```
 
+# 效果
+![image](https://github.com/OpenHUTB/driving/blob/master/demo/multi_car.gif)
+
 # 贡献者
 杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 
 
