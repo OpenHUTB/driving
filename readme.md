@@ -11,7 +11,7 @@
 
 # 环境配置
 
-虚幻引擎和相关数据[下载链接](https://pan.baidu.com/s/1y194-A2m0s9IUwuRWAttYw) ，提取码：dong。
+相关软件和数据[下载链接](https://pan.baidu.com/s/1y194-A2m0s9IUwuRWAttYw) ，提取码：dong。
 其中 `RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip` 为RoadRunner的运行版本，
 `RoadRunner.zip`为RoadRunner工程，`AutoVrtlEnv.zip`为虚幻引擎工程（需要从matlab中打开），
 `matlab_2022b_win_run.zip` 为matlab运行版本。
