@@ -27,10 +27,11 @@ main.mlx
 
 # 内容
 
-## 社区场景建模
+## 场景建模
 基于RoadRunner和虚幻引擎进行场景的建模，任务包括：
 1. 建模咸嘉新村及周围的道路；
 2. 建模湖南工商大学及周围的道路；
+3. 使用虚幻引擎建模桐梓坡路和西二环交叉的十字路口；
 
 操作指南：
 1. [导入底图](https://ww2.mathworks.cn/help/roadrunner/ug/build-roads-using-openstreetmap-data.html) 
@@ -54,9 +55,23 @@ Examples\R2022b\autonomous_control\AEBWithHighFidelityDynamicsExample_2023a
 
 
 ## 需求管理
-Requirement Toolbox
+
+### 数据需求
+包含这些列的表：
+timeStamp— 收集 GPS 数据的时间，以微秒为单位。
+latitude- 自我航路点的纬度坐标值。单位是度。
+longitude— 自我航路点的经度坐标值。单位是度。
+altitude- 自我航路点的高度坐标值。单位为米。
+
+安装在自我车辆上的前向单眼相机记录的相机数据，相机数据是一个包含两列的表格：
+timeStamp— 捕获图像数据的时间，以微秒为单位。
+fileName— 数据集中图像的文件名。
+
+### Requirement Toolbox
 
 * 加入交通灯逻辑、城市场景
+
+
 
 
 ## 实现
