@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayInsideRefundDao">
+
+    <sql id="pub_where">
+        WHERE c.`group_code`=#{groupCode}
+        <if test="ownerName != null and ownerName != ''">
+            AND `owner_name` LIKE CONCAT('%',#{ownerName},'%')
+        </if>
+        <if test="ownerMobile != null  and ownerMobile != ''">
+            AND `owner_mobile` LIKE CONCAT('%',#{ownerMobile},'%')
+        </if>
+        <if test="plateNums != null  and plateNums != ''">
+            AND `plate_nums` LIKE CONCAT('%',#{plateNums},'%')
+        </if>
+        <if test="createTimeMin != null  and createTimeMin != ''">
+            <![CDATA[ AND r.`create_time` >= #{createTimeMin} ]]>
+        </if>
+        <if test="createTimeMax != null  and createTimeMax != ''">
+            <![CDATA[ AND r.`create_time` <= #{createTimeMax} ]]>
+        </if>
+        <if test="parkId !=null and parkId!='' ">
+            AND r.`park_id` = #{parkId}
+        </if>
+        <if test="parkIds !=null and parkIds!='' ">
+            AND r.`park_id` IN (${parkIds})
+        </if>
+    </sql>
+
+    <select id="findPayInsideRefundListByCondition" parameterType="map" resultType="PayInsideRefund">
+        SELECT c.`owner_name`,
+               c.`owner_mobile`,
+               c.`plate_nums`,
+               r.`refund_amont`,
+               r.`deduct_give_amount`,
+               r.`service_amount`,
+               r.`is_contract`,
+               r.`monthly_end_date`,
+               r.`create_user`,
+               r.`create_time`,
+               p.`park_name`
+        FROM `t_pay_inside_refund` r
+        JOIN `t_pay_inside_car` c ON r.`inside_id` = c.`id`
+        LEFT JOIN `t_park_parking` p ON p.`id` = r.`park_id`
+        <include refid="pub_where"/>
+        <choose>
+            <when test="sortTzwName != null and sortTzwName != ''">
+                ORDER BY ${sortTzwName}
+            </when>
+            <otherwise>
+                ORDER BY create_time desc
+            </otherwise>
+        </choose>
+        limit ${start},${end}
+    </select>
+
+    <select id="findCount"  resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM `t_pay_inside_refund` r
+        JOIN `t_pay_inside_car` c ON r.`inside_id` = c.`id`
+        <include refid="pub_where"/>
+    </select>
+
+    <select id="findSum" parameterType="map" resultType="PayInsideRefund">
+        SELECT SUM(refund_amont) AS refundAmont,
+               SUM(service_amount) AS serviceAmount,
+               SUM(deduct_give_amount) AS deductGiveAmount
+        FROM `t_pay_inside_refund` r
+        JOIN `t_pay_inside_car` c ON c.`id`=r.`inside_id`
+        LEFT JOIN `t_park_parking` p ON p.`id` = r.`park_id`
+        <include refid="pub_where"/>
+    </select>
+
+
+
+</mapper>

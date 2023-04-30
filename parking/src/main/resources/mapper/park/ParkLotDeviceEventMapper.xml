@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.ParkLotDeviceEventDao">
+
+
+    <select id="findParkLotDeviceDataLast" resultType="com.xhb.park.bean.ParkLotDeviceEvent">
+        SELECT
+            *
+        FROM
+            `t_park_lot_device_event`
+        WHERE sn = #{sn}
+        ORDER BY create_time DESC
+        LIMIT 0, 1
+    </select>
+
+</mapper>

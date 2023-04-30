@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.IncomeOverviewDao">
+
+    <!-- 临停收入-->
+    <select id="findTempParkDataList" resultType="com.xhb.report.dto.TempParkDTO">
+        SELECT
+        IFNULL(c.outCarNumber, 0) AS outCarNumber,
+        ((CASE WHEN t.liftingRodAmount IS NULL THEN 0 ELSE t.liftingRodAmount END) + SUM(CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END)) AS amountTotal,
+        SUM(CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END) AS pavilionAmount,
+        SUM(CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END) AS electronicPayment,
+        (CASE WHEN t.liftingRodAmount IS NULL THEN 0 ELSE t.liftingRodAmount END) AS liftingRodAmount,
+        concat(pay_time_day,"日") AS payTime
+        FROM t_pay_temp_order_history o
+        LEFT JOIN t_pay_carcome_history c ON c.id = o.enter_id
+        LEFT JOIN (
+        SELECT
+        SUM(CASE WHEN a.cash_pay IS NULL THEN 0 ELSE a.cash_pay END) AS liftingRodAmount,
+        create_date
+        FROM t_pay_hand_lift_rod a
+        <where>
+            <if test="parkId != null and parkId != ''">
+                AND a.park_id in (${parkId})
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND DATE_FORMAT(a.create_time,"%Y%m") = #{payTime}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND a.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND a.park_id IN (${parkIds})
+            </if>
+        </where>
+        GROUP BY create_date) t ON t.create_date = o.pay_date
+        LEFT JOIN
+        (select COUNT(1) AS outCarNumber,
+        access_time_date AS accessTime
+        from t_pay_carcome_history
+        <where>
+            type =1 and record_type = 0
+            <if test="parkId != null and parkId != ''">
+                AND park_id in (${parkId})
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND access_time_dt = #{payTime}
+            </if>
+        </where>
+        GROUP BY accessTime) c ON c.accessTime = o.pay_date
+        <where>
+            o.order_status BETWEEN  1 AND 2
+            <if test="parkId != null and parkId != ''">
+                AND o.park_id in (${parkId})
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND o.pay_dt = #{payTime}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND o.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND o.park_id IN (${parkIds})
+            </if>
+        </where>
+        GROUP BY pay_time_day
+        ORDER BY pay_time_day DESC
+    </select>
+
+    <!--长租收入-->
+    <select id="findMonthlyParkDataList" resultType="com.xhb.report.dto.MonthlyParkDTO">
+        SELECT
+            DATE_FORMAT(pay_time,"%d日") AS payTime,
+            income_amount AS incomeAmount,
+            income_park AS incomePark,
+            refund_amount AS refundAmount,
+            refund_park AS refundPark,
+            electronic_pay AS electronicPay,
+            electronic_park AS electronicPark,
+            amount_total AS amountTotal,
+            park_total AS parkTotal
+            FROM t_pay_monthly_park_report
+            <where>
+                <if test="parkId != null and parkId != ''">
+                    AND park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(pay_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND park_id IN (${parkIds})
+                </if>
+            </where>
+            GROUP BY payTime
+            ORDER BY payTime DESC
+    </select>
+
+    <!--其它收入-->
+    <select id="findOtherBusinessDataList" resultType="com.xhb.report.dto.OtherBusinessDTO">
+        SELECT
+            DATE_FORMAT(pay_time,"%d日") AS payTime,
+            business_recharge_amount AS businessRechargeAmount,
+            business_recharge_count AS businessRechargeCount,
+            coupon_used_count AS couponUsedCount,
+            recharge_amount AS rechargeAmount,
+            recharge_number AS rechargeNumber,
+            refund_amount AS refundAmount,
+            refund_number AS refundNumber,
+            recharge_car_charging AS rechargeCarCharging,
+            recharge_car_surplus AS rechargeCarSurplus,
+            recharge_surplus_number AS rechargeSurplusNumber
+            FROM t_other_business_report
+            <where>
+                <if test="parkId != null and parkId != ''">
+                    AND park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(pay_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND park_id IN (${parkIds})
+                </if>
+            </where>
+            GROUP BY payTime
+            ORDER BY payTime DESC
+    </select>
+
+    <!-- 查询当天 其他业务 数据并存入数据库-->
+    <insert id="insertAndSelectOtherBusiness">
+        INSERT INTO t_other_business_report
+            (pay_time,business_recharge_amount,business_recharge_count,coupon_used_count,recharge_amount,
+            recharge_number,refund_amount,refund_number,recharge_car_charging,
+            recharge_car_surplus,recharge_surplus_number,park_id,group_code,create_time)
+        SELECT 	DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY) AS payTime,
+            (CASE WHEN s.businessRechargeAmount IS NULL THEN 0 ELSE s.businessRechargeAmount END) AS businessRechargeAmount,
+            (CASE WHEN s.businessRechargeCount IS NULL THEN 0 ELSE s.businessRechargeCount END) businessRechargeCount,
+            (CASE WHEN a.couponUsedCount IS NULL THEN 0 ELSE a.couponUsedCount END) couponUsedCount,
+            (CASE WHEN m.rechargeAmount IS NULL THEN 0 ELSE m.rechargeAmount END) rechargeAmount,
+            (CASE WHEN m.rechargeNumber IS NULL THEN 0 ELSE m.rechargeNumber END) rechargeNumber,
+            (CASE WHEN n.refundAmount IS NULL THEN 0 ELSE n.refundAmount END) refundAmount,
+            (CASE WHEN n.refundNumber IS NULL THEN 0 ELSE n.refundNumber END) refundNumber,
+            (CASE WHEN o.rechargeCarCharging IS NULL THEN 0 ELSE o.rechargeCarCharging END) rechargeCarCharging,
+            (CASE WHEN t.rechargeCarSurplus IS NULL THEN 0 ELSE t.rechargeCarSurplus END) rechargeCarSurplus,
+            (CASE WHEN t.rechargeSurplusNumber IS NULL THEN 0 ELSE t.rechargeSurplusNumber END) rechargeSurplusNumber,
+            g.id,
+            g.group_code,
+            NOW()
+            FROM t_park_parking g
+            LEFT JOIN
+                (SELECT SUM(a.amount) AS rechargeAmount,COUNT(a.id) AS rechargeNumber, a.park_id AS parkId, a.group_code AS groupCode,a.create_time AS payTime
+            FROM t_pay_inside_recharge a
+            WHERE DATE_FORMAT(a.create_time,"%Y-%m-%d") = DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY)
+                  AND a.is_contract = 0
+            GROUP BY a.park_id) m ON m.parkId = g.id
+            LEFT JOIN
+                (SELECT SUM(b.refund_amont) AS refundAmount,COUNT(b.id) AS refundNumber, b.park_id AS parkId
+            FROM t_pay_inside_refund b
+            WHERE DATE_FORMAT(b.create_time,"%Y-%m-%d") = DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY)
+                  AND b.is_contract = 0
+            GROUP BY b.park_id) n ON n.parkId = g.id
+            LEFT JOIN
+                (SELECT SUM(CASE WHEN c.balance_pay IS NULL THEN 0 ELSE c.balance_pay END) AS rechargeCarCharging, c.park_id AS parkId
+            FROM t_pay_temp_order c
+            WHERE DATE_FORMAT(c.pay_time,"%Y-%m-%d") = DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY)
+            GROUP BY c.park_id) o ON o.parkId = g.id
+            LEFT JOIN
+                (SELECT SUM(d.balance) AS rechargeCarSurplus,SUM(CASE WHEN d.balance > 0 THEN 1 ELSE 0 END) AS rechargeSurplusNumber, d.park_id AS parkId
+            FROM t_pay_inside_car d
+            GROUP BY d.park_id) t ON t.parkId = g.id
+            LEFT JOIN
+                (SELECT SUM(payment_amount) as businessRechargeAmount,count(1) AS businessRechargeCount,park_id AS parkId
+                  FROM t_business_recharge_apply
+                  WHERE DATE_FORMAT(confirm_receive_time,'%Y-%m-%d') = DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d'), INTERVAL 1 DAY) AND status = 3
+                  GROUP BY parkId) s ON s.parkId = g.id
+            LEFT JOIN
+                (SELECT count(1) couponUsedCount,park_id AS parkId
+                  FROM t_business_cash_coupon
+				  WHERE DATE_FORMAT(use_time,'%Y-%m-%d') = DATE_SUB(DATE_FORMAT(NOW(),'%Y-%m-%d'), INTERVAL 1 DAY) AND status = 2
+				  GROUP BY parkId) a ON a.parkId = g.id
+
+    </insert>
+
+    <!-- 查询当天 长租数据并存入数据库-->
+    <insert id="insertAndSelectMonthly">
+        INSERT INTO t_pay_monthly_park_report
+            (pay_time, income_amount, income_park, electronic_pay, electronic_park, refund_amount, refund_park,
+            amount_total, park_total, park_id, group_code, create_time)
+            SELECT
+                DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY) AS payTime,
+                (CASE WHEN d.incomeAmount IS NULL THEN 0 ELSE d.incomeAmount END) AS incomeAmount,
+                (CASE WHEN d.incomePark IS NULL THEN 0 ELSE d.incomePark END) AS incomePark,
+                (CASE WHEN f.electronicPay IS NULL THEN 0 ELSE f.electronicPay END) AS electronicPay,
+                (CASE WHEN f.electronicPark IS NULL THEN 0 ELSE f.electronicPark END) AS electronicPark,
+                (CASE WHEN e.refundAmount IS NULL THEN 0 ELSE e.refundAmount END) AS refundAmount,
+                (CASE WHEN e.refundPark IS NULL THEN 0 ELSE e.refundPark END) AS refundPark,
+                ((CASE WHEN d.incomeAmount IS NULL THEN 0 ELSE d.incomeAmount END)
+                + (CASE WHEN f.electronicPay IS NULL THEN 0 ELSE f.electronicPay END)
+                - (CASE WHEN e.refundAmount IS NULL THEN 0 ELSE e.refundAmount END)) AS amountTotal,
+                (CASE WHEN g.parkTotal IS NULL THEN 0 ELSE g.parkTotal END) AS parkTotal,
+                c.id,
+                c.group_code,
+                NOW()
+                FROM t_park_parking c
+                    LEFT JOIN
+                    (SELECT
+                        SUM(CASE WHEN a.amount IS NULL THEN 0 ELSE a.amount END) AS incomeAmount,
+                        SUM(CASE WHEN a.lot_num IS NULL THEN 0 ELSE a.lot_num END) AS incomePark,
+                        a.park_id AS parkId
+                        FROM t_pay_inside_contract a
+                        WHERE DATE_FORMAT(a.create_time,"%Y-%m-%d") = DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY)
+                        AND a.from_type = 1
+                        GROUP BY a.park_id) d ON d.parkId = c.id
+                    LEFT JOIN
+                    (SELECT
+                        SUM(CASE WHEN a.monthly_fee IS NULL THEN 0 ELSE a.monthly_fee END) AS electronicPay,
+                        SUM(CASE WHEN a.lot_num IS NULL THEN 0 ELSE a.lot_num END) AS electronicPark,
+                        a.park_id AS parkId
+                        FROM t_pay_inside_car_online_pay_temp_order a
+                        WHERE DATE_FORMAT(a.create_time,"%Y-%m-%d") = DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY)
+                        and a.monthly_fee_status = 1
+                        GROUP BY a.park_id
+                    ) f ON f.parkId = c.id
+                LEFT JOIN
+                    (SELECT
+                      SUM(b.refund_amont) AS refundAmount,
+                      SUM(b.lot_num) AS refundPark, b.park_id AS parkId
+                      FROM t_pay_inside_refund b
+                      WHERE DATE_FORMAT(b.create_time,"%Y-%m-%d") = DATE_SUB(DATE_FORMAT(NOW(),"%Y-%m-%d"), INTERVAL 1 DAY)
+                      AND b.is_contract = 1
+                      GROUP BY b.park_id) e ON e.parkId = c.id
+                LEFT JOIN
+                 (select sum(lot_num) AS parkTotal,park_id AS parkId from t_pay_inside_contract ic join (
+        select tic.inside_id AS insideId,MAX(tic.create_time) ced from t_pay_inside_contract tic WHERE tic.end_date != ''
+        AND DATE_FORMAT(tic.end_date, '%Y-%m-%d') >= DATE_FORMAT(NOW(),'%Y-%m-%d')
+        GROUP BY insideId) cc
+        on ic.inside_id = cc.insideId and ic.create_time = cc.ced GROUP BY parkId) g ON g.parkId = c.id
+                GROUP BY c.id
+                ORDER BY c.create_time DESC
+    </insert>
+</mapper>

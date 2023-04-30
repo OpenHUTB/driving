@@ -1,0 +1,41 @@
+.weui-input {
+	text-align: right;
+}
+.required_lable {
+	color: red;
+	padding-right: 0.3em;
+	float: left;
+	line-height: 1.67058824
+}
+
+.not_required_lable {
+	padding-right: 0.3em;
+	float: left;
+}
+.not_required_lable:after{
+	content:"\00A0";
+}
+.weui-label {
+	float: left;
+}
+.weui-input {
+	padding-right: 0.7em;
+	width: 95%;
+}
+.weui-btn_primary{
+	background:#16ABD7 !important;
+	width: 80%;
+	margin-top:2rem;
+	border-radius: 2rem;
+	margin-bottom: 1rem;
+}
+
+.weui-uploader__bd{
+    padding-left:0.5rem;
+}
+.update_img_review{
+	width:77px;height:77px;position: absolute;z-index:10
+}
+.weui-cells{
+	overflow: auto;
+}

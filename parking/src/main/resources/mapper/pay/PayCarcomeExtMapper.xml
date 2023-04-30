@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayCarcomeExtDao">
+    <delete id="delData2PayCarcomeExt" parameterType="long">
+        delete from t_pay_carcome_ext where id = #{id}
+    </delete>
+    <update id="updateData2PayCarcomeExt" parameterType="com.xhb.pay.form.PayCarcomeForm">
+        update t_pay_carcome_ext
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parkId != null">
+                park_id = #{parkId},
+            </if>
+            <if test="isSync != null">
+                is_sync = #{isSync},
+            </if>
+            <if test="syncTime != null and syncTime != ''">
+                sync_time = #{syncTime},
+            </if>
+            <if test="img != null and img != ''">
+                img = #{img},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+    <insert id="addData2PayCarcomeExt" parameterType="com.xhb.pay.form.PayCarcomeForm">
+        insert into t_pay_carcome_ext
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="groupCode != null and groupCode != ''">group_code,
+            </if>
+            <if test="parkId != null">park_id,
+            </if>
+            <if test="syncTime != null and syncTime != ''">sync_time,
+            </if>
+            <if test="img != null and img != ''">img,
+            </if>
+            <if test="remark != null and remark != ''">remark,
+            </if>
+            <if test="updateTime != null and updateTime != ''">update_time,
+            </if>
+            <if test="updateTime != null and updateTime != ''">create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="groupCode != null and groupCode != ''">#{groupCode},
+            </if>
+            <if test="parkId != null">#{parkId},
+            </if>
+            <if test="syncTime != null and syncTime != ''">#{syncTime},
+            </if>
+            <if test="img != null and img != ''">#{img},
+            </if>
+            <if test="remark != null and remark != ''">#{remark},
+            </if>
+            <if test="updateTime != null and updateTime != ''">#{updateTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+    <insert id="batchReplace" parameterType="com.xhb.pay.bean.PayCarcomeExt" >
+        replace into t_pay_carcome_ext
+        (car_color, id, is_sync,park_id,remark,group_code,sync_time)
+        value
+        <foreach collection="list" item="vo" separator="," close=";">
+            (#{vo.carColor}, #{vo.id}, #{vo.isSync},#{vo.parkId},#{vo.remark},#{vo.groupCode},#{vo.syncTime})
+        </foreach>
+    </insert>
+</mapper>

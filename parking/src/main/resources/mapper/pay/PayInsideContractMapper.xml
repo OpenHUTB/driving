@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayInsideContractDao">
+
+    <select id="selectContractByPlateNum" parameterType="map" resultType="PayInsideContract">
+        SELECT MIN(c.start_date) as start_date,MAX(c.end_date) as end_date  FROM t_pay_inside_contract c
+        WHERE c.inside_id = #{insideId}
+        AND TO_DAYS(STR_TO_DATE(c.start_date,'%Y-%m-%d')) <![CDATA[<=]]> TO_DAYS(STR_TO_DATE(#{outTime},'%Y-%m-%d %H:%i:%s'))
+        AND TO_DAYS(STR_TO_DATE(c.end_date,'%Y-%m-%d')) <![CDATA[>=]]> TO_DAYS(STR_TO_DATE(#{comeTime},'%Y-%m-%d %H:%i:%s'))
+    </select>
+
+    <select id="findLastRecord" parameterType="PayInsideContract" resultType="PayInsideContract">
+        select * from t_pay_inside_contract WHERE 1=1
+        <if test="parkId != null and parkId != ''">
+            AND park_id = #{parkId}
+        </if>
+        <if test="insideId != null and insideId != ''">
+            AND inside_id = #{insideId}
+        </if>
+        ORDER BY create_time DESC
+        limit 0,1
+    </select>
+
+
+    <select id="findContract" resultType="com.xhb.pay.vo.PayInsideContractVo">
+        SELECT
+            c.id,
+            a.plate_nums AS plateNums,
+            a.front_user_id AS frontUserId,
+            a.owner_name AS ownerName,
+            a.owner_mobile AS ownerMobile,
+            a.park_id AS parkId,
+            a.group_code AS groupCode,
+            c.end_date AS endDate,
+            p.park_name AS parkName,
+            p.buffer_days AS bufferDays
+        FROM t_pay_inside_contract c
+        INNER JOIN t_pay_inside_car a ON a.id = c.inside_id
+        INNER JOIN t_park_parking p ON p.id = c.park_id
+        INNER JOIN (select MAX(b.end_date) AS end_date, b.inside_id FROM t_pay_inside_contract b GROUP BY b.inside_id) t ON c.end_date = t.end_date AND c.inside_id = t.inside_id
+        <where>
+            <if test="parkId != null and parkId != ''">
+                AND c.park_id = #{parkId}
+            </if>
+            <choose>
+                <when test="minTime != null and minTime != ''">
+                    AND DATEDIFF(c.end_date, NOW()) <![CDATA[ <= ]]> #{minTime}
+                    AND c.is_notice = 0
+                </when>
+                <otherwise>
+                    AND DATE_FORMAT(c.end_date,"%Y-%m-%d") = DATE_FORMAT(now(),"%Y-%m-%d")
+                </otherwise>
+            </choose>
+        </where>
+
+    </select>
+
+    <select id="selectValidMonthly" parameterType="Long" resultType="java.lang.Integer">
+        select count(1) from t_pay_inside_contract WHERE inside_id = #{insideId}
+        AND DATE_FORMAT(NOW(),"%Y-%m-%d") <![CDATA[<=]]> DATE_FORMAT(end_date,"%Y-%m-%d")
+        AND DATE_FORMAT(NOW(),"%Y-%m-%d") <![CDATA[>=]]> DATE_FORMAT(start_date,"%Y-%m-%d")
+    </select>
+
+
+    <select id="findExecutingRecord" resultType="PayInsideContract">
+        select c.* from t_pay_inside_contract c
+        INNER JOIN t_pay_inside_car a ON a.id = c.inside_id
+        WHERE  a.park_id = #{parkId} AND a.front_user_id = #{userId}
+            AND DATE_FORMAT(NOW(),"%Y-%m-%d") <![CDATA[<=]]> DATE_FORMAT(c.end_date,"%Y-%m-%d")
+        ORDER BY create_time DESC
+        limit 0,1
+    </select>
+
+    <select id="getLastMontlyContract" parameterType="PayInsideContract" resultType="PayInsideContract">
+      SELECT c.* FROM t_pay_inside_contract c INNER JOIN t_pay_inside_car a ON a.id = c.inside_id
+      WHERE a.park_id = #{parkId} AND a.id = #{insideId}
+      AND DATE_FORMAT(NOW(),"%Y-%m-%d") <![CDATA[<=]]> DATE_FORMAT(c.end_date,"%Y-%m-%d")
+      AND DATE_FORMAT(NOW(),"%Y-%m-%d") <![CDATA[>=]]> DATE_FORMAT(c.start_date,"%Y-%m-%d")
+      ORDER BY create_time DESC
+      LIMIT 0,1
+    </select>
+
+    <select id="getUsedLotNum" parameterType="map" resultType="java.lang.Integer">
+        select sum(lot_num) from t_pay_inside_contract c join (
+		select c.inside_id,MAX(c.create_time) ced from t_pay_inside_contract c WHERE DATE_ADD(DATE_FORMAT(c.end_date, '%Y-%m-%d'),INTERVAL ${bufferDays} DAY) <![CDATA[>=]]> DATE_FORMAT(NOW(),'%Y-%m-%d')
+        AND c.park_id = #{parkId} GROUP BY c.inside_id) cc
+				on c.inside_id = cc.inside_id and c.create_time = cc.ced
+    </select>
+
+    <select id="findDailyParameterCost"  resultType="java.lang.Double">
+    select
+        IFNULL(sum(amount / (lease_month_num * ${monthDays})),0)
+    from t_pay_inside_contract
+    where park_id = #{parkId}
+    and DATE_FORMAT(create_time,'%Y-%m') = #{dateTime}
+    </select>
+
+    <select id="monthlyUser" resultType="int">
+        SELECT
+            COUNT(*)
+        FROM
+            t_pay_inside_car
+        WHERE
+                id IN ( SELECT inside_id FROM t_pay_inside_contract WHERE to_days( end_date ) >= to_days( now()) AND park_id = #{parkId} )
+    </select>
+</mapper>

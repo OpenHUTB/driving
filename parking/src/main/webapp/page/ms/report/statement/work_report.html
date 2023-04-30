@@ -1,0 +1,119 @@
+<script type="text/javascript" src="${basePath}/js/baidutemplate.js"></script>
+<div id="plateList">
+</div>
+
+<script id="plateListTemplate" type="text/html">
+    <table id="peripheral">
+        <!--头部-->
+        <table id="head" width="100%">
+            <tr align="center">
+                <th colspan="4">交接班报表</th>
+            </tr>
+            <tr width='50%'>
+                <th >车场名称：</th>
+                <td><@=parkName@></td>
+                <th >当班人：</th>
+                <td><@=collectorName@></td>
+            </tr>
+            <tr width='50%'>
+                <th >当班时间：</th>
+                <td><@=collectorChangeShifts.startTime@> 至 <@=collectorChangeShifts.endTime@></td>
+            </tr>
+        </table>
+        <!--主体-->
+        <br/>
+        <br/>
+        <table id="body" width="100%" border="1">
+            <tr align="center">
+                <th rowspan="2">类别</th>
+                <th colspan="4">收费</th>
+            </tr>
+            <tr align="center">
+                <th>正常收费</th>
+                <th>手动抬杆</th>
+                <th>特殊放行</th>
+                <th>减免</th>
+            </tr>
+            <tr align="center">
+                <th>金额</th>
+                <td><@=tempOrdetrCashPay@></td>
+                <td><@=payHandLiftRodAmount@></td>
+                <td><@=paySpecialPassAmount@></td>
+                <td><@=reliefTypeAmount@></td>
+
+            </tr>
+            <tr align="center">
+                <th>数量</th>
+                <td><@=tempOrderCount@></td>
+                <td><@=payHandLiftRodCount@></td>
+                <td><@=paySpecialPassCount@></td>
+                <td><@=reliefTypeCount@></td>
+            </tr>
+        </table>
+        <!--减免分类-->
+        <br/>
+        <br/>
+        <table  width="100%" border="1">
+            <tr align="center">
+                <th colspan="3">减免统计</th>
+            </tr>
+            <tr align="center">
+                <th>减免分类名称：</th>
+                <th>使用数量（次）</th>
+                <th>抵扣金额（元）</th>
+            </tr>
+            <@
+            for(i=0; i<reliefTypeReport.length; i++) {
+            var reliefName = reliefTypeReport[i].reliefName;
+            var count = reliefTypeReport[i].count;
+            var amount = reliefTypeReport[i].amount;
+            @>
+            <tr align="center">
+                <td><@=reliefName@></td>
+                <td><@=count@></td>
+                <td><@=amount@></td>
+            </tr>
+            <@}@>
+        </table>
+        <!--特殊放行-->
+        <br/>
+        <br/>
+        <table width="100%" border="1">
+            <tr align="center">
+                <th colspan="3">特殊放行统计</th>
+            </tr>
+            <tr align="center">
+                <th>特殊放行描述：</th>
+                <th>使用数量（次）</th>
+                <th>损失金额（元）</th>
+            </tr>
+            <@
+            for(i=0; i<paySpecialPassReport.length; i++) {
+            var describ = paySpecialPassReport[i].describ;
+            var count = paySpecialPassReport[i].count;
+            var amount = paySpecialPassReport[i].amount;
+            @>
+            <tr align="center">
+                <td><@=describ@></td>
+                <td><@=count@></td>
+                <td><@=amount@></td>
+            </tr>
+            <@}@>
+
+        </table>
+    </table>
+</script>
+<script  type="text/javascript">
+    $(function () {
+        $('#subBtn').hide();
+        var id = "${parameter.id}";
+        $.ajax({
+            url:'${basePath}/ms/CollectorChangeShifts/workReport?id='+id,
+            dataType:'json',
+            success:function(_res){
+                $('#plateList').html(baidu.template('plateListTemplate',_res.data));
+            }
+        });
+
+    })
+</script>

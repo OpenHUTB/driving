@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.UnattendedDao">
+
+    <!--线下收费-->
+    <select id="findUnattended" parameterType="map" resultType="com.xhb.report.dto.UnattendedDTO">
+        SELECT
+               tpc.park_id,
+               tpp.park_name parkName,
+               tpc.plate_number plateNumber,
+               tpc.access_time accessTime,
+               tppp.port_name portName,
+               tpc.record_type recordType,
+               tpc.img enterId
+        from t_pay_carcome tpc left join t_park_parking tpp on tpc.park_id=tpp.id
+        left join t_park_parking_port tppp on tpc.port_id=tppp.id
+        <where>
+            (tpc.status=0 or tpc.status=1)
+            <if test="parkId!=null and parkId !=''">
+                and tpc.park_id=#{parkId}
+            </if>
+            <if test="parkingTime !=null">
+                and (unix_timestamp(now())-unix_timestamp(tpc.access_time)) &gt;=#{parkingTime}
+            </if>
+            <if test="plateNumber !=null and plateNumber!=''">
+                AND tpc.plate_number LIKE CONCAT('%',#{plateNumber},'%')
+            </if>
+
+            <if test="groupCode !=null and groupCode!=''">
+                and tpc.group_code=#{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND tpc.park_id IN (${parkIds})
+            </if>
+        </where>
+        order by tpc.create_time desc
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+    </select>
+
+    <select id="findCarcome" resultType="Long">
+        SELECT pc.id FROM `t_pay_carcome` pc
+        WHERE pc.park_id = #{parkId}
+        AND pc.plate_number = #{plateNumber}
+        AND pc.access_time <![CDATA[ <= ]]> #{accessTime}
+        AND pc.status != '2'
+    </select>
+
+
+</mapper>

@@ -1,0 +1,763 @@
+
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="format-detection" content="telephone=no"/>
+
+    <title>CMPark招商享停车</title>
+            <link rel="stylesheet" type="text/css" href="./animation.css">
+            <link rel="stylesheet" type="text/css" href="./keyboard.css">
+            <link rel="stylesheet" type="text/css" href="./jquery-ui/jquery-ui.theme.min.css">
+            <link rel="stylesheet" type="text/css" href="./jquery-ui/jquery-ui.min.css">
+            <link rel="stylesheet" type="text/css" href="./self.css">
+            <link rel="stylesheet" type="text/css" href="./base.css">
+            <link rel="stylesheet" type="text/css" href="./color.css">
+    
+            <script src="./jquery.min.js"></script>
+            <script src="./jquery-ui.min.js"></script>
+            <script src="./jweixin-1.0.0.js"></script>
+            <script src="./common.js"></script>
+            <script src="./self.js"></script>
+            <script src="./keyboard.js"></script>
+    </head>
+<script>
+    
+    var WX_CONFIG = {
+        appID:'wxc2bc4a98dff0d09f',
+        timestamp:1552622871,
+        nonceStr:'KWKAVYRpFwq2v5gP',
+        signature:'6931e64317b88f897f79d937c61c1b25b570f959'
+    }
+
+</script><div class="line-h-0">
+    <img class="w10 h10" src="/static/wechat/image/icon/icon-00.png" onclick="sure()"/>
+</div>
+<div class="pdl-18 pdr-18">
+    <div class="pdt-20">
+        <div class="w10 tx-c t-bla ftb">输入车牌</div>
+        <div class="w10 pdt-10 ftz-18 ov-h pstnr" id="carNumBox" onclick="showKeyboard()">
+            <div class="w22 fll box-s pdr-02">
+                <div class="line-h-35 ov-h bor-b3b3b3 bor-r-4">
+                    <input onfocus='this.blur();' class="fll w5 tx-c line-h-25 mart-5 b-r-b3b3b3" type="text" readonly="readonly" value="" />
+                    <input onfocus='this.blur();' class="fll w5 tx-c line-h-25 mart-5" type="text" readonly="readonly" value="" />
+                </div>
+            </div>
+            <div class="fll w-p-3 line-h-35">
+                <div class="dot"></div>
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus='this.blur();' class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text" readonly="readonly" value="" />
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus='this.blur();' class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text" readonly="readonly" value="" />
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus='this.blur();' class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text" readonly="readonly" value="" />
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus='this.blur();' class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text" readonly="readonly" value="" />
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus='this.blur();' class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text" readonly="readonly" value="" />
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus='this.blur();' class="w10 tx-c line-h-35 dspn bor-r-4 bor-1-5cade2" id="new" type="text" readonly="readonly" value="" />
+                <div class="tx-c bor-r-4 bor-1-5cade2" id="new1">
+                    <p class="ftz-14 t-999 h-16">+</p>
+                    <p class="ftz-8 t-999 h-17">新能源</p>
+                </div>
+            </div>
+            <img class="pstna w12-5 bottom-10 flicker dspn" id="cursor" src="/static/wechat/image/icon/icon-17.png"/>
+            <img class="pstna w11 bottom-10 flicker" id="cursor1" src="/static/wechat/image/icon/icon-17.png"/>
+        </div>
+    </div>
+</div>
+<div class="w10 pdl-18 pdr-18 pdt-32 pdb-20">
+    <div class="line-h-45 c-149bfe tx-c t-wh ftz-16 b-radius-5" onclick="search()">
+        立即查询
+    </div>
+    <div class="line-h-40 tx-c ftz-12 t-999">
+        请输入正确的车牌，否则无法进行停车缴费
+    </div>
+</div>
+<div class="w10 pstnf c-edf1f4 bottom-0 dspn zindex9" id="keyBoard">
+    <div class="ov-h">
+        <div class="w10 pd-2">
+            <div id="provinceKeyboard">
+                <!--第一行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">京</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">津</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">沪</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">渝</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">苏</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">浙</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">豫</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">粤</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">川</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">陕</div>
+                    </li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li style="width: 5%;">
+                        <div class="pdt-10 pdb-10"></div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">冀</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">辽</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">吉</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">皖</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">闽</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">鄂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">湘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">鲁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">晋</div>
+                    </li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li style="width: 5%;">
+                        <div class="pdt-10 pdb-10"></div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">黑</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">赣</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">贵</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">甘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">桂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">琼</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">云</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">青</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">蒙</div>
+                    </li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li style="width: 10%;">
+                        <div class="pdt-10 pdb-10"></div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">藏</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">宁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">新</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">W</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">临</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25 marb-5" src="/static/wechat/image/icon/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li style="width: 22.22222%;">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure t-999">确定</div>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure1 dspn" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="wjKeyboard">
+                <!--第一行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">1</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">2</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">3</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">4</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">5</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">6</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">7</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">8</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">9</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">0</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">京</div></li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">津</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">晋</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">冀</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">蒙</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">辽</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">吉</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">黑</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">沪</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">苏</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">浙</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">皖</div></li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">闽</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">赣</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">鲁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">豫</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">鄂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">湘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">粤</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">桂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">琼</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">渝</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">川</div>
+                    </li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">贵</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">云</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">藏</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">陕</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">甘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">青</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">宁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">新</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="/static/wechat/image/icon/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li style="width: 18.181818%;">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure t-999">确定</div>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure1 dspn" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="wjKeyboardDel">
+                <!--第一行-->
+                <ul class="tx-c t-999">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">1</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">2</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">3</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">4</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">5</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">6</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">7</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">8</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">9</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">0</div></li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Q</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">W</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">E</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">R</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">T</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Y</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">U</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">O</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">P</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div></li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">A</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">S</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">D</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">F</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">G</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">H</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">J</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">K</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">L</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div></li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Z</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">X</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">C</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">V</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">B</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">N</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">M</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="/static/wechat/image/icon/icon-13.png"/>
+                        </div></li>
+                    <li class="w2">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="alphabetKeyboard">
+                <!--第一行-->
+                <ul class="tx-c t-999" id="first">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">1</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">2</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">3</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">4</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">5</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">6</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">7</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">8</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">9</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">0</div></li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c dspn" id="first1">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">1</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">2</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">3</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">4</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">5</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">6</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">7</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">8</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">9</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">0</div></li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">A</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">B</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">C</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">D</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">E</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">F</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">G</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">H</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">J</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">K</div></li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">L</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">M</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">N</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">P</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">Q</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">R</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">S</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">T</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">U</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">V</div></li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">W</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">X</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">Y</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">Z</div></li>
+                    <li class="two dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">港</div>
+                    </li>
+                    <li class="one">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div>
+                    </li>
+                    <li class="two dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div>
+                    </li>
+                    <li class="three dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">港</div>
+                    </li>
+                    <li class="three dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">澳</div>
+                    </li>
+                    <li class="one">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">港</div>
+                    </li>
+                    <li class="one">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div>
+                    </li>
+                    <li class="two dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div>
+                    </li>
+                    <li class="three dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">学</div>
+                    </li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="/static/wechat/image/icon/icon-13.png"/>
+                        </div></li>
+                    <li class="w2">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure t-999">确定</div>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure1 dspn" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="alphabetKeyboardDel">
+                <!--第一行-->
+                <ul class="tx-c t-999">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">1</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">2</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">3</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">4</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">5</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">6</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">7</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">8</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">9</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5">0</div></li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">A</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">B</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">C</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">D</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">E</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">F</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">G</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">H</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">J</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">K</div></li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">L</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">M</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">N</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">P</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Q</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">R</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">S</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">T</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">U</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">V</div></li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">W</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">X</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Y</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Z</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">港</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div></li>
+                    <li><div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div></li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="/static/wechat/image/icon/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li class="w2">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pd-20">
+    <div class="ov-h tx-c ftz-16">
+                        <a href="/wechat/charge/index?application=39">
+                            <div class="w5 fll b-r-f5f5f5">
+                    <div class="pdl-05 pdt-20">
+                        <img class="w-30 h-30" src="/static/wechat/image/icon/icon-01.png"/>
+                        <div class="pdt-10 pdb-20 t-bla">月卡充值</div>
+                    </div>
+                </div>
+            </a>
+                        <a href="/wechat/member/center?application=39">
+                <div class="w5 fll">
+                    <div class="pdr-05 pdt-20">
+                        <img class="w-30 h-30" src="/static/wechat/image/icon/user.png"/>
+                        <div class="pdt-10 pdb-20 t-bla">个人中心</div>
+                    </div>
+                </div>
+            </a>
+    </div>
+</div>
+    <div class="flex-1 w10"  style="max-width: 100%; position: absolute; bottom: 20px;">
+        <div class="tx-c ftz-14 t-999">CMPark招商享停车</div>
+        <div class="tx-c ftz-12 t-999">领先的智能一体化停车场缴费</div>
+    </div>
+
+<div id="page_div" class="pstna w10 dspn" style="height: 100%;top: 0;left: 0;z-index: 100;">
+    <div style="background-color:#000000;opacity: 0.5;width: 100%;height: 100%" onClick="document.getElementById('page_div').style.display='none'"></div>
+    <section class="w10 pstna" style="bottom:0; height: 50%;">
+        <div class="ftz14 w10" style="margin: 0 auto;height: 100%;overflow: auto;background-color: #1296db" id="park">
+
+        </div>
+    </section>
+</div>
+
+<div id="parks_div" class="pstna w10 dspn" style="height: 100%;top: 0;left: 0;z-index: 100;">
+    <div style="background-color:#000000;opacity: 0.5;width: 100%;height: 100%" onClick="document.getElementById('parks_div').style.display='none'"></div>
+    <section class="w10 pstna" style="bottom:0; height: 80%;" onClick="document.getElementById('parks_div').style.display='none'">
+        <div class="ftz-15 pd-20" style="width:90%; margin:0 auto;border-radius:5px;background-color: white;" onclick="event.stopPropagation();">
+            <div class="tx-c">
+                选择车辆所在车场
+            </div>
+            <div id="parks">
+            </div>
+        </div>
+    </section>
+</div>
+<input onfocus='this.blur();' type="hidden" id="latitude" value="">
+<input onfocus='this.blur();' type="hidden" id="longitude" value="">
+<script>
+    $(function(){
+        $('input').val('');
+        var code = '陕AB7BF70';
+        if(is_define(code)){
+            for(var i=0;i<code.length;i++) {
+                insertText(code[i]);
+                carCode += code[i];
+                if (i == 7) {
+                    $('#new1').addClass('dspn');
+                    $('#new').removeClass('dspn').val(code[i]);
+                }
+            }
+            $('#content').hide();
+            $('#carNumBox').show();
+        }
+
+    })
+    function search(){
+        hideKeyboard();
+        var plate = carCode;
+        if(plate.length == 7 || plate.length == 8){
+            $.ajax(
+                {
+                    'url':'/wechat/temporary/inPark?application=39',
+                    'data':{
+                        plate:plate
+                    },
+                    type:'POST',
+                    dataType:'JSON',
+                    success:function(data){
+                        if(0 == data.code){
+                            if(is_define(data.data)){
+                                if(data.data.length > 1){
+                                    var str = "";
+                                    for(var i=0;i<data.data.length;i++){
+                                        str+='<a href="/wechat/pay/temporary?application=39&plate='+plate+'&park='+data.data[i].park_id+'&serial=">';
+                                        str+='<div class="tx-c h-30 mar-5 line-h-35 c-149bfe t-wh" style="border: 1px solid #149bfe;border-radius: 5px;">'+data.data[i].name+'</div>';
+                                        str+='</a>';
+                                    }
+                                    $('#parks').html(str);
+                                    $('#parks_div').show();
+                                }else{
+                                    location.href = '/wechat/pay/temporary?application=39&plate='+plate+'&park='+data.data[0].park_id+'&serial=';
+                                }
+                            }else{
+                                $msg = {
+                                    title:'提示消息',
+                                    content:'未找到您的入场记录'
+                                };
+                                $prompt($msg,closePrompt);
+                            }
+
+                        }
+                        else{
+                            $msg = {
+                                title:'提示消息',
+                                content:data.error
+                            };
+                            $prompt($msg,closePrompt);
+                        }
+                    }
+                }
+            );
+
+        }
+        else{
+            alert("请输入车牌号进行查询");
+        }
+    }
+
+    $(document).ready(function(){
+        wx.config({
+            appId: WX_CONFIG.appID,
+            timestamp: WX_CONFIG.timestamp,
+            nonceStr: WX_CONFIG.nonceStr,
+            signature: WX_CONFIG.signature,
+            jsApiList: [
+                'getLocation'
+            ]
+        });
+        addressInit('cmbProvince', 'cmbCity', 'cmbArea');
+    });
+    var winH = $(window).height(); //浏览器当前窗口可视区域高度
+    var bodyH = $('body').height();
+    $('body').height(winH + 'px');
+    if(bodyH>winH){
+        $('.bottom').removeClass('pstna bottom-0')
+    }
+    function show(){
+        wx.getLocation({
+            type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+
+            success: function (res) {
+                $('#latitude').val(res.latitude); // 纬度，浮点数，范围为90 ~ -90
+
+                $('#longitude').val(res.longitude); // 经度，浮点数，范围为180 ~ -180。
+
+//                var speed = res.speed; // 速度，以米/每秒计
+//
+//                var accuracy = res.accuracy; // 位置精度
+
+            }
+
+        });
+
+        $.ajax(
+            {
+                'url':'/wechat/dashboard/park?application=39',
+                'data':{
+                    latitude:$('#latitude').val(),
+                    longitude:$('#longitude').val()
+                },
+                type:'POST',
+                dataType:'JSON',
+                success:function(data){
+                    if(0 == data.code){
+                        var str = "";
+                        for(var i=0;i<data.parks.length;i++){
+                            var contact = data.parks[i].contact;
+                            if(!is_define(contact)){
+                                contact = "暂无";
+                            }
+                            str +='<div class="mar-5 c-wh h-55 ftz-16 pdl-05 b-radius-5 pstnr" onclick="callphone(\''+contact+'\')">';
+                            str +='<div class="ov-h ftz-13 t-a48145 pdt-05">';
+                            str +='<div class="fll">';
+                            str +='<img class="w-30 h-30 marr-10 mart-5 marb-5" src="/static/wechat/image/icon/icon-16.png"/>';
+                            str +='</div>';
+                            str +='<div class="fll" style="max-width: 100%;">';
+                            str +='<div class="tx-l">'+data.parks[i].name+'</div>';
+                            str +='<div class="tx-l">'+contact+'</div>';
+                            str +='</div>';
+                            str +='<div class="flr">';
+                            str +='<img class="w-30 h-30 marr-10 mart-5 marb-5" src="/static/wechat/image/icon/call.png"/>';
+                            str +='</div>';
+                            str +='</div>';
+                            str +='</div>';
+
+//                            str += '<div class="c-wh h-110 ftz-16 pdl-05 b-radius-5 pstnr animation-park1" style="margin: 10px;">';
+//                            str += '<span class="ftz-18 ftb">'+data.parks[i].name+'</span>';
+//                            str += '<p class=""><img class="w-20 h-20" style="vertical-align: middle;" src="/static/wechat/image/car.png" alt=""><font class=""> 剩余车位:'+data.parks[i].remained_space+'</font></p>';
+//                            str += '<p class=""><img class="w-20 h-20" style="vertical-align: middle;" src="/static/wechat/image/tel.png" alt=""><font class=""> 联系方式:'+contact+'</font></p>';
+//                            str += '<p class=""><img class="w-20 h-20" style="vertical-align: middle;" src="/static/wechat/image/distance.png" alt=""><font class=""> 距离:'+distance+'</font></p>';
+//                            str += '<img class="pstna w-40 h-40" style="right:20px;top:20px;" src="/static/wechat/image/park.png" alt="">';
+//                            str += '</div>';
+                        }
+
+                        $('#page_div').show();
+                        $('#park').html(str);
+                    }
+                    else{
+                        $msg = {
+                            title:'提示消息',
+                            content:data.error
+                        };
+                        $prompt($msg,closePrompt);
+                    }
+                }
+            }
+        );
+    }
+
+    function getDistance(distance){
+        if(parseInt(distance)>1000){
+            distance = parseInt(distance);
+            distance = distance*0.001;
+            distance = distance.toFixed(1);
+            distance = distance + 'km';
+        }else{
+            distance = distance + 'm';
+        }
+        return distance;
+    }
+</script></html>

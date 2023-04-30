@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>生鲜智链综合信息管理平台</title>
+  <style type="text/css">
+    * {
+      padding: 0;
+      margin: 0;
+    }
+    html {
+      height: 100%;
+    }
+    body {
+      height: 100%;
+    }
+    .page-404 {
+      width: 100%;
+      height: 100%;
+      background: #f0f2f5;
+    }
+
+    .wscn-http404 {
+      position: relative;
+      width: 1200px;
+      margin: 0 auto;
+      padding: 0 100px;
+      overflow: hidden;
+    }
+
+    .pic-404 {
+      position: relative;
+      float: left;
+      width: 600px;
+      padding: 150px 0;
+      overflow: hidden;
+    }
+
+    .bullshit {
+      position: relative;
+      float: left;
+      width: 300px;
+      padding: 150px 0;
+      overflow: hidden;
+    }
+
+    .bullshit__oops {
+      font-size: 32px;
+      font-weight: bold;
+      line-height: 40px;
+      color: #1482f0;
+      opacity: 0;
+      margin-bottom: 20px;
+      -webkit-animation-name: slideUp;
+      animation-name: slideUp;
+      -webkit-animation-duration: 0.5s;
+      animation-duration: 0.5s;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+    }
+
+    .bullshit__headline {
+      font-size: 20px;
+      line-height: 24px;
+      color: #1482f0;
+      opacity: 0;
+      margin-bottom: 10px;
+      -webkit-animation-name: slideUp;
+      animation-name: slideUp;
+      -webkit-animation-duration: 0.5s;
+      animation-duration: 0.5s;
+      -webkit-animation-delay: 0.1s;
+      animation-delay: 0.1s;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+    }
+
+    .bullshit__return-home {
+      display: block;
+      float: left;
+      width: 110px;
+      height: 36px;
+      background: #1482f0;
+      border-radius: 100px;
+      text-align: center;
+      color: #ffffff;
+      opacity: 0;
+      font-size: 14px;
+      line-height: 36px;
+      cursor: pointer;
+      -webkit-animation-name: slideUp;
+      animation-name: slideUp;
+      -webkit-animation-duration: 0.5s;
+      animation-duration: 0.5s;
+      -webkit-animation-delay: 0.3s;
+      animation-delay: 0.3s;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+    }
+
+    .pic-404__parent {
+      width: 100%;
+    }
+
+    .pic-404__child {
+      position: absolute;
+    }
+
+    .pic-404__child.left {
+      width: 80px;
+      top: 17px;
+      left: 220px;
+      opacity: 0;
+      -webkit-animation-name: cloudLeft;
+      animation-name: cloudLeft;
+      -webkit-animation-duration: 2s;
+      animation-duration: 2s;
+      -webkit-animation-timing-function: linear;
+      animation-timing-function: linear;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+      -webkit-animation-delay: 1s;
+      animation-delay: 1s;
+    }
+
+    .pic-404__child.mid {
+      width: 46px;
+      top: 10px;
+      left: 420px;
+      opacity: 0;
+      -webkit-animation-name: cloudMid;
+      animation-name: cloudMid;
+      -webkit-animation-duration: 2s;
+      animation-duration: 2s;
+      -webkit-animation-timing-function: linear;
+      animation-timing-function: linear;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+      -webkit-animation-delay: 1.2s;
+      animation-delay: 1.2s;
+    }
+
+    .pic-404__child.right {
+      width: 62px;
+      top: 100px;
+      left: 500px;
+      opacity: 0;
+      -webkit-animation-name: cloudRight;
+      animation-name: cloudRight;
+      -webkit-animation-duration: 2s;
+      animation-duration: 2s;
+      -webkit-animation-timing-function: linear;
+      animation-timing-function: linear;
+      -webkit-animation-fill-mode: forwards;
+      animation-fill-mode: forwards;
+      -webkit-animation-delay: 1s;
+      animation-delay: 1s;
+    }
+
+    @keyframes slideUp {
+      0% {
+        transform: translateY(60px);
+        opacity: 0;
+      }
+
+      100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes cloudLeft {
+      0% {
+        top: 17px;
+        left: 220px;
+        opacity: 0;
+      }
+
+      20% {
+        top: 33px;
+        left: 188px;
+        opacity: 1;
+      }
+
+      80% {
+        top: 81px;
+        left: 92px;
+        opacity: 1;
+      }
+
+      100% {
+        top: 97px;
+        left: 60px;
+        opacity: 0;
+      }
+    }
+
+    @keyframes cloudMid {
+      0% {
+        top: 10px;
+        left: 420px;
+        opacity: 0;
+      }
+
+      20% {
+        top: 40px;
+        left: 360px;
+        opacity: 1;
+      }
+
+      70% {
+        top: 130px;
+        left: 180px;
+        opacity: 1;
+      }
+
+      100% {
+        top: 160px;
+        left: 120px;
+        opacity: 0;
+      }
+    }
+
+    @keyframes cloudRight {
+      0% {
+        top: 100px;
+        left: 500px;
+        opacity: 0;
+      }
+
+      20% {
+        top: 120px;
+        left: 460px;
+        opacity: 1;
+      }
+
+      80% {
+        top: 180px;
+        left: 340px;
+        opacity: 1;
+      }
+
+      100% {
+        top: 200px;
+        left: 300px;
+        opacity: 0;
+      }
+    }
+
+    a {
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but general-project doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <div class="page-404">
+    <div class="wscn-http404">
+      <div class="pic-404">
+        <img class="pic-404__parent" src="./images/404.png" alt="404">
+        <img class="pic-404__child left" src="./images/404_cloud.png" alt="404">
+        <img class="pic-404__child mid" src="./images/404_cloud.png" alt="404">
+        <img class="pic-404__child right" src="./images/404_cloud.png" alt="404">
+      </div>
+      <div class="bullshit">
+        <div class="bullshit__oops">暂无权限</div>
+        <!-- 跳转链接（外部链接--灵活配置） -->
+        <!--<a href="http://parkbase-test.yerunsxzl.com:23100/#/home" class="bullshit__return-home">返回首页</a>-->
+      </div>
+    </div>
+  </div>
+</body>
+</html>

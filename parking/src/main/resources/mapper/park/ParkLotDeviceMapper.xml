@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.ParkLotDeviceDao">
+
+
+    <update id="updateBySN">
+        UPDATE t_park_lot_device SET type = 0, park_id=null, lot_id = null
+        WHERE sn = #{sn}
+    </update>
+
+    <update id="updateBeanBySN" parameterType="com.xhb.park.bean.ParkLotDevice">
+        UPDATE t_park_lot_device
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serviceCode != null">
+                service_code = #{serviceCode},
+            </if>
+            <if test="lotId != null">
+                lot_id = #{lotId},
+            </if>
+            <if test="parkId != null">
+                park_id = #{parkId},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="isOnLine != null">
+                is_on_line = #{isOnLine},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+            <if test="updateUser != null and updateUser != ''">
+                updateUser = #{updateUser},
+            </if>
+        </trim>
+        WHERE sn = #{sn}
+    </update>
+</mapper>

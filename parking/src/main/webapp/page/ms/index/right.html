@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <script type="text/javascript" src="${staticPath}/js/jquery.min.js"></script>
+    <script type="text/javascript" src="${staticPath}/js/echart/echarts.min.js"></script>
+    <style>
+        * {
+            margin:0;
+            padding: 0;
+        }
+        .content-top{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            flex-wrap: wrap;
+        }
+        .item_div {
+            flex: 1;
+            margin-left: 12px;
+            background-color: white;
+            height: 180px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .content-top .item_div:nth-child(1) {
+            margin-left: 0;
+        }
+        .img-sty{
+            width: 110px;
+            height: 100px;
+            margin: 33px 0;
+        }
+        .park-img {
+            position: absolute;
+            top: 46%;
+            left: 31%;
+            width: 54px;
+            height: 54px;
+            display: none;
+        }
+        .park-img2-style {
+            background: linear-gradient(0deg, #5123DE 0%, #706FFD 100%);
+        }
+        .content_div {
+            /*flex: 1;*/
+            /*margin-right: 60px;*/
+            padding-top:20px;
+            color: #656566;
+            /*width: 35%;*/
+        }
+
+        /*.top_div {*/
+        /*    width: 100%;*/
+        /*    height: 40px;*/
+        /*    border-bottom: #F8F8F8 1px solid;*/
+        /*}*/
+
+        .content-sty{
+            /*width: 200px;*/
+            display: flex;
+            /*justify-content: space-between;*/
+            /*flex-flow: row;*/
+        }
+        .text-sty{
+            margin: 4px 10px 10px 0px;
+            font-size: 12px;
+        }
+
+        .tips_div {
+            width: 125px;
+            font-size: 15px;
+            font-family: Microsoft YaHei;
+            font-weight: 800;
+            color: #333333;
+            /*line-height: 45px;*/
+            /*line-height: 40px;*/
+            /*padding-top: 20px;*/
+            /*color: #7F7F7F;*/
+        }
+
+        .tips_right {
+            line-height: 40px;
+            font-size: 12px;
+            padding-left: 10px;
+            padding-right: 20px;
+        }
+
+        .content_number {
+            font-size: 60px;
+            font-family: DIN;
+            font-weight: bold;
+            color: #333333;
+            /*line-height: 234px;*/
+            background: linear-gradient(0deg, #2457FF 0%, #4B92F4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            /*padding-top: 20px;*/
+            /*padding-left: 20px;*/
+        }
+
+
+
+        .like_btn_a {
+            padding: 0px 2px 0px 2px;
+            border-radius: 2px;
+            color: white;
+        }
+    /*    中间*/
+        .mid-top{
+            height:316px;
+            margin: 12px 0;
+            display: flex;
+            justify-content: space-between;
+
+        }
+        .park-time{
+            position: relative;
+            margin-right: 12px;
+            width: 61.8%;
+            height: 100%;
+            background-color: white;
+        }
+        .chartTop {
+            flex: 1;
+            height: 100%;
+            background-color: white;
+        }
+
+    /*    底部框样式*/
+        .content-bottom{
+            height:310px;
+            width:100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .title{
+            /*padding:30px 0 0 30px;*/
+            padding-left: 30px;
+            padding-top: 30px;
+            display: flex;
+            flex-direction: row;
+        }
+        .title-sty {
+            width: 5px;
+            height: 15px;
+            background: #366DF0;
+            margin-right: 15px;
+            margin-top: 5px;
+        }
+        .title-text{
+            font-size: 18px;
+            font-weight: 400;
+            color: #333333;
+        }
+        .pay-type-count{
+            width: 24%;
+            height:100%;
+            background-color: white;
+        }
+        .berthUtilization{
+            width: 38%;
+            height:100%;
+            margin: 0 12px;
+            background-color: white;
+
+        }
+        .park-today{
+            position: relative;
+            width: 38%;
+            height: 100%;
+            background-color: white;
+        }
+
+        .chart-style{
+            padding: 0 30px;
+            box-sizing: border-box;
+        }
+        /*.chart-bottom{*/
+        /*    position: relative;*/
+        /*    width: 510px;*/
+        /*    height: 12px;*/
+        /*    background: #EEEEEE;*/
+        /*    border-radius: 6px;*/
+        /*}*/
+        /*.chart-top{*/
+        /*    position: absolute;*/
+        /*    top: 0;*/
+        /*    left: 0;*/
+        /*    width: 412px;*/
+        /*    height: 12px;*/
+        /*    background: linear-gradient(90deg, #F65456, #FF8B00);*/
+        /*    border-radius: 6px;*/
+        /*}*/
+        .fa-money{
+            width: 100%;
+            height: 34px;
+            display: flex;
+            justify-content: space-between;
+            margin:10px 0 5px 0;
+            font-size:14px
+
+        }
+        .content-img{
+             text-align: center;
+            line-height: 45px;
+             width: 10%;
+         }
+        .no-data-img{
+            padding-top:30px;
+            padding-left: 41%;
+            text-align: center;
+            line-height: 45px;
+            width: 10%;
+        }
+        .echarts-no-data-img{
+            padding-top:30px;
+            padding-left: 47%;
+            text-align: center;
+            line-height: 45px;
+            width: 10%;
+        }
+        .echarts-no-img{
+            padding-top:50px;
+            padding-left: 35%;
+            text-align: center;
+            line-height: 45px;
+            width: 10%;
+        }
+        .content-title{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .content-right{
+            line-height: 20px;
+            width: 90%;
+        }
+        .content-progress{
+            border-radius:0  6px 6px 0;
+            height: 12px;
+            background: linear-gradient(90deg, #F65456, #FF8B00);
+        }
+        .progressone{
+            background: linear-gradient(90deg, #FC828B, #FCC953);
+        }
+        .progresstwo{
+            background: linear-gradient(90deg, #09AFE8, #23E3AB)
+        }
+        .progressthreee{
+            background: linear-gradient(90deg, #2457FF, #4B92F4);
+        }
+        .progressfour{
+            background: linear-gradient(90deg, #2457FF, #4B92F4)
+        }
+        .content-gray{
+            width: 100%;
+            background: #EEEEEE ;
+            border-radius: 6px;
+        }
+        /*new*/
+
+        #admission{
+            font-size: 60px;
+            font-family: DIN;
+            font-weight: bold;
+            color: #333333;
+            /*line-height: 234px;*/
+            background: linear-gradient(0deg, #2457FF 0%, #4B92F4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #appearance{
+            font-size: 60px;
+            font-family: DIN;
+            font-weight: bold;
+            color: #333333;
+            /*line-height: 234px;*/
+            background: linear-gradient(0deg, #5123DE 0%, #706FFD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #chargeToday{
+            font-size: 60px;
+            font-family: DIN;
+            font-weight: bold;
+            color: #333333;
+            /*line-height: 234px;*/
+            background: linear-gradient(0deg, #09AFE8 0%, #23E3AB 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #toDayArrears{
+            font-size: 60px;
+            font-family: DIN;
+            font-weight: bold;
+            color: #333333;
+            /*line-height: 234px;*/
+            background: linear-gradient(0deg, #FC828B 0%, #FCC953 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        #todayCarflow{
+            position: absolute;
+            width: 100%;
+            height: 250px;
+        }
+        #charts{
+            width: 100%;
+            height: 82%;
+        }
+        #berthUtilization{
+            padding-top:10px;
+            padding-left: 29px;
+            width: 550px;
+            height: 215px;
+        }
+        #timeCharts{
+            /*position: relative;*/
+            padding-right: 60px;
+            width: 550px;
+            height: 215px;
+        }
+    </style>
+</head>
+<body style="background-color: #F1F1F1">
+<div class="content-top">
+
+    <div class="item_div">
+        <div class="img-sty"><img src="${basePath}/image/month/parkParking.png" ></div>
+        <div class="content_div">
+            <div class="content_number" >
+                <div id="admission"></div>
+            </div>
+            <div class="tips_div">停车场数量（个） </div>
+
+            <div class="content-sty">
+                <div class="text-sty">封闭:</div>
+                <div class="text-sty">
+                    <div id="close" style="padding-bottom: 30px" ></div>
+                </div>
+                <div class="text-sty">路边:</div>
+                <div class="text-sty">
+                    <div id="road"></div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="item_div">
+        <div class="img-sty"><img src="${basePath}/image/month/parking.png" ></div>
+        <div class="content_div">
+            <div class="content_number" >
+                <div id="appearance"  style="color: #706FFD"></div>
+            </div>
+            <div class="tips_div" style=" color：#333333;">总车位数（个）</div>
+
+            <div class="content-sty">
+                <div class="text-sty">有车:</div>
+                <div class="text-sty">
+                    <div id="todayAppearance">
+
+                    </div>
+                </div>
+                <div class="text-sty">空闲:</div>
+                <div class="text-sty">
+                    <div id="todayAppearanceg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="item_div">
+        <div class="img-sty">
+            <img src="${basePath}/image/month/charge.png">
+        </div>
+        <div class="content_div">
+            <div class="content_number">
+                <div id="chargeToday"></div>
+            </div>
+            <div class="tips_div" style=" color：#313232;">今日收费（元）</div>
+
+
+            <div class="content-sty">
+                <div class="text-sty">
+                    订单数:
+                </div>
+                <div class="text-sty">
+                    <div id="orderNumber">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="item_div">
+        <div class="img-sty">
+            <img src="${basePath}/image/month/arrears.png">
+        </div>
+        <div class="content_div">
+            <!--        <div class="top_div">-->
+            <div class="content_number">
+                <div id="toDayArrears">
+
+                </div>
+            </div>
+            <div class="tips_div" style=" color：#313232;">今日欠费（元)</div>
+            <!--        <div class="tips_right">-->
+            <!--            <a class="like_btn_a" style="background-color: #1E9FFF;">总计</a>-->
+            <!--        </div>-->
+            <!--        </div>-->
+
+            <div class="content-sty">
+                <div class="text-sty">
+                    欠费单:
+                </div>
+                <div class="text-sty">
+                    <div id="arrearsNumber">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="clear: both;">
+</div>
+<div class="mid-top" style="">
+
+    <div class="park-time" style="" >
+        <div class="title">
+            <div class="title-sty"></div>
+            <div class="title-text">日车流量趋势</div>
+        </div>
+
+        <div id="todayCarflow" ></div>
+
+    </div>
+
+    <div class="chartTop" style="" >
+        <div class="title">
+            <div class="title-sty"></div>
+            <div class="title-text">今日交易金额最大排名</div>
+        </div>
+       <div>
+           <div class="chart-style"   id="fa-container">
+           </div>
+       </div>
+
+    </div>
+
+
+</div>
+<div style="clear: both;">
+</div>
+<div class="content-bottom">
+
+     <div  class="pay-type-count"  >
+
+         <div class="title">
+             <div class="title-sty"></div>
+             <div class="title-text">今日支付方式统计</div>
+         </div>
+
+         <div id="charts">
+         </div>
+
+    </div>
+    <div class="berthUtilization " >
+        <div class="title">
+            <div class="title-sty"></div>
+            <div class="title-text">泊位使用率</div>
+        </div>
+
+        <div id="berthUtilization">
+        </div>
+    </div>
+    <div class="park-today">
+        <div class="title">
+            <div class="title-sty"></div>
+            <div class="title-text">今日停车时长</div>
+        </div>
+
+        <div id="timeCharts">
+        </div>
+        <div class="park-img">
+            <img src="${basePath}/image/month/parkCar.png">
+        </div>
+    </div>
+</div>
+<script>
+
+    //基于准备好的DOM，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('charts'));
+
+    //基于准备好的DOM，初始化echarts实例
+    var myTimeCharts = echarts.init(document.getElementById('timeCharts'));
+
+    //日车流量趋势
+    var myTodayCarflow = echarts.init(document.getElementById('todayCarflow'));
+
+    //泊位使用率
+    var myTodayCarUseRate = echarts.init(document.getElementById('berthUtilization'));
+
+
+
+    $(function(){
+        //今日支付方式统计
+        $.ajax({
+            url:'${basePath}/ms/bigScreen/howToPayToday',
+            dataType:'json',
+            success:function(_res){
+                var html = ""
+                let yData = []
+                _res.data.forEach(item=>{
+                    yData.push({
+                        value:item.content,
+                        name:item.key
+                    })
+                })
+                if (yData[0].value == 0 &&yData[1].value == 0 && yData[2].value ==0 && yData[3].value == 0){
+                    var path = '${basePath}'
+                    html += "<div class=\"echarts-no-img\">"
+                    html += '<img src='+path+"/image/month/echarts_nodata.png"+'>'
+                    html += " </div>"
+                    $("#charts").html(html)
+                }else {
+                    initPieChart(yData);
+                }
+
+            }
+        });
+        //
+        // //今日停车时长统计
+        $.ajax({
+            url:'${basePath}/ms/bigScreen/parkingTimeToday',
+            dataType:'json',
+            success:function(_res){
+                var html = ""
+                let legenData = _res.data.map((row)=>row.key)
+                let yData = []
+                _res.data.forEach(item=>{
+                    yData.push({
+                        value:item.content,
+                        name:item.key
+                    })
+                })
+                if (_res.data.length == 0){
+                    var path = '${basePath}'
+                    html += "<div class=\"echarts-no-data-img\">"
+                    html += '<img src='+path+"/image/month/echarts_nodata.png"+'>'
+                    html += " </div>"
+                    $("#timeCharts").html(html)
+                }else {
+                    $(".park-img").show();
+                    initTimeChart(yData,legenData);
+                }
+
+            }
+        });
+        // //今日交易额top5
+        initTop10()
+        //
+        // //泊位使用率
+        $.ajax({
+            url:'${basePath}/ms/bigScreen/berthUtilization',
+            dataType:'json',
+            success:function(_res){
+                let xData = _res.data.map((row)=>row.hour) //横坐标
+                let yData = _res.data.map((row)=>row.proportion) //value
+                // console.log(xData)
+                // console.log(yData)
+                initCarflowChart(xData,yData);
+            }
+        });
+        //
+        // ///今日车流量
+        $.ajax({
+            url:'${basePath}/ms/bigScreen/trafficFlowToday',
+            dataType:'json',
+            success:function(_res){
+                //时间
+                let legenData = _res.data.map((row)=>row.hour)
+                //入场数
+                let comData = _res.data.map((row)=>row.entrance)
+                //出场数
+                let outData = _res.data.map((row)=>row.prep)
+                initCarflow(legenData,comData,outData);
+            }
+        });
+        //
+        // //停车厂数量
+        $.get('${basePath}/ms/bigScreen/parkingSpaceUsage',{},function (_res) {
+            $("#admission").html(_res.data.total)
+            $("#close").html(_res.data.close);
+            $("#road").html(_res.data.road);
+        });
+        // //今日欠费
+        $.get('${basePath}/ms/home/arrearsToday',{},function (_res) {
+            $("#toDayArrears").html(_res.data[0].content);
+            $("#arrearsNumber").html(_res.data[1].content);
+        });
+        // //今日泊车
+        $.get('${basePath}/ms/home/berthTodaySimpleness',{},function (_res) {
+            $("#appearance").html(_res.data[0].content);
+            $("#todayAppearance").html(_res.data[1].content);
+            $("#todayAppearanceg").html(_res.data[2].content);
+        });
+        // //今日收费
+        $.get('${basePath}/ms/home/chargeToday',{},function (_res) {
+            $("#chargeToday").html(_res.data[0].content);
+            $("#orderNumber").html(_res.data[1].content);
+        })
+    })
+
+
+
+    function initTop10(){
+
+        var createHtml = function(name,value,percentage,key){
+            var per = percentage
+            var path = '${basePath}'
+            var index = key + 1
+                if(key > 10){
+                    index = 10
+                }
+            var html = " <div class=\"fa-money\">"
+            html += "<div class=\"content-img\">"
+            html += '<img src='+path+"/image/month/"+index+".png"+'>'
+            html += " </div>"
+            html += " <div class=\"content-right\">"
+            html += "<div class=\"content-title\">"
+            html += "<div class=\"num\">"+name+"</div>"
+            html += "<div class=\"num\">"+value+"</div>"
+            html += "  </div>"
+            html += "<div class=\"content-gray\">"
+            html += "<div style=\"width: "+ per +"\" class=\"content-progress progressthree\"></div>"
+            html += " </div>"
+            html += "  </div>"
+            html += "  </div>"
+            return html
+        }
+        $.ajax({
+            url:'${basePath}/ms/bigScreen/todaySTradingVolumeTOP5',
+            dataType:'json',
+            success:function(_res){
+                var html = ""
+                console.log(_res)
+                if (_res.data.length == 0){
+                    var path = '${basePath}'
+                    html += " <div class=\"fa-money\">"
+                    html += "<div class=\"no-data-img\">"
+                    html += '<img src='+path+"/image/month/no_data.png"+'>'
+                    html += " </div>"
+                    html += " </div>"
+                }else {
+                    _res.data.forEach(function(item,index){
+                        html += createHtml(item.name,item.value,item.percentage,index)
+                    })
+                }
+                $("#fa-container").html(html)
+
+            }
+        });
+    }
+
+
+    //支付方式统计图
+    function initPieChart(_data){
+        option = {
+            tooltip: {
+                trigger: 'item'
+            },
+            legend: {
+                top: '50%',
+                left: '30%'
+            },
+            legend: {
+                top:'50px',
+                right: '15%',
+                align:'right',
+                orient: 'vertical',
+                itemWidth: 20,   // 设置图例图形的宽
+                itemHeight: 10,  // 设置图例图形的高
+                bottom: 15,
+                textStyle: { //图例文字的样式
+                    color: '#333333',
+                    fontSize: 16
+                }
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: ['54%', '67%'],
+                    center: ['37%', '45%'],
+                    avoidLabelOverlap: false,
+                    itemStyle: {
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2
+                    },
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: true,
+                            fontSize: '20',
+                            fontWeight: 'bold'
+                        }
+                    },
+                    labelLine: {
+                        show: false
+                    },
+                    itemStyle: {
+                        normal: {
+                            // borderWidth: 2, // 间距的宽度
+                            // borderColor: '#fff', //背景色
+                            color: function (colors) {
+                                var colorList = [
+                                    '#FC8251CB',
+                                    '#006FFFF3',
+                                    '#00FFAECD',
+                                    '#00AEFFE4'
+                                ];
+                                return colorList[colors.dataIndex];
+                            }
+                        }
+                    },
+                    data: _data
+                }
+            ]
+        };
+        myChart.setOption(option);
+    };
+    //今日停车时长
+    function initTimeChart(_data,legenData){
+        option = {
+            color: [new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                offset: 0,
+                color: '#F37A77'
+            },
+                {
+                    offset: 0.9,
+                    color: '#C24064'
+                }]), new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                offset: 0,
+                color: '#FFA200'
+            },
+                {
+                    offset: 0.9,
+                    color: '#F65456'
+                }]), new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                offset: 0,
+                color: '#706FFD'
+            },
+                {
+                    offset: 0.9,
+                    color: '#5123DE'
+                }]), new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                offset: 0,
+                color: '#08DD83'
+            },
+                {
+                    offset: 0.9,
+                    color: '#00C7F0'
+                }]), new echarts.graphic.LinearGradient(1, 1, 0, 0, [{
+                offset: 0,
+                color: '#4B92F4'
+            },
+                {
+                    offset: 0.9,
+                    color: '#2457FF'
+                }])],
+            tooltip: {
+                trigger: 'item',
+            },
+            legend: {
+                top:'50px',
+                right:'7%',
+                align: 'right',
+                orient: 'vertical',
+                itemWidth: 20,   // 设置图例图形的宽
+                itemHeight: 10,  // 设置图例图形的高
+                bottom: 10,
+                textStyle: { //图例文字的样式
+                    color: '#333333',
+                    fontSize: 16
+                }
+            },
+            series: [
+                {
+                    type: 'pie',
+                    radius: ['65%', '80%'],
+                    center: ['40%', '55%'],
+                    avoidLabelOverlap: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    emphasis: {
+                        label: {
+                            show: false,
+                            fontSize: '16',
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            show: false   // show设置线是否显示，默认为true，可选值：true ¦ false
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show:false
+                        }
+                    },
+                    data: _data
+                },
+                {
+                    type: 'pie',
+                    radius: ['53%', '55%'],
+                    center: ['40%', '55%'],
+                    avoidLabelOverlap: false,
+                    hoverAnimation: false,
+                    label: {
+                        show: false,
+                        position: 'center'
+                    },
+                    // emphasis: {
+                    //     label: {
+                    //         show: true,
+                    //         fontSize: '16',
+                    //     }
+                    // },
+                    labelLine: {
+                        normal: {
+                            show: false   // show设置线是否显示，默认为true，可选值：true ¦ false
+                        }
+                    },
+                    label: {
+                        normal: {
+                            show:false
+                        }
+                    },
+                    data: _data
+                }
+            ]
+        }
+        myTimeCharts.setOption(option);
+    };
+    //泊位使用率
+    function initCarflowChart(_data,yData){
+        option = {
+            grid: {
+                top: '10%', // 等价于 y: '16%'
+                left: 10,
+                right: 0,
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                axisTick:{ //x轴刻度线
+                    show:false,
+                    alignWithLabel: true
+                },
+                axisLine:{ //x轴
+                    show:false,
+                    lineStyle:{
+                        color:'rgba(40,133,217,0.4)'
+                    }
+                },
+                //网格样式
+                splitLine: {
+                    show:true,
+                    lineStyle:{
+                        color: ['#F0F3F5FF'],
+                        width: 1,
+                        type: 'solid'
+                    }
+                },
+                //x轴字体颜色
+                axisLabel:{
+                    color:'#56AFE2'  // x轴字体颜色
+                },
+                // boundaryGap: false,
+                data: _data
+            },
+            yAxis: {
+                type: 'value',
+                axisTick:{ //y轴刻度线
+                    show:false
+                },
+                axisLine:{ //y轴
+                    show:true,
+                    lineStyle:{
+                        color:'rgba(40,133,217,0.4)'
+                    }
+                },
+                axisLabel: {
+                    show: true,
+                    color:'#56AFE2',
+                    formatter:'{value}%',
+                },
+                //网格样式
+                splitLine: {
+                    show:true,
+                    lineStyle:{
+                        color: ['#F0F3F5FF'],
+                        width: 1,
+                        type: 'solid'
+                    }
+                }
+            },
+            tooltip : {
+                trigger: 'axis',
+                formatter: function(params) {
+                    var result = params[0].name + "<br>";
+                    params.forEach(function(item) {
+                        if (item.value) {
+                            result += item.marker + " " + item.value + "%</br>";
+                        } else {
+                            result += item.marker + "   - </br>";
+                        }
+                    });
+                    return result;
+                }
+            },
+            itemStyle : { normal: {label : {show: true}}},
+            series: [
+                {
+                    symbolSize: 8, // 设置折线上圆点大小
+                    symbol: 'circle', // 设置拐点为实心圆
+                    itemStyle : {
+                        normal : {
+                            color:'#366DF0',
+                            lineStyle:{
+                                color:'#366DF0',
+                                width:3//设置线条粗细
+                            }
+                        }
+                    },
+                    data: yData,
+                    type: 'line',
+                    areaStyle: {//区域填充渐变颜色
+                        color: {
+                            type: 'linear',
+                            x: 0,
+                            y: 0,
+                            x2: 0,
+                            y2: 1,
+                            colorStops: [{
+                                offset: 0, color: '#366DF0' // 0% 处的颜色
+                            }, {
+                                offset: 1, color: '#C5CCE3FF' // 100% 处的颜色
+                            }],
+                            global: false // 缺省为 false
+                        }
+                    }
+                }
+            ]
+        };
+        myTodayCarUseRate.setOption(option);
+    };
+    //日流量趋势
+    function initCarflow(_data,comData,outData){
+        option = {
+
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['出场', '入场',],
+                right:'10%',
+                top:'0%'
+            },
+
+            grid: {
+                top: '20%',
+                left: '3%',
+                right: '3%',
+                bottom: '0%',
+                containLabel: true
+            },
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data:_data,
+                axisTick:{ //x轴刻度线
+                    show:false
+                },
+                axisLine:{ //x轴
+                    show:false
+                },
+                splitLine: {
+                    show:true,
+                    lineStyle:{
+                        color: ['#F0F3F5FF'],
+                        width: 1,
+                        type: 'solid'
+                    }
+                }
+            },
+            yAxis: {
+                type: 'value',
+                axisTick:{ //y轴刻度线
+                    show:false
+                },
+                axisLine:{ //y轴
+                    show:false
+                },
+                splitLine: {
+                    show:true,
+                    lineStyle:{
+                        color: ['#F0F3F5FF'],
+                        width: 1,
+                        type: 'solid'
+                    }
+                }
+            },
+            series: [
+                {
+                    name: '入场',
+                    type: 'line',
+                    symbolSize: 5, // 设置折线上圆点大小
+                    symbol: 'circle', // 设置拐点为实心圆
+                    itemStyle : {
+                        normal : {
+                            color:'#08DD83',
+                            lineStyle:{
+                                color:'#08DD83',
+                                width:3//设置线条粗细
+                            }
+                        }
+                    },
+                    data: comData
+                },
+                {
+                    name: '出场',
+                    type: 'line',
+                    symbolSize: 5, // 设置折线上圆点大小
+                    symbol: 'circle', // 设置拐点为实心圆
+                    itemStyle : {
+                        normal : {
+                            color:'#366DF0',
+                            lineStyle:{
+                                color:'#366DF0',
+                                width:3//设置线条粗细
+                            }
+                        }
+                    },
+                    data: outData
+                }
+            ]
+        }
+        myTodayCarflow.setOption(option);
+    }
+</script>
+</body>
+</html>

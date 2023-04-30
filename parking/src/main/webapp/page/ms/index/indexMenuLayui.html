@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>智慧车云管理系统</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" href="${basePath}/js/layui/layuiadmin/layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="${basePath}/js/layui/layuiadmin/style/admin.css" media="all">
+	<script type="text/javascript" src="${staticPath}js/jquery.min.js"></script>
+
+	<style>
+
+		.layadmin-iframe{
+			left: 0.5%;
+			top: 1%;
+			width: 99%;
+			height: 98%;
+		}
+		.
+	</style>
+</head>
+<body class="layui-layout-body">
+
+<div id="LAY_app">
+	<div class="layui-layout layui-layout-admin">
+		<div class="layui-header">
+			<!-- 头部区域 -->
+			<ul class="layui-nav layui-layout-left" id="topMenuUL">
+				<li class="layui-nav-item layadmin-flexible" lay-unselect>
+					<a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+						<i class="layui-icon layui-icon-shrink-right" id="LAY_app_flexible"></i>
+					</a>
+				</li>
+			</ul>
+
+			<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+				<li class="layui-nav-item" lay-unselect>
+					<a href="${basePath}/flight" target="_blank">
+						<cite>统计大屏</cite>
+					</a>
+				</li>
+				<li class="layui-nav-item" lay-unselect>
+					<a href="javascript:;">
+						<cite>${session.sessionUser.userName}</cite>
+					</a>
+					<dl class="layui-nav-child">
+						<dd><a lay-href="${basePath}/page/ms/index/admin_info_update.jsp?isFrame=true">基本资料</a></dd>
+						<dd><a lay-href="${basePath}/page/ms/index/admin_pass_update.jsp?isFrame=true">修改密码</a></dd>
+						<hr>
+						<dd  style="text-align: center;"><a href="${loginOutUrl}">退出</a></dd>
+					</dl>
+				</li>
+				<li class="layui-nav-item layui-hide-xs" lay-unselect>
+					<a href="javascript:;" >
+
+					</a>
+				</li>
+
+			</ul>
+		</div>
+
+		<!-- 侧边菜单 -->
+		<div class="layui-side layui-side-menu">
+			<div class="layui-side-scroll">
+				<div class="layui-logo" >
+					<span>智慧车云管理系统</span>
+				</div>
+
+				<ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+
+				</ul>
+			</div>
+		</div>
+
+		<!-- 页面标签 -->
+		<div class="layadmin-pagetabs" id="LAY_app_tabs">
+			<div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+			<div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+			<div class="layui-icon layadmin-tabs-control layui-icon-down">
+				<ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+					<li class="layui-nav-item" lay-unselect>
+						<a href="javascript:;"></a>
+						<dl class="layui-nav-child layui-anim-fadein">
+							<dd layadmin-event="closeThisTabs" id="closeThisTabs"><a href="javascript:;">关闭当前标签页</a></dd>
+							<dd layadmin-event="closeOtherTabs"><a href="javascript:;">关闭其它标签页</a></dd>
+							<dd layadmin-event="closeAllTabs"><a href="javascript:;">关闭全部标签页</a></dd>
+						</dl>
+					</li>
+				</ul>
+			</div>
+			<div class="layui-tab" lay-unauto lay-allowClose="true" lay-filter="layadmin-layout-tabs">
+				<ul class="layui-tab-title" id="LAY_app_tabsheader">
+					<li lay-id="${basePath}/b/page-ms-index/right" lay-attr="home/console.html" class="layui-this"><i class="layui-icon layui-icon-home"></i></li>
+				</ul>
+			</div>
+		</div>
+
+
+		<!-- 主体内容 -->
+		<div class="layui-body" id="LAY_app_body">
+			<div class="layadmin-tabsbody-item layui-show">
+				<iframe src="${basePath}/b/page-ms-index/right" frameborder="0" class="layadmin-iframe"></iframe>
+			</div>
+		</div>
+
+		<!-- 辅助元素，一般用于移动设备下遮罩 -->
+		<div class="layadmin-body-shade" layadmin-event="shade"></div>
+	</div>
+</div>
+<a ay-href="" style="display: none" id="openFrameWin"></a>
+<!--顶部菜单模板-->
+<script id="top_menu_teplate" type="text/html">
+	<@for(i=0;i<menus.length;i++){
+		var _temp_menu = menus[i];
+	@>
+
+	<li class="layui-nav-item layui-hide-xs topMenu" >
+		<a href="javascript:refreshLeft('<@=_temp_menu.id@>');"  menuId="<@=_temp_menu.id@>" title="<@=_temp_menu.name@>">
+			<i class="layui-icon">
+				<@=_temp_menu.name@>
+			</i>
+		</a>
+	</li>
+	<@}@>
+</script>
+<!--左侧菜单模板-->
+<script id="left_menu_teplate" type="text/html">
+	<@
+	for(i=0;i<menus.length;i++){
+	    var _temp_menu = menus[i];
+	@>
+
+	<li class="layui-nav-item" lay-unselect>
+		<a href="javascript:;"
+		<@if(!_temp_menu.sonMenu||_temp_menu.sonMenu.length==0){@>
+			lay-href="<@=_temp_menu['serverUrl']@>ms/redirect?call=<@=_temp_menu['url']@>"  title="<@=_temp_menu['name']@>"
+		<@}@>
+		  >
+			<i class="layui-icon left-menu-icon" style="background-image:url(${basePath}/downLoad/file?fileId=<@=_temp_menu['image']@>)"></i>
+			<cite><@=_temp_menu['name']@></cite>
+		</a>
+		<@if(_temp_menu.sonMenu&&_temp_menu.sonMenu.length>0)
+         {
+		    @>
+		<dl class="layui-nav-child">
+		 <@
+             for(j=0;j<_temp_menu.sonMenu.length;j++)
+			 {
+				var _class2_temp_menu = _temp_menu.sonMenu[j];
+
+		@>
+			<dd>
+				<a href="javascript:;"
+				<@if(!_class2_temp_menu.sonMenu||_temp_menu.sonMenu.length>0){@>
+				lay-href="<@=_class2_temp_menu['serverUrl']@>ms/redirect?call=<@=_class2_temp_menu['url']@>"  title="<@=_class2_temp_menu['name']@>"
+				<@}@>
+				><@=_class2_temp_menu.name@></a>
+				<@if(_class2_temp_menu.sonMenu&&_class2_temp_menu.sonMenu.length>0){
+				@>
+					<dl class="layui-nav-child ">
+						<@ for(q=0;q<_class2_temp_menu.sonMenu.length;q++)
+						{
+							var _class3_temp_menu=_class2_temp_menu.sonMenu[q];
+						 @>
+							<dd data-name="list"><a lay-href="<@=_class3_temp_menu['serverUrl']@>ms/redirect?call=<@=_class3_temp_menu['url']@>"><@=_class3_temp_menu['name']@></a></dd>
+						<@}@>
+					 </dl>
+				<@}@>
+			</dd>
+		<@
+		  }@>
+		</dl>
+		<@}@>
+	</li>
+	<@}@>
+</script>
+
+<script type="text/javascript" src="${staticPath}js/baidutemplate.js"></script>
+<script src="${basePath}/js/layui/layuiadmin/layui/layui.js"></script>
+
+<!--菜单相关js-->
+<script>
+	$(function () {
+        $.get(
+		'${basePath}ms/sysUser/seachMenuByUser?menuType=${parameter.menuType!1}',
+		function(data) {
+			initTopMenu(data);
+            addOpenFrameMsgListener();
+		}, 'json');
+    })
+    var topMenuMap = {};
+
+    //初始化最顶部的菜单
+    function initTopMenu(topMenuData){
+       var topMenuHtml = baidu.template('top_menu_teplate',{menus:topMenuData});
+       $('#topMenuUL').append(topMenuHtml);
+        initLayui();
+        topMenuData.forEach(function (item) {
+            topMenuMap[item.id]=item;
+        });
+        refreshLeft(topMenuData[0].id);
+        $('.topMenu:first').addClass('layui-this');
+    }
+
+    //刷新左侧菜单
+    function refreshLeft(fatherId){
+        var leftMenuHtml = baidu.template('left_menu_teplate',{menus:topMenuMap[fatherId].sonMenu});
+        $('#LAY-system-side-menu').html(leftMenuHtml);
+        if(element.render)
+		{
+            //渲染navbar
+            element.render();
+		}
+	}
+
+	//关闭当前页面
+	function  closeDialog() {
+		$('#closeThisTabs').click();
+    }
+
+    // mainIframe打开一个Tab
+    function openFrame(url, title) {
+        $('#openFrameWin').html(title);
+		$('#openFrameWin').attr('lay-href',url);
+        $('#openFrameWin').click();
+    }
+
+    //监听子系统调用打开新的窗口事件
+    function addOpenFrameMsgListener(){
+        window.addEventListener('message',function(event){
+            openFrame(event.data.url, event.data.title)
+        },false);
+    }
+
+</script>
+<script>
+
+	var element = {};
+
+	function initLayui(){
+        layui.config({
+            base: '../../../js/layui/layuiadmin/' //静态资源所在路径
+        }).extend({
+            index: './lib/index' //主入口模块
+        }).use(['index','element'],function(){
+            element = layui.element;
+		});
+	}
+
+</script>
+</body>
+</html>
+
+

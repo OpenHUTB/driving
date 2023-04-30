@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>车流与收入统计</title>
+    <%
+    layout("/page/tags/header.html",{date:true}){}
+    %>
+    <script type="text/javascript" src="${staticPath}/js/echart/echarts.min.js"></script>
+    <script type="text/javascript" src="${staticPath}/js/easyui/datagrid-export.js"></script>
+</head>
+<style>
+    .filterDiv {
+        margin-left: 10px;
+    }
+
+    .chartDiv {
+        width: 96%;
+        height: 400px;
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+    .aButton {
+        height:15px;
+        line-height:15px;
+        float: right;
+    }
+    .rotate-style {
+        font-size:30px;
+        font-family:Arial, Helvetica, sans-serif;
+        /* Safari */
+        -webkit-transform: rotate(-90deg);
+        /* Firefox */
+        -moz-transform: rotate(-90deg);
+        /* Internet Explorer 滤镜写法*/
+        filter: progid:DXImageTransform.Microsoft.BasicImage(rotation=3);
+
+    }
+</style>
+<body style="background-color: white">
+<div id="len">
+    <div class="filterDiv">
+        月份
+        <input id="monthF" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})"/>
+
+        <label>停车场:</label> <input type='text' autocomplete='off'  class='easyui-combobox '
+                                   id='parkId_import' name='id' valuefield='parkId' textfield='parkName'
+                                   url='${pay_api_basePath}/ms/parking/getParkParkingList?jsonpCallback=?'/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" plain="true"
+           onclick="loadDate()">查询</a>
+    </div>
+
+    <div class="chartDiv" id="traffic_income">
+
+    </div>
+
+    <div class="chartDiv" id="traffic">
+
+    </div>
+
+</div>
+<script>
+    $(function(){
+        var myDate = new Date();//获取系统当前时间
+        var month;
+        if((myDate.getMonth()+1)<=9){
+            month="0"+(myDate.getMonth()+1);
+        }else{
+            month=myDate.getMonth()+1;
+        }
+        var dateFull= myDate.getFullYear()+"-"+ month;
+        $("#monthF").val(dateFull);
+
+        $('#typeF').combobox({
+            onLoadSuccess : function(){
+                var typeF = $("#typeF").combobox("getData");
+                if (typeF && typeF.length > 0) {
+                    $("#typeF").combobox("setValue", typeF[0].wordbookCode);
+                }
+            }
+        })
+
+        $('#parkId_import').combobox({
+            onLoadSuccess : function(){
+                var parkId_import = $("#parkId_import").combobox("getData");
+                if (parkId_import && parkId_import.length > 0) {
+                    $("#parkId_import").combobox("setValue", parkId_import[0].parkId);
+                }
+                loadDate();
+            }
+        })
+    })
+
+
+
+    function loadDate(){
+        var dateFull=$("#monthF").val();
+        var parkId_import=$("#parkId_import").combobox('getValue');
+        $.get('${basePath}/ms/parkingStatistics/findTrafficIncome', {dateFull:dateFull,parkIdImport:parkId_import}, function (res) {
+            if(res.code==200){
+                option = {
+                    title: {
+                        text: "车流与收入分析"
+                    },
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['求和项:临时车','求和项:固定车','实收金额','应收金额']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : res.data.xDate,
+                            axisLabel: {
+                                rotate:90,
+                                interval:0
+                            }
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '￥{value}'
+                            }
+                        },
+                        {
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value}次'
+                            },
+                            splitLine:{
+                                show:false
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'实收金额',
+                            type:'line',
+                            data:res.data.netReceipts,
+                            itemStyle: { color: '#8600FF' }
+                        },
+                        {
+                            name:'应收金额',
+                            type:'line',
+                            data:res.data.receivable,
+                            itemStyle: { color: '#02C874' }
+                        },
+                        {
+                            name:'求和项:临时车',
+                            type:'bar',
+                            stack: '求和项',
+                            yAxisIndex: 1,
+                            data:res.data.temporary,
+                            itemStyle: { color: '#1890ff' },
+                            barMaxWidth: 10
+                        },
+                        {
+                            name:'求和项:固定车',
+                            type:'bar',
+                            stack: '求和项',
+                            yAxisIndex: 1,
+                            data:res.data.other,
+                            itemStyle: { color: '#EA0000' },
+                            barMaxWidth: 10
+                        }
+
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById("traffic_income"));
+                myChart.setOption(option);
+
+
+                option1 = {
+                    title: {
+                        text: "日均车流"
+                    },
+                    tooltip : {
+                        trigger: 'axis',
+                        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data:['临时车(工作日)','固定车(工作日)','临时车(周末)','固定车(周末)']
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis : [
+                        {
+                            type : 'category',
+                            data : res.data.xDateF
+                        }
+                    ],
+                    yAxis : [
+                        {   name:"平均项",
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value}次'
+                            }
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'临时车(工作日)',
+                            type:'bar',
+                            stack: '平均项工作日',
+                            data:res.data.netReceiptsF,
+                            itemStyle: { color: '#1890ff' },
+                            barMaxWidth: 20
+                        },
+                        {
+                            name:'固定车(工作日)',
+                            type:'bar',
+                            stack: '平均项工作日',
+                            data:res.data.receivableF,
+                            itemStyle: { color: '#EA0000' },
+                            barMaxWidth: 20
+                        },
+                        {
+                            name:'临时车(周末)',
+                            type:'bar',
+                            stack: '平均项周末',
+                            barGap: '10%',
+                            data:res.data.temporaryF,
+                            itemStyle: { color: '#00E3E3' },
+                            barMaxWidth: 20
+                        },
+                        {
+                            name:'固定车(周末)',
+                            type:'bar',
+                            stack: '平均项周末',
+                            barGap: '10%',
+                            data:res.data.otherF,
+                            itemStyle: { color: '#FFAAD5' },
+                            barMaxWidth: 20
+                        }
+
+                    ]
+                };
+                var myChart1 = echarts.init(document.getElementById("traffic"));
+                myChart1.setOption(option1);
+
+            }else{
+                Ealert(res.data.message);
+            }
+        });
+
+
+    }
+
+
+
+
+
+</script>
+</body>
+</html>

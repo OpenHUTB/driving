@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.ParkRegionLotDao">
+
+    <select id="selectRegionLotList" parameterType="map" resultType="ParkRegionLot">
+        SELECT o.id, o.region_id AS regionId, t.region_name AS regionName FROM t_park_region_lot o
+        LEFT JOIN t_park_region_lot r
+        ON o.region_id = r.id
+        WHERE o.id = #{id}
+    </select>
+
+    <select id="findRegionLotDueList" resultType="String">
+        SELECT b.id
+        FROM t_park_parking a
+        LEFT JOIN t_park_region_lot b ON b.park_id = a.id
+        WHERE
+        DATE_ADD(DATE_FORMAT(b.end_date, '%Y-%m-%d'),INTERVAL a.buffer_days DAY) <![CDATA[<]]> DATE_FORMAT(NOW(), '%Y-%m-%d')
+        AND b.status = 2
+    </select>
+
+    <update id="updateRegionLotDueList">
+        UPDATE t_park_region_lot a SET a.start_date = null, a.end_date = null, a.inside_id = null, a. time_out_time = null, a.status = 0
+        WHERE id IN
+        <foreach collection="idList" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <update id="updatePlateNumber">
+        UPDATE t_park_region_lot SET plate_number = null, status = 0
+        WHERE id = #{id}
+    </update>
+
+    <update id="noBoundParkingSpace">
+        UPDATE t_park_region_lot SET hardware_sn = null
+        WHERE hardware_sn = #{sn}
+    </update>
+
+    <select id="findLotNOAndRegionName" resultType="java.util.Map" parameterType="java.util.Map">
+        SELECT prl.`id`, CONCAT(pr.`region_name`,"_", prl.`lot_no`) lotNo
+        FROM `t_park_region_lot` prl LEFT JOIN `t_park_region` pr ON pr.`id`= prl.`region_id`
+        WHERE 1=1
+        <if test="parkIds !=null and parkIds!='' ">
+            AND prl.park_id IN (${parkIds})
+        </if>
+    </select>
+
+    <select id="getLotAndRegionInfo" resultType="String" parameterType="Long">
+        SELECT CONCAT(pr.`region_name`,"_", prl.`lot_no`)
+        FROM `t_park_region_lot` prl
+        LEFT JOIN `t_park_region` pr ON pr.`id`= prl.`region_id`
+        WHERE prl.id = #{id}
+    </select>
+    
+    <select id="freeParking" resultType="int">
+        select count(id) from t_park_region_lot where status = '0' and park_id = #{parkId}
+    </select>
+
+    <select id="carParking" resultType="int">
+        select count(id) from t_park_region_lot where  status !='0' and  park_id = #{parkId}
+    </select>
+
+    <select id="parkRegionLotList" resultType="com.xhb.park.bean.ParkRegionLot">
+        select
+        prl.id as id,
+        prl.park_id as parkId,
+        prl.lot_no as lotNo,
+        prl.status as status,
+        prl.plate_number as plateNumber,
+        prl.enter_id as enterId,
+        pc.access_time as accessTime
+        from t_park_region_lot prl
+                          LEFT JOIN t_pay_carcome pc ON prl.enter_id = pc.id
+        WHERE
+            prl.park_id = #{parkId}
+    </select>
+</mapper>

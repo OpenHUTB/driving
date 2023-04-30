@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.TempOrderReportDao">
+
+    <!--查询当前输入的月份的订单详情-->
+    <select id="findMonthData" parameterType="java.util.Map" resultType="com.xhb.report.vo.DailyReportVo">
+        SELECT
+        SUM(CASE WHEN o.id IS NULL THEN 0 ELSE 1 END) AS outNumber,
+        SUM((CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END)
+        + (CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END)
+        + (CASE WHEN o.balance_pay IS NULL THEN 0 ELSE o.balance_pay END)
+        + (CASE WHEN o.integral_pay IS NULL THEN 0 ELSE o.integral_pay END)
+        + (CASE WHEN o.cash_coupon_pay IS NULL THEN 0 ELSE o.cash_coupon_pay END)
+        + (CASE WHEN o.special_pay IS NULL THEN 0 ELSE o.special_pay END)) AS receivable,
+        SUM((CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END)
+        + (CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END)) AS realIncome,
+        DATE_FORMAT(o.pay_time,"%Y年%m月") AS payTime,
+        SUM(CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END) AS cashPay,
+        SUM(CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END) AS gatePay,
+        SUM(CASE WHEN o.balance_pay IS NULL THEN 0 ELSE o.balance_pay END) AS balancePay,
+        SUM(CASE WHEN o.integral_pay IS NULL THEN 0 ELSE o.integral_pay END) AS integralPay,
+        SUM(CASE WHEN o.cash_coupon_pay IS NULL THEN 0 ELSE o.cash_coupon_pay END) AS cashCouponPay,
+        SUM(CASE WHEN o.cash_coupon_id IS NULL THEN 0 ELSE 1 END) AS cashCouponNumber,
+        SUM(CASE WHEN o.special_pay IS NULL THEN 0 ELSE o.special_pay END) AS specialPay
+        FROM t_pay_temp_order o
+            <where>
+                (o.order_status = 1 OR o.order_status = 2)
+                <if test="parkId != null and parkId != ''">
+                    AND o.park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(o.pay_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND o.group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND o.park_id IN (${parkIds})
+                </if>
+            </where>
+            GROUP BY payTime
+            ORDER BY payTime DESC
+    </select>
+
+    <select id="findPayTempOrderData" resultType="com.xhb.report.dto.PayTempOrderExportDTO">
+        SELECT  a.order_no AS orderNo,
+                a.plate_number AS plateNumber,
+                a.enter_time AS enterTime,
+                a.out_time AS outTime,
+                a.order_status AS orderStatus,
+                a.total_amount AS totalAmount,
+                a.pay_type AS payType,
+                a.pay_order_no AS payOrderNo,
+                DATE_FORMAT(a.pay_time,'%Y-%m-%d %H:%i:%s') AS payTime,
+                a.detail AS detail,
+                a.is_online AS isOnline,
+                a.actual_amount AS actualAmount,
+                a.discount_amount AS discountAmount,
+                a.parking_time AS parkingTime,
+                a.cash_pay AS cashPay,
+                a.gate_pay AS gatePay,
+                a.cash_coupon_pay AS cashCouponPay,
+                a.balance_pay AS balancePay,
+                a.integral_pay AS integralPay,
+                a.special_pay AS specialPay,
+                a.lifting_rod_time AS liftingRodTime,
+                a.is_advance_pay AS isAdvancePay,
+                p.park_name AS parkName,
+                o.port_name AS outPortName,
+                b.port_name AS enterPortName,
+                u.name,
+                e.describ AS discountType,
+                d.record_type AS recordType
+            FROM t_pay_temp_order a
+            LEFT JOIN t_park_parking p ON p.id = a.park_id
+            LEFT JOIN t_park_parking_port o ON o.id = a.port_id
+            LEFT JOIN t_park_parking_port b ON b.id = a.enter_port
+            LEFT JOIN t_ucenter_toll_collector u ON u.collector_id = a.collector_id
+            LEFT JOIN t_park_relief_type e ON e.id = a.relief_type
+            LEFT JOIN t_pay_carcome d ON d.id = a.enter_id
+	        <where>
+                (a.order_status = 1 OR a.order_status = 2)
+                <if test="parkId != null and parkId != ''">
+                    AND a.park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(a.pay_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND a.group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND a.park_id IN (${parkIds})
+                </if>
+            </where>
+	        ORDER BY a.pay_time DESC
+            limit #{pageNo},#{pageIndex}
+    </select>
+
+    <select id="findTempCount" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT COUNT(a.id) FROM t_pay_temp_order a
+        <where>
+            <if test="parkId != null and parkId != ''">
+                AND a.park_id = #{parkId}
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND DATE_FORMAT(a.pay_time,"%Y-%m") = #{payTime}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND a.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND a.park_id IN (${parkIds})
+            </if>
+        </where>
+    </select>
+</mapper>

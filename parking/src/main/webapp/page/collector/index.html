@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>铭泊停车</title>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <link rel="stylesheet" href="${basePath}/css/weui/jquery-weui.css">
+    <link rel="stylesheet" href="${basePath}/css/weui/weui.min.css">
+    <% include("/page/tags/jss_css_include.html"){} %>
+    <style>
+        body{
+            background: #EDEDED;
+        }
+        h3{
+            margin: 20px 30px;
+            font-weight: 600;
+        }
+        .weui-btn_plain-default{
+            height: 90px;
+            line-height: 100px;
+            width: 85%;
+            color: #464646;
+            font-size: 20px;
+            padding: 4px 20px;
+            background: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: none;
+            margin-bottom: 30px;
+        }
+        .weui-cells{
+            background: #F3F3F3;
+            padding: 15px 0 50px;
+        }
+        .weui-cell span{
+            text-decoration: underline;
+            color:  #2784E3;
+        }
+        .weui-cell p{
+            margin-left: 20px;
+        }
+
+        .resolve{
+           font-size: 30px;
+        }
+        .btn-active{
+            background: #2784E3;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+<div class="weui-cells">
+    <div class="weui-cell">
+        <p  id="logname"></p><span onclick="logout()">点击退出</span>
+    </div>
+        <div class="weui-btn weui-btn_plain-default btn-active" onclick="access(1)">
+            <div class="lisc" id="out_pay">出场缴费</div>
+            <div class="resolve"> ></div>
+        </div>
+    <div  class="weui-btn weui-btn_plain-default btn-active" onclick="access(2)">
+        <div class="lisc" id="inner_pay">车辆入场</div>
+        <div class="resolve"> ></div>
+    </div>
+    <div  class="weui-btn weui-btn_plain-default btn-active" onclick="access(3)">
+        <div class="lisc" id="special_pass">特殊放行</div>
+        <div class="resolve"> ></div>
+    </div>
+    <div  class="weui-btn weui-btn_plain-default btn-active" onclick="access(4)">
+        <div class="lisc" id="showQR">出口二维码</div>
+        <div class="resolve"> ></div>
+    </div>
+</div>
+<script>
+    $(".weui-btn .weui-btn_plain-default").hover(function () {
+        $(".weui-btn .weui-btn_plain-default").addClass("weui-btn weui-btn_plain-default btn-active")
+    })
+    function access(val) {
+        var lisc;
+        if(val == 1){
+            lisc = $("#out_pay").html();
+        }
+        if(val == 2){
+            lisc = $("#inner_pay").html();
+        }
+        if(val == 3){
+            lisc = $("#special_pass").html();
+        }
+        if(val == 4){
+            lisc = $("#showQR").html();
+            window.location.href = "${basePath}b/page-collector/show_qr_code?type="+val+"&lisc="+lisc;
+            return;
+        }
+        window.location.href = "${basePath}b/page-collector/plate_number_input?type="+val+"&lisc="+lisc;
+    }
+    function logout(){
+        $.get('${basePath}/login_collector/logout',{},function () {
+            window.location.href = "${basePath}b/page/collector_login";
+        })
+    }
+    $(function () {
+        $.get('${basePath}/login_collector/getsession',{},function (res) {
+            $("#logname").text("欢迎"+res.data.name+"登录, ");
+            localStorage.setItem("parkId",res.data.parkId);
+        })
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<div class="fitem">
+    <div class="fitemDiv">
+        <label>模板下载:</label>
+        <a href="${basePath}\page\ms\template\parkingspace.xls" class="easyui-linkbutton" plain="true">请先下载模板填写内容</a>
+    </div>
+</div>
+<form id="addOrUpdateForm" method="post" enctype="multipart/form-data">
+    <input type="hidden" id="parkId_import" name="parkId">
+    <input type="hidden" id="regionId_import" name="regionId">
+    <div class="fitem">
+        <div class="fitemDiv">
+            <label>添加文件:</label>
+            <input type="file" id="file" name="file">
+            <span class="form-field-required">*</span>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $('#subBtn').show();
+        var url_save = "${basePath}ms/parkRegionLot/batchImport";
+        function save() {
+            var parkId = "${parameter.parkId}";
+            var regionId = "${parameter.regionId}";
+            $('#parkId_import').val(parkId);
+
+            $('#regionId_import').val(regionId);
+            var fileLength = $('#file').val().length;
+            if(fileLength <= 0){
+                Ealert('请添加文件!');
+                return;
+            }
+            $('#addOrUpdateForm').form('submit', {
+                url: url_save,
+                success: function (d) {
+                    d = $.parseJSON(d);
+                    if (d != null && d.code == 200) {
+                        Ealert("操作成功！");
+                        closeDialog();
+                        reload();
+                    } else {
+                        if (d.message != null) {
+                            EalertE(d.message);
+                        } else {
+                            Ealert('操作失败');
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</form>

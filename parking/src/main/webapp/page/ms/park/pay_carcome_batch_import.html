@@ -1,0 +1,68 @@
+<%
+include("/page/tags/form_include.html"){}
+%>
+<div class="fitem">
+    <div class="fitemDiv">
+        <label>模板下载:</label>
+        <a href="${basePath}\page\ms\template\carcomeBatchImport.xls" class="easyui-linkbutton" plain="true">请先下载模板填写内容</a>
+    </div>
+</div>
+<div class="fitem">
+    <div class='fitemDiv'><label>所属停车场名称:</label>
+        <input type='text' autocomplete='off' dataType='*' nullmsg='停车场名称不能为空' errormsg='停车场名称输入了错误的格式' class='easyui-combobox '
+               id='parkId_import' name='id' valuefield='id' textfield='parkName'
+               url='${basePath}/ms/x/parking/findListData' />
+        <span class='form-field-required'>*</span></div>
+</div>
+<form id="addOrUpdateForm" method="post" enctype="multipart/form-data">
+    <div class="fitem">
+        <div class="fitemDiv">
+            <label>添加文件:</label>
+            <input type="file" id="file" name="file">
+            <span class="form-field-required">*</span>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#parkId_import').combobox({
+                onLoadSuccess: function () {
+                    var parkId_import = $("#parkId_import").combobox("getData");
+                    if (parkId_import && parkId_import.length > 0) {
+                        $("#parkId_import").combobox("setValue", parkId_import[0].id);
+                    }
+                }
+            })
+        })
+        $('#subBtn').show();
+        function save() {
+            var parkId=$("#parkId_import").combobox('getValue');
+            if(parkId == null || parkId == ""){
+                EalertE('请选择停车场!');
+                return;
+            }
+            var fileLength = $('#file').val().length;
+            if(fileLength <= 0){
+                Ealert('请添加文件!');
+                return;
+            }
+            $('#addOrUpdateForm').form('submit', {
+                url: '${basePath}ms/pay_carcome/batchImport?parkId=' + parkId,
+                success: function (d) {
+                    d = $.parseJSON(d);
+                    if (d != null && d.code == 200) {
+                        Ealert("操作成功！");
+                        closeDialog();
+                        reload();
+                    } else {
+                        if (d.message != null) {
+                            EalertE(d.message);
+                        } else {
+                            Ealert('操作失败');
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</form>

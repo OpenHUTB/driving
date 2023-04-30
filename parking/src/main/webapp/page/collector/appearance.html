@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>停车交费</title>
+    <% include("/page/tags/jss_css_include.html"){} %>
+    <script type="text/javascript" src="${basePath}/js/hui/hui-picker.js" charset="utf-8"></script>
+    <style>
+        .info_group {
+            padding-top: 2rem;
+        }
+
+        .info_title {
+            float: left;
+            color: #7F7F7F;
+            text-align: left;
+            font-size: 1.2rem;
+        }
+
+        .info_content {
+            float: right;
+            text-align: right;
+            font-size: 1.2rem;
+        }
+
+        .hui-text {
+            text-align:right;
+            border-bottom-width: 1px;
+            border-bottom-style: solid;
+            border-bottom-color: rgb(176, 176, 176);
+        }
+
+    </style>
+</head>
+<body style="background-color: #FFFFFF;">
+<div class="hui-wrap">
+    <div style="height: 6rem;background-color: #2784E3;">
+        <div style="padding-top:1.3rem;text-align: center;color: white;" id="showParkName">
+
+        </div>
+        <div style="padding-top: 0.5rem;text-align: center;color: white;font-size: 1.2rem;" id="plateNumber">
+
+        </div>
+    </div>
+    <div style="padding: 1rem;">
+        <div class="info_group">
+            <div class="info_title">
+                入场时间:
+            </div>
+            <div class="info_content" id="enterTime">
+
+            </div>
+        </div>
+        <div class="info_group">
+            <div class="info_title">
+                当前时间:
+            </div>
+            <div class="info_content" id="createTime">
+
+            </div>
+        </div>
+        <div class="info_group">
+            <div class="info_title">
+                停车时长:
+            </div>
+            <div class="info_content" id="parkingTime">
+
+            </div>
+        </div>
+        <div class="hui-accordion">
+            <div class="hui-accordion-title ">各个时间段费用详单</div>
+            <div class="hui-accordion-content hui-list" style="display: none;" id="feeDetailListDiv">
+
+            </div>
+        </div>
+        <div class="hui-accordion">
+            <div class="hui-accordion-title ">各个时间段未计费分钟数计费详单</div>
+            <!--结余-->
+            <div class="hui-accordion-content hui-list" style="display: none;" id="balanceDetailListDiv">
+
+            </div>
+        </div>
+        <div class="info_group">
+            <div class="info_title">
+                应付:
+            </div>
+            <div class="info_content" id="actualAmount" style="color:#FE7800;">
+
+            </div>
+        </div>
+
+    </div>
+    <div class="hui-form-items">
+        <div class="info_title" style="width: 50%">实收金额:</div>
+        <input type="number" class="hui-input hui-input-clear hui-text" id="actualHarvest" style="padding:2px 10px;" value=""/>
+    </div>
+    <div class="hui-form-items">
+        <div class="info_title" style="width: 50%">优惠金额:</div>
+        <input type="number" class="hui-input hui-input-clear hui-text" id="preferential" style="padding:2px 10px;" value="" disabled="disabled" />
+    </div>
+    <div class="hui-form-items">
+        <div class="info_title" style="width: 20%">备注:</div>
+        <input type="text" class="hui-input hui-input-clear hui-text" id="remark" value="" checkType="string"
+               checkData="2,20" checkMsg="称呼应为2-20个字符"/>
+    </div>
+    <div class="hui-form-items">
+        <div class="hui-form-items-title">出口选择:</div>
+        <input type="text" class="hui-input hui-input-clear" id="out_port_select" placeholder="请选择..." readonly="readonly"/>
+    </div>
+    <div style="float: bottom;padding-top: 5rem;">
+        <button type="button" class="hui-button hui-button-large hui-primary" id="creatOrderBtn"
+                onclick="charge_release()">收费放行
+        </button>
+    </div>
+</div>
+
+</div>
+</div>
+
+</div>
+</body>
+<script type="text/javascript" src="${basePath}/js/hui/hui.js"></script>
+<script type="text/javascript" src="${basePath}/js/hui/hui-accordion.js"></script>
+<script type="text/javascript" src="${basePath}/js/dayjs.min.js"></script>
+<script type="text/javascript">
+    hui.accordion(true, true);
+</script>
+<script id="dayFeeTemplate" type="text/html">
+    <ul>
+        <@for(i=0;i
+        <data.length
+                ;i++){
+                var _item=data[i];
+                @>
+            <li>
+                <div class="hui-list-text" id="<@=_item.id@>" date="<@=_item.feeDate@>">
+                    <@=_item.feeDate@> <@=_item.amount@>元
+                    <div class="hui-list-info hui-icons hui-icons-right"></div>
+                </div>
+            </li>
+            <@}@>
+    </ul>
+</script>
+<!--结余分钟计算-->
+<script id="balanceFeeTemplate" type="text/html">
+    <ul>
+        <@for(i=0;i
+        <data.length
+                ;i++){
+                var _item=data[i];
+                @>
+            <li>
+                <div class="hui-list-text" id="<@=_item.id@>" date="<@=_item.feeDate@>">
+                    单价<@=_item.price@>元/小时，总计<@=_item.minutes@>分钟，金额<@=_item.amount@>元
+                </div>
+                </div>
+            </li>
+            <@}@>
+    </ul>
+</script>
+<script type="text/javascript">
+
+    // key dayFeeId value对应的时段算费集合
+    var feeDepictMap = {};
+
+
+    $("#actualHarvest").blur(function (da) {
+        $('#preferential').val((parseFloat($('#actualAmount').text())-parseFloat($('#actualHarvest').val())).toFixed(2));//优惠金额
+    })
+
+    var outPortId = ""
+
+    $(function () {
+        $('.feeDetailListDiv').click();
+        $.get({
+            url: '/front/x/pay_temp_order/info?id=${parameter.orderId}', success: function (result) {
+                $('#plateNumber').text(result.data.plateNumber);
+                $('#enterTime').text(result.data.enterTime);
+                $('#createTime').text(result.data.createTime);
+                $('#actualAmount').text(result.data.actualAmount);
+                $('#actualHarvest').val(result.data.actualAmount);
+                $('#parkingTime').text(toHourMinute(result.data.parkingTime));
+                //重复支付判断
+                if (result.data.orderStatus == 1) {
+                    hui.toast('订单已支付，请您尽快离场');
+                    $('#creatOrderBtn').hide();
+                } else if (result.data.orderStatus == 2) {
+                    hui.toast('订单金额为0，无需支付，请您尽快离场');
+                    $('#creatOrderBtn').hide();
+                }
+                $.get({
+                    url: '${basePath}/front/x/parking/info?id=' + result.data.parkId, success: function (result) {
+                        $('#showParkName').text(result.data.parkName);
+                    }, dataType: 'json'
+                });
+            }, dataType: 'json'
+        });
+        $.get({
+            url: '${basePath}/front/tempOrder/findTempFeeDayList?orderId=${parameter.orderId}',
+            success: function (result) {
+                $('#feeDetailListDiv').html(baidu.template('dayFeeTemplate', result));
+                initDayFeeClick();
+            },
+            dataType: 'json'
+        });
+
+        $.get({
+            url: '${basePath}/front/tempOrder/findTempFeeBalanceList?orderId=${parameter.orderId}',
+            success: function (result) {
+                $('#balanceDetailListDiv').html(baidu.template('balanceFeeTemplate', result));
+            },
+            dataType: 'json'
+        });
+
+        $.get({url: '${basePath}/front/tempOrder/findTempFeeDepictList?orderId=${parameter.orderId}',
+            success: function (result) {
+                result.data.forEach(function (elm) {
+                    if (!feeDepictMap[elm.feeDayId]) {
+                        feeDepictMap[elm.feeDayId] = [];
+                    }
+                    feeDepictMap[elm.feeDayId].push(elm);
+                })
+            },
+            dataType: 'json'
+        });
+
+         $.get({url: '${basePath}/front/x/parking_port/list?portFunType=2&parkId=${parameter.parkId}',
+            success: function (res) {
+               var picker1 = new huiPicker('#out_port_select', function () {
+                    var val = picker1.getVal(0);
+                    var txt = picker1.getText(0);
+                    $('#out_port_select').val(txt);
+                    outPortId = val;
+                });
+                var array=[];
+                for (var i = 0; i < res.data.length; i++) {
+                    array.push({value:res.data[i].id,text:res.data[i].portName})
+                }
+                picker1.bindData(0, array);
+            },
+            dataType: 'json'
+        });
+
+    })
+
+    //初始化每一天的点击事件
+    function initDayFeeClick() {
+        $('.hui-list-text').click(function () {
+            var dayFeeId = $(this).attr('id');
+            var dayFeeDate = $(this).attr('date');
+            var _desc = dayFeeDate + '详单';
+            var findTempFeeDepictList = feeDepictMap[dayFeeId];
+            findTempFeeDepictList.forEach(function (elm) {
+                _desc = _desc + '</br>' + dayjs(elm.startTime).format('HH:mm') + '-' + dayjs(elm.endTime).format('HH:mm') + ' 单价：' + elm.price + '/小时，总计:' + elm.totalAmount + '元,未计费分钟数:' + elm.balanceMinutes;
+            })
+            hui.alert(_desc, '关闭', function () {
+            });
+        });
+
+    }
+
+    //收费放行
+    function charge_release() {
+        if(!$("#actualHarvest").val()){
+            hui.toast("实收金额不能为空");
+            return;
+        }
+        if(!outPortId){
+            hui.toast("请选择出口");
+            return;
+        }
+        $.ajax({
+            method: 'post',
+            url: '${basePath}/collector/carOut',
+            dataType: 'json',
+            data: {
+                id: '${parameter.orderId}',
+                actualAmount: $('#actualHarvest').val(),
+                discountAmount: $('#preferential').val(),
+                outPortId : outPortId,
+                remark : $('#remark').val()
+            },
+            success: function (_res) {
+                if (_res.code == 200) {
+                    window.location="${basePath}/b/page-collector/index";
+                    hui.toast("操作成功");
+                }else {
+                     hui.toast(_res.message);
+                }
+            }
+        })
+    }
+
+
+
+
+
+
+</script>
+</html>

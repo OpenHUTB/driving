@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>车位数统计</title>
+    <script type="text/javascript" src="${staticPath}js/jquery.min.js"></script>
+    <script type="text/javascript" src="${staticPath}/js/echart/echarts.min.js"></script>
+</head>
+<body>
+<div id="len">
+</div>
+<script>
+    $(function () {
+        $.get('${basePath}/ms/parkSpaceReport/findParkingSpaceNum', {}, function (res) {
+            var str='';
+            for (var i = 0; i < res.data.length; i++) {
+                str+='<div style="height:380px;width: 47%;padding-top: 5px; padding-left: 10px;float: left;" id='+i+'></div>';
+            }
+            $("#len").html(str);
+            initChart(res.data)
+        })
+
+    });
+    //基于准备好的DOM，初始化echarts实例
+    function initChart(_data) {
+        for (var i = 0; i < _data.length; i++) {
+            var myChart = echarts.init(document.getElementById(i));
+            option = {
+                title: {
+                    text: _data[i].parkName+'停车场车位数统计',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['空闲车位', '已使用车位'],
+
+                },
+                color: [
+                    "#CD0000", "#66CD00"
+                ],
+                series: [
+                    {
+                        name: '车位状态',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['50%', '60%'],
+                        data: [
+                            {value: _data[i].freeSpace, name: '空闲车位'},
+                            {value: _data[i].usedSpace, name: '已使用车位'},
+                        ],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+            myChart.setOption(option);
+        }
+    }
+</script>
+</body>
+</html>

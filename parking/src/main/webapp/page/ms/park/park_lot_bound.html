@@ -1,0 +1,73 @@
+<form id="addUpdateForm" method="post">
+    <div class="fitem">
+        <div class='fitemDiv'><label>所属停车场:</label>
+            <input type='text' autocomplete='off' dataType='*' prompt="请选择停车场" nullmsg='停车场名称不能为空' errormsg='停车场名称输入了错误的格式' class='easyui-combobox '
+                   id='parkId_import' name='parkId' valuefield='id' textfield='parkName'
+                   url='${basePath}/ms/x/parking/findListData' data-options="onSelect:reloadlot"/>
+            <span class='form-field-required'>*</span></div>
+    </div>
+
+    <div class="fitem">
+        <div class='fitemDiv'><label>车位号:</label>
+            <input type='text' autocomplete='off' dataType='*' prompt="请选择车位号" nullmsg='车位号不能为空' class='easyui-combobox '
+                   id='lotId' name='lotId'  valuefield='id' textfield='lotNo'
+                   url=''/>
+            <span class='form-field-required'>*</span></div>
+    </div>
+    <#HideFormTag name="id" value="${parameter.id}"/>
+    <#HideFormTag name="sn" value="${parameter.sn}"/>
+</form>
+
+<script type="text/javascript">
+
+    $(function () {
+        $('#parkId_import').combobox({
+            onLoadSuccess: function () {
+                debugger
+                var parkId_import = $("#parkId_import").combobox("getData");
+                var parkId= "${parameter.parkId}"
+                if (parkId_import && parkId_import.length > 0 && parkId) {
+                    $("#parkId_import").combobox("setValue", parkId);
+                    reloadlot();
+                }
+            }
+        })
+    })
+
+    function reloadlot(){
+       var parkId=$("#parkId_import").combobox('getValue');
+       var lotId = "${parameter.lotId}";
+       $('#lotId').combobox('clear');
+       $('#lotId').combobox('reload', '${basePath}/ms/lotDevice/getLotList?parkId=' + parkId);
+       if(lotId){
+           $("#lotId").combobox("setValue", lotId);
+       }
+    }
+
+    function save() {
+        var parkId=$("#parkId_import").combobox('getValue');
+        if(parkId == null || parkId == ""){
+            EalertE('请选择停车场!');
+            return;
+        }
+        var lotId=$("#lotId").combobox('getValue');
+        if(lotId == null || lotId == ""){
+            EalertE('请选择车位号!');
+            return;
+        }
+        $('#addUpdateForm').form('submit', {
+            url: '${basePath}ms/lotDevice/boundParkingSpace',
+            success: function (res) {
+                res = $.parseJSON(res);
+                if (res.code == 200) {
+                    Ealert("操作成功");
+                    closeDialog();
+                    reload();
+                } else {
+                    EalertE(res.message);
+                }
+            }
+        });
+    }
+</script>
+

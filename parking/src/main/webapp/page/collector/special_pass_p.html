@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>停车交费</title>
+    <% include("/page/tags/jss_css_include.html"){} %>
+    <script type="text/javascript" src="${basePath}/js/hui/hui-picker.js" charset="utf-8"></script>
+</head>
+<body style="background-color: #FFFFFF;">
+    <header class="hui-header">
+        <h1 id="showPlateNum">${parameter.plateNum}</h1>
+    </header>
+    <div class="hui-wrap">
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">出口选择:</div>
+            <input type="text" class="hui-input hui-input-clear" id="out_port_select" placeholder="请选择..." readonly="readonly"/>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">放行原因:</div>
+            <input type="text" class="hui-input hui-input-clear" id="special_pass_type" placeholder="请选择..." readonly="readonly"/>
+        </div>
+        <div class="hui-form-items">
+            <div class="hui-form-items-title">备注:</div>
+            <div class="hui-form-textarea">
+                <textarea placeholder="备注..." id="remark"></textarea>
+            </div>
+        </div>
+        <div style="float: bottom;padding-top: 5rem;">
+            <button type="button" class="hui-button hui-button-large hui-primary" onclick="release()"
+                    >立即放行
+            </button>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="${basePath}/js/hui/hui.js"></script>
+<script type="text/javascript" src="${basePath}/js/hui/hui-select-beautify.js"></script>
+<script type="text/javascript">
+    var outPortId = "";
+    var type = "";
+    $(function () {
+         $.get({url: '${basePath}/front/x/park_special_pass_type/list?parkId=${parameter.parkId}',
+            success: function (res) {
+                var picker2 = new huiPicker('#special_pass_type', function () {
+                    var val = picker2.getVal(0);
+                    var txt = picker2.getText(0);
+                    $('#special_pass_type').val(txt);
+                    type = val;
+                });
+                var array=[];
+                for (var i = 0; i < res.data.length; i++) {
+                    array.push({value:res.data[i].id,text:res.data[i].describ})
+                }
+                picker2.bindData(0, array);
+            },
+            dataType: 'json'
+        });
+        $.get({url: '${basePath}/front/x/parking_port/list?portFunType=2&parkId=${parameter.parkId}',
+            success: function (res) {
+                var picker1 = new huiPicker('#out_port_select', function () {
+                    var val = picker1.getVal(0);
+                    var txt = picker1.getText(0);
+                    $('#out_port_select').val(txt);
+                    outPortId = val;
+                });
+                var array=[];
+                for (var i = 0; i < res.data.length; i++) {
+                    array.push({value:res.data[i].id,text:res.data[i].portName})
+                }
+                picker1.bindData(0, array);
+            },
+            dataType: 'json'
+        });
+    })
+
+    //立即放行
+
+    function release(){
+        var plateNumber = "${parameter.plateNum}";
+        var remark = $("#remark").val();
+        $.post("${basePath}/collector/specialPass",{outPortId:outPortId,type:type,plateNumber:plateNumber,remark:remark},function (res) {
+            if (res.code == 200) {
+                window.location="${basePath}/b/page-collector/index";
+                hui.toast("操作成功");
+            }else {
+                 hui.toast(res.message);
+            }
+        })
+    }
+</script>
+</html>

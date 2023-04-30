@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.ParkTempRuleDao">
+
+    <select id="getParkTempRuleVoList" resultType="java.util.Map">
+      SELECT
+        t.id event_id,
+        s.data_center_parkid park_id,
+        t.update_user object_id,
+        t.rule_name rule_name,
+        t.car_type car_type,
+        t.price billing_type,
+        t.description detail,
+        t.update_time effect_time,
+        t.start_time,
+        t.end_time,
+        t.charge_type,
+        t.time_hours,
+        t.time_charge,
+        t.all_day_charge,
+        t.day_rest_charge,
+        t.day_charge,
+        t.night_charge,
+        t.rest_day_charge,
+        t.rest_night_charge,
+        t.update_time updateTime,
+        t.create_time createTime,
+        t.is_disable isDisable
+        FROM
+            t_park_temp_rule t
+            LEFT JOIN t_sync_park_sett s ON s.park_id  = t.park_id
+           WHERE
+               t.update_time <![CDATA[ >= ]]> #{staTime}
+               AND t.update_time <![CDATA[ < ]]> #{endTime}
+               AND t.park_id = #{parkId}
+
+
+
+    </select>
+    
+
+</mapper>

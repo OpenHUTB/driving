@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.ParkSpaceDao">
+
+    <select id="findParkingSpace" resultType="parkSpace" parameterType="map">
+        SELECT park_id,SUM(free_space) free_space,SUM(used_space) used_space
+        FROM t_park_space where 1=1
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+        GROUP BY park_id
+    </select>
+
+    <select id="findParkingSpaceNum" resultType="parkSpace" parameterType="map">
+        SELECT s.`free_space`, s.`used_space`, p.`park_name` as parkName
+        FROM t_park_space s
+        left join `t_park_parking` p on p.`id` = s.`park_id`
+        where s.`group_code` = #{groupCode}
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+    </select>
+
+
+
+</mapper>

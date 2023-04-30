@@ -1,0 +1,69 @@
+<script type="text/javascript" src="${staticPath}/js/easyui/datagrid-export.js"></script>
+<script type="text/javascript" src="${staticPath}/js/My97DatePicker/WdatePicker.js"></script>
+<div class="fitem">
+    <div class='fitemDiv'>
+        <label>停车场名称:</label>
+        <input type='text' autocomplete='off' dataType='*' nullmsg='停车场名称不能为空' errormsg='停车场名称输入了错误的格式' class='easyui-combobox '
+               id='parkId_import' name='id' valuefield='id' textfield='parkName'
+               url='${basePath}/ms/x/parking/findListData' />
+        <span class='form-field-required'>*</span>
+    </div>
+    <div class='fitemDiv'>
+        月份:
+        <input id="dateTime" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})"/>
+    </div>
+</div>
+<div id="dlg-buttons">
+    <center>
+        <a href="#" class="easyui-linkbutton" onclick="save()">生成</a>
+    </center>
+</div>
+    <script type="text/javascript">
+        $(function () {
+            var myDate = new Date();//获取系统当前时间
+            var month;
+            if((myDate.getMonth()+1)<=9){
+                month="0"+(myDate.getMonth()+1);
+            }else{
+                month=myDate.getMonth()+1;
+            }
+            var dateFull= myDate.getFullYear()+"-"+ month;
+            $("#dateTime").val(dateFull);
+
+            $('#parkId_import').combobox({
+                onLoadSuccess: function () {
+                    var parkId_import = $("#parkId_import").combobox("getData");
+                    if (parkId_import && parkId_import.length > 0) {
+                        $("#parkId_import").combobox("setValue", parkId_import[0].id);
+                    }
+                }
+            })
+        })
+        $('#subBtn').hide();
+        function save() {
+            var parkId=$("#parkId_import").combobox('getValue');
+            if(parkId == null || parkId == ""){
+                EalertE('请选择停车场!');
+                return;
+            }
+            var dateTime = $("#dateTime").val();
+            if (dateTime == "") {
+                EalertE("日期不能为空");
+                return;
+            }
+            $.ajax({
+                type:'post',
+                url:'${basePath}parkMonthReport/OAParkMonthWord?parkId='+parkId+"&dateTime="+dateTime,
+                dataType: 'json',
+                success : function (result) {
+                    if (result.code == 400) {
+                        EalertE(result.message);
+                    } else {
+                        Ealert("word文件正在生成，请稍后在报表夹下载！")
+                        closeDialog();
+                    }
+                }
+            });
+        }
+    </script>
+</form>

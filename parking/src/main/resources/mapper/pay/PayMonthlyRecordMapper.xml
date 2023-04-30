@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayMonthlyRecordDao">
+
+    <select id="findMonthlyCount" parameterType="map" resultType="int">
+        SELECT COUNT(id)
+        FROM t_pay_inside_car
+        <where>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND park_id IN (${parkIds})
+            </if>
+            AND DATE_FORMAT(start_date,"%Y-%m-%d") <![CDATA[ <= ]]> DATE_FORMAT(now(),"%Y-%m-%d")
+            AND DATE_FORMAT(end_date,"%Y-%m-%d") <![CDATA[ >= ]]> DATE_FORMAT(now(),"%Y-%m-%d")
+        </where>
+    </select>
+
+    <select id="findTodayMonthlyCount" parameterType="map" resultType="int">
+        SELECT COUNT(id)
+        FROM t_pay_inside_car
+        <where>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND park_id IN (${parkIds})
+            </if>
+            AND DATE_FORMAT(create_time,"%Y-%m-%d") = DATE_FORMAT(now(),"%Y-%m-%d")
+        </where>
+    </select>
+
+</mapper>

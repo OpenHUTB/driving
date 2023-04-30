@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>停车流量统计</title>
+    <%
+    layout("/page/tags/header.html",{date:true}){}
+    %>
+    <script type="text/javascript" src="${staticPath}/js/echart/echarts.min.js"></script>
+</head>
+<style>
+    .filterDiv {
+        margin-left: 10px;
+    }
+
+    .chartDiv {
+        width: 96%;
+        height: 400px;
+        margin-left: 30px;
+        margin-top: 10px;
+    }
+
+</style>
+<body style="background-color: white">
+<div id="len" style="background-color: white">
+    <div class="filterDiv">
+        月份
+        <input id="monthF" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})"/>
+
+        <label>停车场:</label> <input type='text' autocomplete='off'  class='easyui-combobox '
+                                   id='parkId_import' name='id' valuefield='parkId' textfield='parkName'
+                                   url='${pay_api_basePath}/ms/parking/getParkParkingList?jsonpCallback=?'/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" plain="true"
+           onclick="loadDate()">查询</a>
+    </div>
+
+    <div class="chartDiv" id="temporary_div">
+
+    </div>
+
+    <div class="chartDiv" id="monthly_rent_div">
+
+    </div>
+
+
+    <div class="chartDiv" id="free_admission_div">
+
+    </div>
+</div>
+<script>
+    $(function(){
+        var myDate = new Date();//获取系统当前时间
+        var month;
+        if((myDate.getMonth()+1)<=9){
+            month="0"+(myDate.getMonth()+1);
+        }else{
+            month=myDate.getMonth()+1;
+        }
+        var dateFull= myDate.getFullYear()+"-"+ month;
+        $("#monthF").val(dateFull);
+
+        $('#parkId_import').combobox({
+            onLoadSuccess : function(){
+                var parkId_import = $("#parkId_import").combobox("getData");
+                if (parkId_import && parkId_import.length > 0) {
+                    $("#parkId_import").combobox("setValue", parkId_import[0].parkId);
+                }
+                loadDate();
+            }
+        })
+    })
+
+
+
+    function loadDate(){
+        var dateFull=$("#monthF").val();
+        var parkId_import=$("#parkId_import").combobox('getValue');
+        $.get('${basePath}/ms/parkingStatistics/findParkingFlows', {dateFull:dateFull,parkIdImport:parkId_import}, function (res) {
+            if(res.code!=200){
+                Ealert("系统出错请联系管理员");
+            }else{
+                //临停统计
+                option = {
+                    title: {
+                        text: "临停进出流量"
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        },formatter: function(params) {
+                            var seriousData = '';
+                            for(var i=0;i<params.length;i++){
+                                seriousData +='<p>'+ params[i].marker+params[i].seriesName+'：'+params[i].value+'</p>';
+                            }
+                            var week =getWeek(params[0].axisValue);
+                            return '<p style="margin:7.5% auto;">' + params[0].axisValue.substr(5,5)  +' 周'+ week + '<p/>' + seriousData;
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: {show: false, readOnly: false},
+                            magicType: {show: false, type: ['line', 'bar']},
+                            restore: {show: false},
+                            saveAsImage: {show: false}
+                        }
+                    },
+                    legend: {
+                        data:['临停进场','临停出场','临停停车费']
+                    },
+                    xAxis: [
+                        {
+
+                            data: res.data.temporaryX,
+
+                            axisLine: { lineStyle: { color: '#999999' } },
+                            axisLabel: {
+                                fontSize: 10,
+                                color:'#333333',
+                                formatter: function (value, index) {
+                                    var week =getWeek(value); //获取时间的星期数
+
+                                    var ss=value.substr(8,2)
+                                    return ss+'\n'+week;
+                                }
+                            }
+                        },
+                        {
+                            data: res.data.temporaryX,
+                            show: false
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            interval: 30,
+                            axisLabel: {
+                                formatter: '{value}'
+                            }
+                        },
+                        {
+                            type: 'value',
+                            interval: 200,
+                            axisLabel: {
+                                formatter: '￥{value}'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '星期天',
+                            type: 'bar',
+                            silent: true,
+                            data: res.data.temporaryWeek,
+                            xAxisIndex: 1,
+                            barWidth: '100%',
+                            itemStyle: { color: '#f1f3f8', opacity: 0.6 },
+                            tooltip: { show: false }
+                        },
+                        {
+                            name:'临停进场',
+                            type:'bar',
+                            data:res.data.temporaryAdmission,
+                            barGap: '1%',
+                            barMaxWidth: 6
+                        },
+                        {
+                            name:'临停出场',
+                            type:'bar',
+                            data:res.data.temporaryAppearance,
+                            barGap: '1%',
+                            barMaxWidth: 6
+                        },
+                        {
+                            name:'临停停车费',
+                            type:'line',
+                            yAxisIndex: 1,
+                            data:res.data.temporaryMoney,
+                            itemStyle: { color: '#ff9e21' }
+                        }
+                    ]
+                };
+                var myChart = echarts.init(document.getElementById("temporary_div"));
+                myChart.setOption(option);
+
+                //月租统计
+                monthly_rent_div_option = {
+                    title: {
+                        text: "月租进出流量"
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        },formatter: function(params) {
+                            var seriousData = '';
+                            for(var i=0;i<params.length;i++){
+                                seriousData +='<p>'+ params[i].marker+params[i].seriesName+'：'+params[i].value+'</p>';
+                            }
+                            var week =getWeek(params[0].axisValue);
+                            return '<p style="margin:7.5% auto;">' + params[0].axisValue.substr(5,5)  +' 周'+ week + '<p/>' + seriousData;
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: {show: false, readOnly: false},
+                            magicType: {show: false, type: ['line', 'bar']},
+                            restore: {show: false},
+                            saveAsImage: {show: false}
+                        }
+                    },
+                    legend: {
+                        data:['月租进场','月租出场','月租停车费']
+                    },
+                    xAxis: [
+                        {
+
+                            data: res.data.monthlyRentX,
+
+                            axisLine: { lineStyle: { color: '#999999' } },
+                            axisLabel: {
+                                fontSize: 10,
+                                color:'#333333',
+                                formatter: function (value, index) {
+                                    var week =getWeek(value); //获取时间的星期数
+
+                                    var ss=value.substr(8,2)
+                                    return ss+'\n'+week;
+                                }
+                            }
+                        },
+                        {
+                            data: res.data.monthlyRentX,
+                            show: false
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            interval: 30,
+                            axisLabel: {
+                                formatter: '{value}'
+                            }
+                        },
+                        {
+                            type: 'value',
+                            interval: 200,
+                            axisLabel: {
+                                formatter: '￥{value}'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '星期天',
+                            type: 'bar',
+                            silent: true,
+                            data: res.data.monthlyRentWeek,
+                            xAxisIndex: 1,
+                            barWidth: '100%',
+                            itemStyle: { color: '#f1f3f8', opacity: 0.6 },
+                            tooltip: { show: false }
+                        },
+                        {
+                            name:'月租进场',
+                            type:'bar',
+                            data:res.data.monthlyRentAdmission,
+                            barMaxWidth: 6
+                        },
+                        {
+                            name:'月租出场',
+                            type:'bar',
+                            data:res.data.monthlyRentAppearance,
+                            barMaxWidth: 6
+                        },
+                        {
+                            name:'月租停车费',
+                            type:'line',
+                            yAxisIndex: 1,
+                            data:res.data.monthlyRentMoney,
+                            itemStyle: { color: '#ff9e21' },
+                            yAxisIndex: 1
+                        }
+                    ]
+                };
+                var monthly_rent_div = echarts.init(document.getElementById("monthly_rent_div"));
+                monthly_rent_div.setOption(monthly_rent_div_option);
+
+
+                //免费进出统计
+                free_admission_div_option = {
+                    title: {
+                        text: "免费进出流量"
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: {
+                            type: 'cross',
+                            crossStyle: {
+                                color: '#999'
+                            }
+                        },
+                        formatter: function(params) {
+                            var seriousData = '';
+                            for(var i=0;i<params.length;i++){
+                                seriousData +='<p>'+ params[i].marker+params[i].seriesName+'：'+params[i].value+'</p>';
+                            }
+                            var week =getWeek(params[0].axisValue);
+                            return '<p style="margin:7.5% auto;">' + params[0].axisValue.substr(5,5)  +' 周'+ week + '<p/>' + seriousData;
+                        }
+                    },
+                    toolbox: {
+                        feature: {
+                            dataView: {show: false, readOnly: false},
+                            magicType: {show: false, type: ['line', 'bar']},
+                            restore: {show: false},
+                            saveAsImage: {show: false}
+                        }
+                    },
+                    legend: {
+                        data:['免费进场','免费出场']
+                    },
+                    xAxis: [
+                        {
+                            data: res.data.freeAdmissionX,
+                            axisLine: { lineStyle: { color: '#999999' } },
+                            axisLabel: {
+                                fontSize: 10,
+                                color: '#333333',
+                                formatter: function (value, index) {
+                                    var week =getWeek(value); //获取时间的星期数
+
+                                    var ss=value.substr(8,2)
+                                    return ss+'\n'+week;
+                                }
+
+                            }
+                        },
+                        {
+                            data: res.data.freeAdmissionX,
+                            show: false
+                        }
+                    ],
+                    yAxis: [
+                        {
+                            type: 'value',
+                            axisLabel: {
+                                formatter: '{value}'
+                            }
+                        }
+                    ],
+                    series: [
+                        {
+                            name: '星期天',
+                            type: 'bar',
+                            silent: true,
+                            data: res.data.freeAdmissionWeek,
+                            xAxisIndex: 1,
+                            barWidth: '100%',
+                            itemStyle: { color: '#f1f3f8', opacity: 0.6 },
+                            tooltip: { show: false }
+                        },
+                        {
+                            name:'免费进场',
+                            type:'bar',
+                            data:res.data.freeAdmissionAdmission,
+                            barMaxWidth: 6
+                        },
+                        {
+                            name:'免费出场',
+                            type:'bar',
+                            data:res.data.freeAdmissionAppearance,
+                            barMaxWidth: 6
+                        }
+                    ]
+                };
+                var free_admission_div = echarts.init(document.getElementById("free_admission_div"));
+                free_admission_div.setOption(free_admission_div_option);
+
+            }
+        });
+
+
+    }
+
+    function getWeek(value){
+        var week =(new Date(value)).getDay(); //获取时间的星期数
+        if(week==0){
+            week="日";
+        }else if(week==1){
+            week="一";
+        }else if(week==2){
+            week="二";
+        }else if(week==3){
+            week="三";
+        }else if(week==4){
+            week="四";
+        }else if(week==5){
+            week="五";
+        }else if(week==6){
+            week="六";
+        }
+        return week;
+    }
+
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.CollectorChangeShiftsDao">
+
+    <select id="findCollectorChangeShiftsByLately" resultType="com.xhb.pay.bean.CollectorChangeShifts">
+        SELECT s.`id`,
+               s.`collector_id`,
+               s.`start_time`,
+               s.`end_time`,
+               s.`park_id`,
+               s.`group_code`,
+               s.`status`,
+               s.`is_sync`
+        FROM `t_collector_change_shifts` s
+        WHERE s.`collector_id` = #{collectorId}
+        ORDER BY s.`start_time` DESC
+        LIMIT 0, 1
+    </select>
+
+    <select id="getTimeSlot" resultType="com.xhb.pay.bean.CollectorChangeShifts" parameterType="com.xhb.pay.dto.SummaryDto">
+        SELECT c.start_time, c.end_time FROM
+        (
+            SELECT s.`start_time`, s.`end_time` FROM `t_collector_change_shifts` s
+            WHERE s.`collector_id` = #{collectorId}
+            AND s.`start_time` <![CDATA[>=]]> #{startTime}
+            AND s.`end_time` <![CDATA[<=]]> #{endTime}
+
+            UNION
+            SELECT s.`start_time`, s.`end_time`  FROM `t_collector_change_shifts` s
+            WHERE s.`collector_id` = #{collectorId}
+            AND (#{startTime} BETWEEN s.`start_time` AND s.`end_time`)
+
+            UNION
+            SELECT s.`start_time`, s.`end_time`  FROM `t_collector_change_shifts` s
+            WHERE s.`collector_id` = #{collectorId}
+            AND (#{endTime} BETWEEN s.`start_time` AND s.`end_time`)
+
+	        UNION
+            SELECT s.`start_time`, s.`end_time`  FROM `t_collector_change_shifts` s
+            WHERE s.`collector_id` = #{collectorId}
+            AND s.`start_time` <![CDATA[<=]]> #{endTime}
+            AND s.`end_time` IS NULL
+        ) c
+        ORDER BY c.start_time
+
+    </select>
+
+</mapper>

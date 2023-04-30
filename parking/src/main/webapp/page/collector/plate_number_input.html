@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="utf-8">
+
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>铭泊停车</title>
+    <% include("/page/tags/jss_css_include.html"){} %>
+</head>
+<body style="background-color: white;">
+<header class="hui-header">
+    <h1 id="showParkName"></h1>
+</header>
+<% include("/page/tags/select_plate_plugin.html"){} %>
+<script type="text/javascript">
+    function search() {
+        hideKeyboard(); //隐藏键盘
+        if (carCode==null || carCode==''){
+            hui.toast("请输入车牌号");
+            return
+        }
+        jump()
+    }
+
+    //携带参数跳转
+    function jump() {
+        var type=GetQueryString("type");
+        var plateNum = carCode;
+        var parkId = localStorage.getItem("parkId");
+        if (type==1){
+            //跳转停车缴费页面appearance.html
+            $.get({url:'${basePath}/collector/createOrder?plateNumber='+plateNum,success:function(result){
+                if(result.code==200){
+                    window.location.href = "${basePath}b/page-collector/appearance?plateNum=" + plateNum + "&type="+type+"&orderId="+result.data+"&parkId="+parkId;
+                }else{
+                    hui.toast(result.message);
+                }
+            },dataType:'json'});
+        }else if (type==2) {
+            //跳转选择入口界面admittance.html
+            window.location.href = "${basePath}b/page-collector/admittance?plateNum=" + plateNum + "&type="+type;
+        }else if (type==3){
+            //跳转到特殊放行的界面
+            $.get({url:'${basePath}/collector/isPass?plateNumber='+plateNum,success:function(result){
+                if(result.code==200){
+                    window.location.href = "${basePath}b/page-collector/special_pass_p?plateNum=" + plateNum + "&type="+type+"&parkId="+parkId;
+                }else{
+                    hui.toast(result.message);
+                }
+            },dataType:'json'});
+        }
+    }
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);//search,查询？后面的参数，并匹配正则
+        if (r != null) return decodeURI(r[2]);
+        return null;
+    }
+
+    $(function(){
+        $("#nextBTN").html(GetQueryString("lisc"));
+        $('#carNumBox input[type=text]').val('');
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>收入全览</title>
+    <%
+    layout("/page/tags/header.html",{date:true}){}
+    %>
+
+    <script type="text/javascript" src="${staticPath}/js/easyui/datagrid-export.js"></script>
+</head>
+<body style="background-color: white;">
+    <div class="filterDiv">
+        <label>月份:</label>
+        <input id="monthF" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})"/>
+        <label>停车场:</label>
+        <input type='text' autocomplete='off'  class='easyui-combobox 'id='parkId_import' name='id' valuefield='parkId'
+               textfield='parkName' />
+        <a href="javascript:void(0)" class="easyui-linkbutton" plain="true" onclick="load()">查询</a>
+    </div>
+    <div style="text-align: center;margin-top: 20px;margin-bottom: 20px">收入全览</div>
+    <div id="tt" class="easyui-tabs">
+        <div title="临停" style="padding:20px;" >
+            <table id="temporary_stop" ></table>
+        </div>
+        <div title="长租" data-options="" style="padding:20px;" >
+            <table id="long_rent" ></table>
+        </div>
+        <div title="其他业务" data-options="" style="padding:20px;" >
+            <table id="other_business" ></table>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function(){
+            var myDate = new Date();//获取系统当前时间
+            var month;
+            if((myDate.getMonth()+1)<=9){
+                month="0"+(myDate.getMonth()+1);
+            }else{
+                month=myDate.getMonth()+1;
+            }
+            var dateFull= myDate.getFullYear()+"-"+ month;
+            $("#monthF").val(dateFull);
+            setTimeout(function(){
+                $('#parkId_import').combobox({
+                    url:'${pay_api_basePath}/ms/parking/getParkParkingList?jsonpCallback=?',
+                    onLoadSuccess : function(){
+                        var parkId_import = $("#parkId_import").combobox("getData");
+                        if (parkId_import && parkId_import.length > 0) {
+                            $("#parkId_import").combobox("setValue", parkId_import[0].parkId);
+                        }
+                        load();
+                    }
+                })
+            },100)
+
+        })
+        function load() {
+            var tab = $('#tt').tabs('getSelected');
+            var active = $('#tt').tabs('getTabIndex',tab);
+            var dateFull=$("#monthF").val();
+            var parkId_import=$("#parkId_import").combobox('getValue');
+
+            if(active==0){
+                $('#temporary_stop').datagrid({
+                    url:'${basePath}/ms/incomeOverview/findTempParkData',
+                    queryParams: {
+                        payTime:dateFull,
+                        parkId:parkId_import
+                    },
+                    fitColumns:true,
+                    columns:[[
+                        {field:'payTime',title:'日期',width:90,align:'center'},
+                        {field:'amountTotal',title:'现金合计',width:90,align:'center'},
+                        {field:'pavilionAmount',title:'现金支付金额',width:90,align:'center'},
+                        {field:'liftingRodAmount',title:'手动抬杆现金',width:90,align:'center'},
+                        {field:'electronicPayment',title:'网络支付金额',width:90,align:'center'},
+                        {field:'outCarNumber',title:'出厂车次',width:90,align:'center'}
+                    ]]
+                });
+            }else if(active==1){
+                $('#long_rent').datagrid({
+                    url:'${basePath}/ms/incomeOverview/findMonthlyParkData',
+                    queryParams: {
+                        payTime:dateFull,
+                        parkId:parkId_import
+                    },
+                    fitColumns:true,
+                    columns:[[
+                        {title:'类别',width:90,align:'center'},
+                        {title:'开通续费(车场后台)',width:180,align:'center',colspan:2},
+                        {title:'退费(车场后台)',width:180,align:'center',colspan:2},
+                        {title:'公众号续费',width:180,align:'center',colspan:2},
+                        {title:'长租汇总',width:180,align:'center',colspan:2},
+                    ],[
+                        {field:'payTime',title:'日期',width:90,align:'center'},
+                        {field:'incomeAmount',title:'现金收取',width:90,align:'center'},
+                        {field:'incomePark',title:'车位数',width:90,align:'center'},
+                        {field:'refundAmount',title:'现金退费',width:90,align:'center'},
+                        {field:'refundPark',title:'车位数',width:90,align:'center'},
+                        {field:'electronicPay',title:'电子支付',width:90,align:'center'},
+                        {field:'electronicPark',title:'车位数',width:90,align:'center'},
+                        {field:'amountTotal',title:'收入合计',width:90,align:'center'},
+                        {field:'parkTotal',title:'有效车位总数',width:90,align:'center'}
+                    ]]
+                });
+            }else if(active==2){
+                $('#other_business').datagrid({
+                    url:'${basePath}/ms/incomeOverview/findOtherBusinessData',
+                    queryParams: {
+                        payTime:dateFull,
+                        parkId:parkId_import
+                    },
+                    fitColumns:true,
+                    columns:[[
+                        {title:'类别',width:90,align:'center'},
+                        {title:'商家优免',width:280,align:'center',colspan:3},
+                        {title:'储值卡',width:630,align:'center',colspan:7},
+                    ], [
+                        {field:'payTime',title:'日期',width:90,align:'center'},
+                        {field:'businessRechargeAmount',title:'商户充值金额',width:90,align:'center'},
+                        {field:'businessRechargeCount',title:'充值商户数',width:90,align:'center'},
+                        {field:'couponUsedCount',title:'代金卷使用张数',width:100,align:'center'},
+                        {field:'rechargeAmount',title:'储值金额',width:90,align:'center'},
+                        {field:'rechargeNumber',title:'储值用户数',width:90,align:'center'},
+                        {field:'refundAmount',title:'退费金额',width:90,align:'center'},
+                        {field:'refundNumber',title:'退费用户数',width:90,align:'center'},
+                        {field:'rechargeCarCharging',title:'储值卡用户当日扣费',width:90,align:'center'},
+                        {field:'rechargeCarSurplus',title:'储值卡用户余额',width:90,align:'center'},
+                        {field:'rechargeSurplusNumber',title:'储值卡余额>0的用户数',width:120,align:'center'}
+                    ]]
+                });
+            }
+        }
+
+        $('#tt').tabs({
+            onSelect: function (title, index) {
+                var dateFull=$("#monthF").val();
+                var parkId_import=$("#parkId_import").combobox('getValue');
+                if(index==0){
+                    $('#temporary_stop').datagrid({
+                        url:'${basePath}/ms/incomeOverview/findTempParkData',
+                        queryParams: {
+                            payTime:dateFull,
+                            parkId:parkId_import
+                        },
+                        fitColumns:true,
+                        columns:[[
+                            {field:'payTime',title:'日期',width:90,align:'center'},
+                            {field:'amountTotal',title:'现金合计',width:90,align:'center'},
+                            {field:'pavilionAmount',title:'现金支付金额',width:90,align:'center'},
+                            {field:'liftingRodAmount',title:'手动抬杆现金',width:90,align:'center'},
+                            {field:'electronicPayment',title:'网络支付金额',width:90,align:'center'},
+                            {field:'outCarNumber',title:'出场车次',width:90,align:'center'}
+                        ]]
+                    });
+                }else if(index==1){
+                    $('#long_rent').datagrid({
+                        url:'${basePath}/ms/incomeOverview/findMonthlyParkData',
+                        queryParams: {
+                            payTime:dateFull,
+                            parkId:parkId_import
+                        },
+                        fitColumns:true,
+                        columns:[[
+                            {title:'类别',width:90,align:'center'},
+                            {title:'开通续费(车场后台)',width:180,align:'center',colspan:2},
+                            {title:'退费(车场后台)',width:180,align:'center',colspan:2},
+                            {title:'公众号续费',width:180,align:'center',colspan:2},
+                            {title:'长租汇总',width:180,align:'center',colspan:2},
+                        ],[
+                            {field:'payTime',title:'日期',width:90,align:'center'},
+                            {field:'incomeAmount',title:'现金收取',width:90,align:'center'},
+                            {field:'incomePark',title:'车位数',width:90,align:'center'},
+                            {field:'refundAmount',title:'现金退费',width:90,align:'center'},
+                            {field:'refundPark',title:'车位数',width:90,align:'center'},
+                            {field:'electronicPay',title:'电子支付',width:90,align:'center'},
+                            {field:'electronicPark',title:'车位数',width:90,align:'center'},
+                            {field:'amountTotal',title:'收入合计',width:90,align:'center'},
+                            {field:'parkTotal',title:'有效车位总数',width:90,align:'center'}
+                        ]]
+                    });
+                }else if(index==2){
+                    $('#other_business').datagrid({
+                        url:'${basePath}/ms/incomeOverview/findOtherBusinessData',
+                        queryParams: {
+                            payTime:dateFull,
+                            parkId:parkId_import
+                        },
+                        fitColumns:true,
+                        columns:[[
+                            {title:'类别',width:90,align:'center'},
+                            {title:'商家优免',width:280,align:'center',colspan:3},
+                            {title:'储值卡',width:630,align:'center',colspan:7},
+                        ], [
+                            {field:'payTime',title:'日期',width:90,align:'center'},
+                            {field:'businessRechargeAmount',title:'商户充值金额',width:90,align:'center'},
+                            {field:'businessRechargeCount',title:'充值商户数',width:90,align:'center'},
+                            {field:'couponUsedCount',title:'代金卷使用张数',width:100,align:'center'},
+                            {field:'rechargeAmount',title:'储值金额',width:90,align:'center'},
+                            {field:'rechargeNumber',title:'储值用户数',width:90,align:'center'},
+                            {field:'refundAmount',title:'退费金额',width:90,align:'center'},
+                            {field:'refundNumber',title:'退费用户数',width:90,align:'center'},
+                            {field:'rechargeCarCharging',title:'储值卡用户当日扣费',width:90,align:'center'},
+                            {field:'rechargeCarSurplus',title:'储值卡用户余额',width:90,align:'center'},
+                            {field:'rechargeSurplusNumber',title:'储值卡余额>0的用户数',width:120,align:'center'}
+                        ]]
+                    });
+                }
+            }
+        })
+    </script>
+</body>
+</html>

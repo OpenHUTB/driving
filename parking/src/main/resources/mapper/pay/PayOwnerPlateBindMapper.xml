@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayOwnerPlateBindDao">
+    <!-- 实名车牌报表 -->
+    <select id="plateNumberReport" resultType="java.util.Map">
+        select
+        date_format(date,'%c.%e') as date ,
+        count(id) as count
+        from (
+        <foreach collection="dates" item="day" separator="UNION ALL" >
+            SELECT #{day} date
+        </foreach>
+        ) as dateTable
+        left join t_pay_owner_plate_bind as tpa on tpa.create_date = dateTable.date
+        and collector_id = #{collectorId}
+        group by  date
+    </select>
+</mapper>

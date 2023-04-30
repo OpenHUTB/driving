@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.ReportNoGetOutCarDao">
+    <select id="getAllNoGetOutCar" resultType="com.xhb.report.bean.ReportNoGetOutCar">
+         SELECT
+            tpc.park_id,
+            tpp.park_name ,
+            tpc.plate_number ,
+            tpc.access_time ,
+            tppp.port_name ,
+            tpc.record_type ,
+            tpc.img img,
+            tpp.group_code
+        FROM
+            (
+               SELECT his.id, his.park_id, his.port_id, his.plate_number, MAX( his.access_time ) access_time, his.record_type,his.TYPE, ext.img
+               FROM t_pay_carcome_history his LEFT JOIN t_pay_carcome_ext ext ON his.id = ext.id
+               WHERE  STATUS != 2
+               GROUP BY park_id,plate_number
+            ) tpc
+        LEFT JOIN t_park_parking tpp ON tpc.park_id = tpp.id
+        LEFT JOIN t_park_parking_port tppp ON tpc.port_id = tppp.id
+        WHERE tpc.TYPE = 0
+    </select>
+
+    <update id="truncateTable">
+        truncate table t_report_no_getout_car
+    </update>
+
+    <sql id="selectPubSql">
+        FROM
+        (
+        SELECT his.id, his.park_id, his.port_id, his.plate_number, MAX( his.access_time ) access_time, his.record_type,his.TYPE,ext.img
+        FROM t_pay_carcome_history his
+        LEFT JOIN t_pay_carcome_ext ext on his.id = ext.id
+        WHERE  STATUS != 2
+        AND his.park_id=#{parkId}
+        GROUP BY his.park_id,his.plate_number
+        ) tpc
+        LEFT JOIN t_park_parking tpp ON tpc.park_id = tpp.id
+        LEFT JOIN t_park_parking_port tppp ON tpc.port_id = tppp.id
+        WHERE tpc.TYPE = 0
+        <if test="parkId != null and parkId != ''">
+            AND tpc.park_id=#{parkId}
+        </if>
+        <if test="parkingTime != null">
+            AND unix_timestamp(access_time) <![CDATA[<=]]> unix_timestamp(#{parkingTime})
+        </if>
+        <if test="plateNumber !=null and plateNumber!=''">
+            AND plate_number = #{plateNumber}
+        </if>
+        <if test="groupCode !=null and groupCode!=''">
+            AND tpp.group_code = #{groupCode}
+        </if>
+        <if test="parkIds != null and parkIds != ''">
+            AND tpc.park_id IN (${parkIds})
+        </if>
+    </sql>
+
+    <select id="findNoOutCar" resultType="com.xhb.report.bean.ReportNoGetOutCar">
+        SELECT
+        '-1' AS id,
+        tpc.park_id AS parkId,
+        tpp.park_name AS parkName,
+        tpc.plate_number AS plateNumber,
+        tpc.access_time AS accessTime,
+        tppp.port_name AS portName,
+        tpc.record_type AS recordType,
+        tpc.img img,
+        tpp.group_code AS groupCode
+        <include refid="selectPubSql"/>
+        ORDER BY access_time desc
+        <if test="end != null and end != ''">
+            LIMIT ${start},${end}
+        </if>
+    </select>
+
+    <select id="findNoOutCarCount" resultType="Integer">
+        SELECT
+        count(1)
+        <include refid="selectPubSql"/>
+    </select>
+
+    <select id="findNotPayCar" resultType="java.lang.String">
+        SELECT id FROM `t_pay_carcome`
+        WHERE park_id = #{parkId}
+        AND plate_number = #{plateNumber}
+        AND access_time <![CDATA[ <= ]]> #{accessTime}
+        AND status != '2'
+    </select>
+
+
+</mapper>

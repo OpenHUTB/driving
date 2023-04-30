@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.TollCollectorReportDao">
+
+    <!--线下收费-->
+    <select id="findListData" parameterType="java.util.Map" resultType="com.xhb.report.vo.TollCollectorReportVo">
+        SELECT
+        m.collector_id as collectorId,
+        m.park_id as parkId,
+        p.park_name as parkName,
+        u.name,
+        m.report_date as payTime,
+        (CASE WHEN s.specialPassNumber IS NULL THEN 0 ELSE s.specialPassNumber END) as specialPassNumber,
+        (CASE WHEN n.cashPay IS NULL THEN 0 ELSE n.cashPay END) AS cashPay,
+        (CASE WHEN n.cashNumber IS NULL THEN 0 ELSE n.cashNumber END) AS cashNumber
+        FROM t_report_collector_report m
+        LEFT JOIN t_ucenter_toll_collector u on m.collector_id = u.collector_id
+        LEFT JOIN t_park_parking p on m.park_id = p.id
+        LEFT JOIN
+        (SELECT
+        SUM(CASE WHEN id IS NULL THEN 0 ELSE 1 END) AS specialPassNumber,
+        collector_id AS collectorId,
+        create_date
+        FROM t_pay_special_pass
+        GROUP BY collectorId,create_date
+        ) s on s.collectorId = m.collector_id and m.report_date = create_date
+        LEFT JOIN
+        (SELECT
+        SUM(CASE WHEN a.cash_pay IS NULL THEN 0 ELSE a.cash_pay END) AS cashPay,
+        create_date,
+        a.collector_id AS collectorId, COUNT(a.id) AS cashNumber
+        FROM t_pay_hand_lift_rod a
+        GROUP BY create_date,collectorId) n ON n.create_date = m.report_date AND n.collectorId = m.collector_id
+        <where>
+            <if test="collectorId != null and collectorId != ''">
+                AND m.collector_id = #{collectorId}
+            </if>
+            <if test="parkId != null and parkId != ''">
+                AND m.park_id = #{parkId}
+            </if>
+            <if test="payTimeMin != null and payTimeMin != ''">
+                AND m.report_date <![CDATA[ >= ]]> #{payTimeMin}
+            </if>
+            <if test="payTimeMax != null and payTimeMax != ''">
+                AND m.report_date <![CDATA[ <= ]]> #{payTimeMax}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND p.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND p.id IN (${parkIds})
+            </if>
+        </where>
+        GROUP BY collectorId, payTime
+        <choose>
+            <when test="sortTzwName != null and sortTzwName != ''">
+                ORDER BY ${sortTzwName} ${order}
+            </when>
+            <otherwise>
+                ORDER BY payTime desc
+            </otherwise>
+        </choose>
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+    </select>
+
+    <select id="countFindListData" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT count(collectorId)
+        FROM(
+        SELECT
+        m.collector_id as collectorId
+        FROM t_report_collector_report m
+        LEFT JOIN t_park_parking p on m.park_id = p.id
+        <where>
+            <if test="collectorId != null and collectorId != ''">
+                AND m.collector_id = #{collectorId}
+            </if>
+            <if test="parkId != null and parkId != ''">
+                AND m.park_id = #{parkId}
+            </if>
+            <if test="payTimeMin != null and payTimeMin != ''">
+                AND m.report_date <![CDATA[ >= ]]> #{payTimeMin}
+            </if>
+            <if test="payTimeMax != null and payTimeMax != ''">
+                AND m.report_date <![CDATA[ <= ]]> #{payTimeMax}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND p.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND p.id IN (${parkIds})
+            </if>
+        </where>
+        GROUP BY m.collector_id, m.report_date)AS cou
+    </select>
+
+    <select id="findCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select count(*) from
+        ( select utc.collector_id from
+          t_pay_temp_order pto
+        LEFT JOIN t_ucenter_toll_collector utc on pto.collector_id = utc.collector_id
+        LEFT JOIN t_park_parking park on pto.park_id = park.id
+        where pto.is_online = "0"
+        <if test="collectorId != null and collectorId != ''">
+            AND utc.collector_id = #{collectorId}
+        </if>
+        <if test="parkId != null and parkId != ''">
+            AND park.id = #{parkId}
+        </if>
+        <if test="payTime != null and payTime != ''">
+            AND DATE_FORMAT(pto.pay_time,"%Y-%m-%d") = #{payTime}
+        </if>
+        <if test="groupCode != null and groupCode != ''">
+            AND pto.group_code = #{groupCode}
+        </if>
+        <if test="parkIds != null and parkIds != ''">
+            AND pto.park_id IN (${parkIds})
+        </if>
+        GROUP BY utc.collector_id, DATE_FORMAT(pto.pay_time,"%Y-%m-%d")) as tbl
+    </select>
+
+    <!-- 日报表-->
+    <select id="findDailyReport" parameterType="java.util.Map" resultType="com.xhb.report.vo.DailyReportVo">
+        SELECT c.outNumber,(t.receivable + IFNULL(s.cashPayLow,0)) AS receivable,t.payTime,t.cashPay,t.gatePay,t.balancePay,t.integralPay,t.discountAmount,
+            t.cashCouponPay,t.cashCouponNumber,t.specialPay,IFNULL(s.cashPayLow,0) AS cashPayLow,(t.realIncome + IFNULL(s.cashPayLow,0)) AS realIncome
+            FROM
+            (SELECT
+                SUM(CASE WHEN o.id IS NULL THEN 0 ELSE 1 END) AS outNumber,
+                SUM(CASE WHEN o.total_amount IS NULL THEN 0 ELSE o.total_amount END) AS receivable,
+                SUM((CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END)
+                + (CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END)) AS realIncome,
+                DATE_FORMAT(o.pay_time,"%d日") AS payTime,
+                SUM(CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END) AS cashPay,
+                SUM(CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END) AS gatePay,
+                SUM(CASE WHEN o.balance_pay IS NULL THEN 0 ELSE o.balance_pay END) AS balancePay,
+                SUM(CASE WHEN o.integral_pay IS NULL THEN 0 ELSE o.integral_pay END) AS integralPay,
+                SUM(CASE WHEN o.cash_coupon_pay IS NULL THEN 0 ELSE o.cash_coupon_pay END) AS cashCouponPay,
+                SUM(CASE WHEN o.cash_coupon_id IS NULL THEN 0 ELSE 1 END) AS cashCouponNumber,
+                SUM(CASE WHEN o.special_pay IS NULL THEN 0 ELSE o.special_pay END) AS specialPay,
+                SUM(CASE WHEN o.discount_amount IS NULL THEN 0 ELSE o.discount_amount END) AS discountAmount,
+                o.park_id AS parkId
+                FROM t_pay_temp_order o
+                <where>
+                    (o.order_status = 1 OR o.order_status = 2)
+                    <if test="parkId != null and parkId != ''">
+                        AND o.park_id = #{parkId}
+                    </if>
+                    <if test="payTime != null and payTime != ''">
+                        AND DATE_FORMAT(o.pay_time,"%Y-%m") = #{payTime}
+                    </if>
+                    <if test="groupCode != null and groupCode != ''">
+                        AND o.group_code = #{groupCode}
+                    </if>
+                    <if test="parkIds != null and parkIds != ''">
+                        AND o.park_id IN (${parkIds})
+                    </if>
+                </where>
+                GROUP BY payTime) t
+                    LEFT JOIN (
+                    SELECT SUM(a.cash_pay) AS cashPayLow, DATE_FORMAT(a.create_time,"%d日") AS payTime,a.park_id AS parkId
+                    FROM t_pay_hand_lift_rod a
+                    <where>
+                        <if test="parkId != null and parkId != ''">
+                            AND park_id = #{parkId}
+                        </if>
+                        <if test="payTime != null and payTime != ''">
+                            AND DATE_FORMAT(create_time,"%Y-%m") = #{payTime}
+                        </if>
+                        <if test="groupCode != null and groupCode != ''">
+                            AND group_code = #{groupCode}
+                        </if>
+                        <if test="parkIds != null and parkIds != ''">
+                            AND park_id IN (${parkIds})
+                        </if>
+                    </where>
+                    GROUP BY payTime
+                    ) s ON s.payTime = t.payTime AND s.parkId = t.parkId
+                    RIGHT JOIN
+                      (SELECT
+                        SUM(CASE WHEN cc.id IS NULL THEN 0 ELSE 1 END) AS outNumber,
+                        DATE_FORMAT(cc.access_time,"%d日") AS payTime,
+                        cc.park_id AS parkId
+                        FROM t_pay_carcome cc
+                        <where>
+                            cc.type = 1
+                            <if test="parkId != null and parkId != ''">
+                                AND cc.park_id = #{parkId}
+                            </if>
+                            <if test="payTime != null and payTime != ''">
+                                AND DATE_FORMAT(cc.access_time,"%Y-%m") = #{payTime}
+                            </if>
+                            <if test="groupCode != null and groupCode != ''">
+                                AND cc.group_code = #{groupCode}
+                            </if>
+                            <if test="parkIds != null and parkIds != ''">
+                                AND cc.park_id IN (${parkIds})
+                            </if>
+                        </where>
+                        GROUP BY payTime) c ON c.payTime = t.payTime AND c.parkId = t.parkId
+                ORDER BY t.payTime DESC
+    </select>
+
+
+    <select id="selectMinDate" resultType="String">
+        SELECT MIN(create_time) FROM t_pay_temp_order where park_id = #{parkId}
+    </select>
+
+
+    <select id="findReportCollectorByParkId" resultType="com.xhb.report.bean.ReportCollectorReport">
+        SELECT park_id AS parkId,#{reportDate} as reportDate,collector_id as collectorId
+            FROM t_ucenter_toll_collector
+            WHERE park_id = #{parkId}
+		          AND DATE_FORMAT(create_time,"%Y-%m-%d") <![CDATA[ <= ]]> DATE_FORMAT(#{reportDate},"%Y-%m-%d")
+    </select>
+
+
+
+    <select id="findDailyTempOrder" parameterType="java.util.Map" resultType="com.xhb.report.vo.DailyReportVo">
+        SELECT
+        DATE_FORMAT(o.pay_time,"%e日") AS payTime,
+        SUM(CASE WHEN o.total_amount IS NULL THEN 0 ELSE o.total_amount END) AS receivable,
+        SUM((CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END)
+        + (CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END)) AS realIncome,
+        SUM(CASE WHEN o.cash_pay IS NULL THEN 0 ELSE o.cash_pay END) AS cashPay,
+        SUM(CASE WHEN o.gate_pay IS NULL THEN 0 ELSE o.gate_pay END) AS gatePay,
+        SUM(CASE WHEN o.balance_pay IS NULL THEN 0 ELSE o.balance_pay END) AS balancePay,
+        SUM(CASE WHEN o.integral_pay IS NULL THEN 0 ELSE o.integral_pay END) AS integralPay,
+        SUM(CASE WHEN o.cash_coupon_pay IS NULL THEN 0 ELSE o.cash_coupon_pay END) AS cashCouponPay,
+        SUM(CASE WHEN o.cash_coupon_id IS NULL THEN 0 ELSE 1 END) AS cashCouponNumber,
+        SUM(CASE WHEN o.special_pay IS NULL THEN 0 ELSE o.special_pay END) AS specialPay,
+        SUM(CASE WHEN o.discount_amount IS NULL THEN 0 ELSE o.discount_amount END) AS discountAmount
+        FROM t_pay_temp_order o
+        <where>
+            (o.order_status = 1 OR o.order_status = 2)
+            <if test="parkId != null and parkId != ''">
+                AND o.park_id = #{parkId}
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND DATE_FORMAT(o.pay_time,"%Y-%m") = #{payTime}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND o.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND o.park_id IN (${parkIds})
+            </if>
+        </where>
+        GROUP BY payTime
+    </select>
+
+    <select id="findDailyCarOutNum" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT
+            DATE_FORMAT(cc.access_time,"%e日") AS payTime,
+            count(1) AS outNumber
+        FROM t_pay_carcome cc
+        <where>
+            cc.type = 1
+            <if test="parkId != null and parkId != ''">
+                AND cc.park_id = #{parkId}
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND DATE_FORMAT(cc.access_time,"%Y-%m") = #{payTime}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND cc.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND cc.park_id IN (${parkIds})
+            </if>
+        </where>
+        GROUP BY payTime
+    </select>
+    <select id="findDailyHandLiftAmount" parameterType="java.util.Map" resultType="java.util.HashMap">
+        SELECT
+          DATE_FORMAT(a.create_time,"%e日") AS payTime,
+          IFNULL(SUM(a.cash_pay),0) AS cashPayLow
+        FROM t_pay_hand_lift_rod a
+        <where>
+            <if test="parkId != null and parkId != ''">
+                AND park_id = #{parkId}
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND DATE_FORMAT(create_time,"%Y-%m") = #{payTime}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND park_id IN (${parkIds})
+            </if>
+        </where>
+        GROUP BY payTime
+    </select>
+    <select id="queryTempOrderOfflineCharging" parameterType="com.xhb.report.vo.TollCollectorReportVo" resultType="com.xhb.report.vo.TollCollectorReportVo">
+        SELECT
+        SUM( CASE WHEN o.actual_amount IS NULL THEN 0 ELSE o.actual_amount END) AS actualAmount,
+        SUM( CASE WHEN o.actual_amount = 0 THEN 0 ELSE 1 END ) AS strokeNumber,
+        SUM( CASE WHEN o.special_pay IS NULL THEN 0 ELSE o.special_pay END ) AS specialPay,
+        o.collector_id,
+        o.pay_date
+        FROM  t_pay_temp_order_history o
+        <where>
+            o.park_id = #{parkId}
+            AND o.is_online = 0
+            <if test="collectorId != null">
+                AND o.collector_id = #{collectorId}
+            </if>
+            <if test="collectorId == null">
+                AND o.collector_id IS NOT NULL
+            </if>
+            <if test="payTime != null">
+                AND o.pay_date = #{payTime}
+            </if>
+        </where>
+        GROUP BY collector_id,pay_date
+    </select>
+</mapper>

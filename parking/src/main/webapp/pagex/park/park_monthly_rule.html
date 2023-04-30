@@ -1,0 +1,64 @@
+<fieldset class="infoGroup" >
+    <legend>租户类型</legend>
+</fieldset>
+<div id="leaseTypeDiv">
+</div>
+
+<script id="leaseTypeTemplate" type="text/html">
+    <@ for(i=0;i<list.length;i++)
+      {
+         var _item = list[i];
+    @>
+    <div class="fitem">
+        <div class="bigLabelDiv">
+            <label><@=_item.leaseName@>:</label>
+        </div>
+        <div class="bigContent">
+            <input type="text" id="<@=_item.id@>" class="feeAmount"  datatype="n" nullmsg="收费金额为空" placeholder="收费金额" errormsg="收费金额输入了错误的格式"/>
+            <span class="form-field-required">*</span>
+        </div>
+    </div>
+    <@}@>
+</script>
+<script>
+
+     //切换park的时候
+     function onParkingChange(rec)
+     {
+         $.get({url:'${basePath}/ms/x/parking_lease_type/findListData?isDisable=0&parkId=' + rec.id,success:function(leaseTypes){
+                $('#leaseTypeDiv').html(baidu.template('leaseTypeTemplate',{list:leaseTypes}));
+                 setDefaultFeeAmount();
+         },dataType:'json'});
+     }
+
+     //在更新和保存的时候更新租赁方式的金额配置
+     function updateLeaseTypeSett(){
+         var _lease_type_sett = {};
+         $('.feeAmount').each(function(){
+             _lease_type_sett[$(this).attr('id')]=$(this).val();
+         })
+         $('#leaseTypeSett').val(json2str(_lease_type_sett));
+         return true;
+     }
+
+      //设置默认的金额
+      function setDefaultFeeAmount(){
+         var _lease_type_sett = {};
+         if($('#leaseTypeSett').val()!='')
+         {
+             _lease_type_sett = str2json($('#leaseTypeSett').val());
+         }
+         for(_id in _lease_type_sett)
+         {
+             $('#'+_id).val(_lease_type_sett[_id]);
+         }
+     }
+
+     // 当修改的时候，初始化列表
+     function renderLeaseTypeSett(info)
+     {
+         onParkingChange({id:info.parkId})
+     }
+
+
+</script>

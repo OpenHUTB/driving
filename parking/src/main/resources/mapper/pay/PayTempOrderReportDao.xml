@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayTempOrderReportDao">
+
+    <select id="findPayTempOrderList" parameterType="map" resultType="com.xhb.pay.dto.PayTempOrderDTO">
+        SELECT
+            tpo.park_id,
+            tpo.port_id,
+            tpo.enter_port,
+            tpo.collector_id,
+            tpo.relief_type,
+            tpo.id,
+            tpo.order_no,
+            tpo.plate_number ,
+            tpo.enter_time ,
+            tpo.out_time ,
+            tpo.order_status ,
+            tpo.pay_type ,
+            tpo.total_amount ,
+            tpo.pay_order_no ,
+            tpo.detail,
+            tpo.create_time,
+            DATE_FORMAT(tpo.pay_time,'%Y-%m-%d %H:%i:%s') AS payTime,
+            tpo.is_sync ,
+            tpo.actual_amount ,
+            tpo.discount_amount ,
+            tpo.offline_pay_type ,
+            tpo.parking_time ,
+            tpo.cash_pay ,
+            tpo.gate_pay ,
+            tpo.cash_coupon_pay ,
+            tpo.balance_pay ,
+            tpo.integral_pay ,
+            tpo.special_pay ,
+            tpo.cash_coupon_hours ,
+            tpo.cash_coupon_radio ,
+            tpo.enter_id ,
+            tpo.out_id ,
+            tpo.is_advance_pay,
+            tpo.lifting_rod_time,
+            tpo.syn_status,
+            tpo.car_type,
+            tpo.special_pass_id,
+            tpo.relief_type,
+            (case when tpo.car_record_type =0 then '临时车'
+            when tpo.car_record_type =1 and tpo.balance_pay &gt;0 then '储值卡'
+            when tpo.car_record_type =1 and (tpo.balance_pay &lt;=0 or tpo.balance_pay is null) then '月租户'
+            when tpo.car_record_type =2 then '免费车'
+            else '' end) recordTypeName,
+            (CASE WHEN tpo.cash_pay !=0 THEN '现金'
+                  WHEN tpo.gate_pay !=0 AND tpo.is_advance_pay =0 THEN '岗亭扫码'
+                WHEN tpo.gate_pay !=0 AND tpo.is_advance_pay =1 THEN '场内扫码'
+                ELSE '' END) isOnlineName
+        FROM `t_pay_temp_order` tpo
+        <where>
+            <if test="parkId !=null and parkId !=''">
+                and tpo.park_id=#{parkId}
+            </if>
+            <if test="plateNumber!=null and plateNumber !=''">
+                and tpo.plate_number like CONCAT('%',#{plateNumber},'%')
+            </if>
+            <if test="collectorId !=null and collectorId !=''">
+                and tpo.collector_id=#{collectorId}
+            </if>
+            <if test="orderStatus !=null and  orderStatus !=''">
+                and tpo.order_status =#{orderStatus}
+            </if>
+            <if test="enterTimeMax !=null and enterTimeMax!=''">
+                and unix_timestamp(tpo.enter_time) &lt; unix_timestamp(#{enterTimeMax})
+            </if>
+            <if test="enterTimeMin !=null and enterTimeMin !=''">
+                and unix_timestamp(tpo.enter_time) &gt;=unix_timestamp(#{enterTimeMin})
+            </if>
+            <if test="payTimeMin !=null and payTimeMin!=''">
+                and unix_timestamp(tpo.pay_time) &gt;=unix_timestamp(#{payTimeMin})
+            </if>
+            <if test="payTimeMax !=null and payTimeMax!=''">
+                and unix_timestamp(tpo.pay_time) &lt;unix_timestamp(#{payTimeMax})
+            </if>
+            <if test="groupCode !=null and groupCode!=''">
+                and tpo.group_code=#{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+        </where>
+        <choose>
+            <when test="sortTzwName !=null and sortTzwName!=''">
+                order by tpo.${sortTzwName}
+            </when>
+            <otherwise>
+                ORDER BY tpo.create_time desc
+            </otherwise>
+        </choose>
+
+        <if test="pageNo !=null">
+            limit ${pageNo},${rows}
+        </if>
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+
+    </select>
+
+    <select id="findPayTempOrderCount" parameterType="map" resultType="int">
+        SELECT count(1)
+        from t_pay_temp_order tpo
+        <where>
+            <if test="parkId !=null and parkId !=''">
+                and tpo.park_id=#{parkId}
+            </if>
+            <if test="plateNumber!=null and plateNumber !=''">
+                and tpo.plate_number like CONCAT('%',#{plateNumber},'%')
+            </if>
+            <if test="collectorId !=null and collectorId !=''">
+                and tpo.collector_id=#{collectorId}
+            </if>
+            <if test="orderStatus !=null and orderStatus !=''">
+                and tpo.order_status =#{orderStatus}
+            </if>
+            <if test="enterTimeMax !=null and enterTimeMax!=''">
+                and unix_timestamp(tpo.enter_time) &lt; unix_timestamp(#{enterTimeMax})
+            </if>
+            <if test="enterTimeMin !=null and enterTimeMin !=''">
+                and unix_timestamp(tpo.enter_time) &gt;=unix_timestamp(#{enterTimeMin})
+            </if>
+            <if test="payTimeMin !=null and payTimeMin!=''">
+                and unix_timestamp(tpo.pay_time) &gt;=unix_timestamp(#{payTimeMin})
+            </if>
+            <if test="payTimeMax !=null and payTimeMax!=''">
+                and unix_timestamp(tpo.pay_time) &lt;unix_timestamp(#{payTimeMax})
+            </if>
+            <if test="groupCode !=null and groupCode!=''">
+                and tpo.group_code=#{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+        </where>
+    </select>
+
+</mapper>

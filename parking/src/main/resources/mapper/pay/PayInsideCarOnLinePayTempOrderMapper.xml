@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayInsideCarOnlinePayTempOrderDao">
+
+    <select id="findUseingPayOnLineTempOrder" parameterType="map" resultType="PayInsideCarOnlinePayTempOrder">
+        SELECT t.* From t_pay_inside_car_online_pay_temp_order t
+        WHERE t.monthly_fee_status = 1 AND t.property_fee_status = 1
+        <choose>
+            <when test="bufferDays != null and bufferDays != 0">
+                AND DATE_ADD(DATE_FORMAT(t.end_date, '%Y-%m-%d'),INTERVAL ${bufferDays} DAY) <![CDATA[>=]]>
+                DATE_FORMAT(NOW(),'%Y-%m-%d')
+            </when>
+            <otherwise>
+                AND DATE_FORMAT(t.end_date, '%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(NOW(),'%Y-%m-%d')
+            </otherwise>
+        </choose>
+        AND t.park_id = #{parkId} AND t.front_user_id = #{frontUserId}
+        ORDER BY DATE_FORMAT(t.end_date,'%Y-%m-%d') DESC LIMIT 0,1
+    </select>
+
+    <select id="findAllNoPayAndTimeOutOnLineTempOrder" parameterType="map" resultType="PayInsideCarOnlinePayTempOrder">
+        SELECT t.* From t_pay_inside_car_online_pay_temp_order t
+        WHERE t.monthly_fee_status = 0
+        AND STR_TO_DATE(t.time_out_time,'%Y-%m-%d %H:%i:%s') <![CDATA[<]]> DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+    </select>
+
+    <select id="findNoPayOnLineTempOrder" parameterType="map" resultType="PayInsideCarOnlinePayTempOrder">
+        SELECT t.* From t_pay_inside_car_online_pay_temp_order t
+        WHERE t.monthly_fee_status = 0 AND t.park_id = #{parkId} AND t.front_user_id = #{frontUserId}
+        AND STR_TO_DATE(t.time_out_time,'%Y-%m-%d %H:%i:%s') <![CDATA[>]]> DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%s')
+        ORDER BY STR_TO_DATE(t.create_time,'%Y-%m-%d %H:%i:%s') DESC LIMIT 0,1
+    </select>
+
+    <select id="selectLastRechargeRecord" parameterType="Long" resultType="String">
+        SELECT lot_ids FROM `t_pay_inside_car_online_pay_temp_order`
+        WHERE inside_id = #{insideId} and monthly_fee_status = 1
+        ORDER BY create_time desc LIMIT 0,1
+    </select>
+
+
+    <select id="getPayInsideCarOnlinePayTempOrderVo" resultType="java.util.Map">
+ SELECT
+            s.data_center_parkid parkId,
+            t.id eventId,
+            t.create_time 'time',
+            t.inside_id objectId,
+            t.start_date startTime,
+            t.end_date endTime,
+            t.lot_num lotNum,
+            t.lot_ids lotIds,
+            t.mobile mobile,
+            t.name 'name',
+             t.property_fee propertyFee,
+             t.monthly_fee monthlyFee,
+             t.monthly_fee_status status,
+             t.time_out_time outTime,
+             t.monthly_fee_return_time monthlyFeeReturnTime,
+             t.monthly_fee_pay_time monthlyFeePayTime
+             FROM t_pay_inside_car_online_pay_temp_order t
+               LEFT JOIN t_sync_park_sett s ON s.park_id  = t.park_id
+             WHERE
+                 t.update_time <![CDATA[ >= ]]> #{staTime}
+            AND t.update_time <![CDATA[ < ]]> #{endTime}
+            AND t.park_id = #{parkId}
+
+    </select>
+</mapper>

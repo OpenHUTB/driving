@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayTempOrderHistoryDao">
+
+
+    <insert id="copyPayTempOrder2History" parameterType="map">
+        replace into t_pay_temp_order_history (id,order_no,park_id,port_id,plate_number,enter_time,out_time,enter_id,out_id,order_status,total_amount,pay_type,pay_order_no,pay_time,
+                                               create_time,update_time,detail,syn_status,is_online,user_id,actual_amount,discount_amount,update_user,create_user,parking_time,is_sync,
+                                               collector_id,offline_pay_type,group_code,cash_pay,gate_pay,cash_coupon_id,cash_coupon_pay,balance_pay,integral_pay,special_pay,special_pass_id,
+                                               cash_coupon_hours,cash_coupon_radio,enter_port,lifting_rod_time,is_advance_pay,relief_type,receiving_park_id,car_record_type,car_type,
+                                               advance_pay,pay_time_day,pay_time_month,pay_time_year,pay_date,pay_hour,pay_dt)
+        (select id,order_no,park_id,port_id,plate_number,enter_time,out_time,enter_id,out_id,order_status,total_amount,pay_type,pay_order_no,pay_time,
+                create_time,update_time,detail,syn_status,is_online,user_id,actual_amount,discount_amount,update_user,create_user,parking_time,is_sync,
+                collector_id,offline_pay_type,group_code,cash_pay,gate_pay,cash_coupon_id,cash_coupon_pay,balance_pay,integral_pay,special_pay,special_pass_id,
+                cash_coupon_hours,cash_coupon_radio,enter_port,lifting_rod_time,is_advance_pay,relief_type,receiving_park_id,car_record_type,car_type,advance_pay,
+                (case  when pay_time = '' then null when pay_time is null then null else substr(pay_time,7,2) end) as pay_time_day,
+                (case  when pay_time = '' then null when pay_time is null then null else substr(pay_time,5,2) end) as pay_time_month,
+                (case  when pay_time = '' then null when pay_time is null then null else substr(pay_time,1,4) end) as pay_time_year,
+                (case  when pay_time = '' then null when pay_time is null then null else substr(pay_time,1,8) end) as pay_date,
+                (case  when pay_time = '' then null when pay_time is null then null else substr(pay_time,9,2) end) as pay_hour,
+                (case  when pay_time = '' then null when pay_time is null then null else substr(pay_time,1,6) end) as pay_hour
+        from t_pay_temp_order
+        <where>
+            t_pay_temp_order.park_id = #{id}
+            <if test="time != null and time != ''">
+                and (t_pay_temp_order.create_time <![CDATA[>=]]> #{time} or t_pay_temp_order.pay_time <![CDATA[>=]]> #{faTime})
+            </if>
+        </where>
+        )
+    </insert>
+
+    <select id="queryTempOrderPage" parameterType="com.xhb.pay.form.PayTempOrderForm" resultType="com.xhb.pay.dto.PayTempOrderDTO">
+        select
+        id,order_no,park_id,port_id,enter_port,port_id,plate_number,car_record_type,enter_time,out_time,order_status,pay_type,total_amount,pay_order_no,create_time,pay_time,
+        is_sync,is_online,actual_amount,discount_amount,parking_time,collector_id,cash_pay,gate_pay,balance_pay,special_pay,detail,lifting_rod_time,car_type
+        from t_pay_temp_order_history
+        <where>
+            <if test="parkId != null">
+                and park_id = #{parkId}
+            </if>
+            <if test="plateNumber != null  and plateNumber != ''">
+                and plate_number = #{plateNumber}
+            </if>
+            <if test="enterTimeMin != null  and enterTimeMin != ''">
+                and enter_time <![CDATA[>=]]> #{enterTimeMin}
+            </if>
+            <if test="enterTimeMax != null  and enterTimeMax != ''">
+                and out_time <![CDATA[<=]]> #{enterTimeMax}
+            </if>
+            <if test="payTimeMin != null  and payTimeMin != ''">
+                and pay_time <![CDATA[>=]]> #{payTimeMin}
+            </if>
+            <if test="payTimeMax != null  and payTimeMax != ''">
+                and pay_time<![CDATA[<=]]> #{payTimeMax}
+            </if>
+            <if test="collectorId != null">
+                and collector_id = #{collectorId}
+            </if>
+            <if test="orderStatus != null">
+            and order_status = #{orderStatus}
+            </if>
+            <if test="groupCode != null  and groupCode != ''">
+                and group_code = #{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND park_id IN (${parkIds})
+            </if>
+        </where>
+        order by create_time desc
+        limit #{num},#{rows};
+    </select>
+
+    <select id="payToday" resultType="java.math.BigDecimal">
+        SELECT IFNULL(sum( actual_amount ) ,0) FROM t_pay_temp_order_history WHERE `order_status` = '1' AND park_id = #{parkId} AND to_days(pay_time) = to_days(now())
+    </select>
+    <select id="queryTempOrder" parameterType="long" resultType="com.xhb.pay.dto.PayTempOrderDTO">
+        select id,order_no,park_id,port_id,plate_number,enter_time,out_time,order_status,pay_type,total_amount,pay_order_no,pay_time,syn_status,
+               is_online,actual_amount,discount_amount,parking_time,collector_id,enter_port,cash_pay,gate_pay,balance_pay,special_pay
+        from t_pay_temp_order_history
+        where id = #{id}
+    </select>
+    <insert id="batchInsertIgnore" parameterType="java.util.List">
+        INSERT INTO t_pay_temp_order_history
+            (ID,ORDER_NO,PARK_ID,PORT_ID,PLATE_NUMBER,ENTER_TIME,OUT_TIME,ENTER_ID,OUT_ID,ORDER_STATUS,
+             TOTAL_AMOUNT,PAY_TYPE,PAY_ORDER_NO,PAY_TIME,DETAIL,SYN_STATUS,IS_ONLINE,USER_ID,ACTUAL_AMOUNT,
+             DISCOUNT_AMOUNT,PARKING_TIME,IS_SYNC,COLLECTOR_ID,OFFLINE_PAY_TYPE,GROUP_CODE,ENTER_PORT,CASH_PAY,
+             GATE_PAY,CASH_COUPON_ID,CASH_COUPON_PAY,BALANCE_PAY,INTEGRAL_PAY,SPECIAL_PAY,SPECIAL_PASS_ID,
+             CASH_COUPON_HOURS,CASH_COUPON_RADIO,LIFTING_ROD_TIME,IS_ADVANCE_PAY,RELIEF_TYPE,RECEIVING_PARK_ID,
+             CAR_RECORD_TYPE,CAR_TYPE,ADVANCE_PAY,CREATE_USER,CREATE_TIME,UPDATE_USER,UPDATE_TIME )
+        VALUES
+        <foreach collection="list" item="bean" separator="," close=";">
+            (#{bean.id},#{bean.orderNo},#{bean.parkId},#{bean.portId},#{bean.plateNumber},#{bean.enterTime}
+            ,#{bean.outTime},#{bean.enterId},#{bean.outId}
+            ,#{bean.orderStatus},#{bean.totalAmount},#{bean.payType},#{bean.payOrderNo},#{bean.payTime}
+            ,#{bean.detail},#{bean.synStatus},#{bean.isOnline}
+            ,#{bean.userId},#{bean.actualAmount},#{bean.discountAmount},#{bean.parkingTime}
+            ,#{bean.isSync},#{bean.collectorId},#{bean.offlinePayType},#{bean.groupCode}
+            ,#{bean.enterPort},#{bean.cashPay},#{bean.gatePay},#{bean.cashCouponId},#{bean.cashCouponPay}
+            ,#{bean.balancePay},#{bean.integralPay},#{bean.specialPay}
+            ,#{bean.specialPassId},#{bean.cashCouponHours},#{bean.cashCouponRadio},#{bean.liftingRodTime}
+            ,#{bean.isAdvancePay},#{bean.reliefType},#{bean.receivingParkId},#{bean.carRecordType}
+            ,#{bean.carType},#{bean.advancePay},#{bean.createUser},#{bean.createTime},#{bean.updateUser},#{bean.updateTime})
+        </foreach>
+    </insert>
+    <select id="findPayTempOrderCount" parameterType="map" resultType="int">
+        SELECT count(1)
+        from t_pay_temp_order_history tpo
+        <where>
+            <if test="parkId !=null and parkId !=''">
+                and tpo.park_id=#{parkId}
+            </if>
+            <if test="plateNumber!=null and plateNumber !=''">
+                and tpo.plate_number like CONCAT('%',#{plateNumber},'%')
+            </if>
+            <if test="collectorId !=null and collectorId !=''">
+                and tpo.collector_id=#{collectorId}
+            </if>
+            <if test="orderStatus !=null and orderStatus !=''">
+                and tpo.order_status =#{orderStatus}
+            </if>
+            <if test="enterTimeMax !=null and enterTimeMax!=''">
+                and unix_timestamp(tpo.enter_time) &lt; unix_timestamp(#{enterTimeMax})
+            </if>
+            <if test="enterTimeMin !=null and enterTimeMin !=''">
+                and unix_timestamp(tpo.enter_time) &gt;=unix_timestamp(#{enterTimeMin})
+            </if>
+            <if test="payTimeMin !=null and payTimeMin!=''">
+                and unix_timestamp(tpo.pay_time) &gt;=unix_timestamp(#{payTimeMin})
+            </if>
+            <if test="payTimeMax !=null and payTimeMax!=''">
+                and unix_timestamp(tpo.pay_time) &lt;unix_timestamp(#{payTimeMax})
+            </if>
+            <if test="groupCode !=null and groupCode!=''">
+                and tpo.group_code=#{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+        </where>
+    </select>
+    <select id="findPayTempOrderList" parameterType="map" resultType="com.xhb.pay.dto.PayTempOrderDTO">
+        SELECT
+        tpo.park_id,
+        tpo.port_id,
+        tpo.enter_port,
+        tpo.collector_id,
+        tpo.relief_type,
+        tpo.id,
+        tpo.order_no,
+        tpo.plate_number ,
+        tpo.enter_time ,
+        tpo.out_time ,
+        tpo.order_status ,
+        tpo.pay_type ,
+        tpo.total_amount ,
+        tpo.pay_order_no ,
+        tpo.detail,
+        tpo.create_time,
+        DATE_FORMAT(tpo.pay_time,'%Y-%m-%d %H:%i:%s') AS payTime,
+        tpo.is_sync ,
+        tpo.actual_amount ,
+        tpo.discount_amount ,
+        tpo.offline_pay_type ,
+        tpo.parking_time ,
+        tpo.cash_pay ,
+        tpo.gate_pay ,
+        tpo.cash_coupon_pay ,
+        tpo.balance_pay ,
+        tpo.integral_pay ,
+        tpo.special_pay ,
+        tpo.cash_coupon_hours ,
+        tpo.cash_coupon_radio ,
+        tpo.enter_id ,
+        tpo.out_id ,
+        tpo.is_advance_pay,
+        tpo.lifting_rod_time,
+        tpo.syn_status,
+        tpo.car_type,
+        tpo.special_pass_id,
+        tpo.relief_type,
+        (case when tpo.car_record_type =0 then '临时车'
+        when tpo.car_record_type =1 and tpo.balance_pay &gt;0 then '储值卡'
+        when tpo.car_record_type =1 and (tpo.balance_pay &lt;=0 or tpo.balance_pay is null) then '月租户'
+        when tpo.car_record_type =2 then '免费车'
+        else '' end) recordTypeName,
+        (CASE WHEN tpo.cash_pay !=0 THEN '现金'
+        WHEN tpo.gate_pay !=0 AND tpo.is_advance_pay =0 THEN '岗亭扫码'
+        WHEN tpo.gate_pay !=0 AND tpo.is_advance_pay =1 THEN '场内扫码'
+        ELSE '' END) isOnlineName
+        FROM t_pay_temp_order_history tpo
+        <where>
+            <if test="parkId !=null and parkId !=''">
+                and tpo.park_id=#{parkId}
+            </if>
+            <if test="plateNumber!=null and plateNumber !=''">
+                and tpo.plate_number like CONCAT('%',#{plateNumber},'%')
+            </if>
+            <if test="collectorId !=null and collectorId !=''">
+                and tpo.collector_id=#{collectorId}
+            </if>
+            <if test="orderStatus !=null and  orderStatus !=''">
+                and tpo.order_status =#{orderStatus}
+            </if>
+            <if test="enterTimeMax !=null and enterTimeMax!=''">
+                and unix_timestamp(tpo.enter_time) &lt; unix_timestamp(#{enterTimeMax})
+            </if>
+            <if test="enterTimeMin !=null and enterTimeMin !=''">
+                and unix_timestamp(tpo.enter_time) &gt;=unix_timestamp(#{enterTimeMin})
+            </if>
+            <if test="payTimeMin !=null and payTimeMin!=''">
+                and unix_timestamp(tpo.pay_time) &gt;=unix_timestamp(#{payTimeMin})
+            </if>
+            <if test="payTimeMax !=null and payTimeMax!=''">
+                and unix_timestamp(tpo.pay_time) &lt;unix_timestamp(#{payTimeMax})
+            </if>
+            <if test="groupCode !=null and groupCode!=''">
+                and tpo.group_code=#{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+        </where>
+        <choose>
+            <when test="sortTzwName !=null and sortTzwName!=''">
+                order by tpo.${sortTzwName}
+            </when>
+            <otherwise>
+                ORDER BY tpo.create_time desc
+            </otherwise>
+        </choose>
+
+        <if test="pageNo !=null">
+            limit ${pageNo},${rows}
+        </if>
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+
+    </select>
+
+    <select id="findTempOrderByCashPayByTime" parameterType="com.xhb.pay.bean.CollectorChangeShifts" resultType="map">
+        SELECT IFNULL(SUM(o.cash_pay),0) AS amount, COUNT(o.cash_pay) AS `count`
+        FROM `t_pay_temp_order_history` o WHERE 1=1
+                                            AND o.`collector_id` = #{collectorId}
+                                            AND DATE_FORMAT(o.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+                                            AND DATE_FORMAT(o.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>  #{endTime}
+                                            AND o.`pay_type` = '10';
+    </select>
+
+    <select id="findTempOrderByDiscountAmountByTime" parameterType="com.xhb.pay.bean.CollectorChangeShifts" resultType="map">
+        SELECT IFNULL(SUM(o.discount_amount),0) AS amount, COUNT(o.relief_type) AS `count`
+        FROM `t_pay_temp_order_history` o WHERE 1=1
+                                            AND o.`collector_id` = #{collectorId}
+                                            AND o.`relief_type` IS NOT NULL
+                                            AND DATE_FORMAT(o.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+                                            AND DATE_FORMAT(o.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>  #{endTime}
+    </select>
+
+    <select id="findReliefTypeByCollectorId" parameterType="com.xhb.pay.bean.CollectorChangeShifts" resultType="com.xhb.pay.vo.ParkReliefTypeVo">
+        SELECT  t.`name` AS reliefName, COUNT(o.`relief_type`) AS `count`, IFNULL(SUM(o.`discount_amount`),0) AS amount
+        FROM `t_pay_temp_order_history` o
+                 LEFT JOIN `t_park_relief_type` t ON o.`relief_type` = t.`id`
+        WHERE 1=1
+          AND o.`collector_id` = #{collectorId}
+          AND o.`relief_type` IS NOT NULL
+          AND DATE_FORMAT(o.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+          AND DATE_FORMAT(o.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>  #{endTime}
+        GROUP BY o.`relief_type`
+    </select>
+    <insert id="batchReplace" parameterType="com.xhb.pay.bean.PayTempOrderHistory" >
+        replace into t_pay_temp_order_history
+                (id, order_no, park_Id, port_Id, plate_Number, enter_Time, out_Time, enter_Id, out_Id, order_Status,
+                total_Amount, pay_Type, pay_Order_No, create_Time, pay_Time, update_Time, detail, syn_Status, is_Online,
+                user_Id, actual_Amount, discount_Amount,update_User, create_User, parking_Time, is_Sync, collector_Id,
+                offline_Pay_Type, group_Code, cash_Pay, gate_Pay,cash_Coupon_Pay, balance_Pay, integral_Pay, special_Pay,
+                cash_Coupon_Hours, cash_Coupon_Radio, enter_Port,lifting_Rod_Time, is_Advance_Pay, relief_Type,
+                receiving_Park_Id, car_Record_Type, car_Type, advance_Pay, pay_Hour, pay_Time_Day,pay_Time_Month, pay_Time_Year, pay_Date,pay_dt)
+        value
+        <foreach collection="list" item="vo" separator="," close=";">
+            (#{vo.id}, #{vo.orderNo}, #{vo.parkId}, #{vo.portId}, #{vo.plateNumber}, #{vo.enterTime},
+            #{vo.outTime}, #{vo.enterId}, #{vo.outId}, #{vo.orderStatus}, #{vo.totalAmount}, #{vo.payType},
+            #{vo.payOrderNo}, #{vo.createTime}, #{vo.payTime}, #{vo.updateTime}, #{vo.detail},
+            #{vo.synStatus}, #{vo.isOnline}, #{vo.userId}, #{vo.actualAmount}, #{vo.discountAmount},
+            #{vo.updateUser}, #{vo.createUser}, #{vo.parkingTime}, #{vo.isSync}, #{vo.collectorId},
+            #{vo.offlinePayType}, #{vo.groupCode}, #{vo.cashPay}, #{vo.gatePay},
+            #{vo.cashCouponPay}, #{vo.balancePay}, #{vo.integralPay}, #{vo.specialPay}, #{vo.cashCouponHours},
+            #{vo.cashCouponRadio}, #{vo.enterPort},#{vo.liftingRodTime}, #{vo.isAdvancePay}, #{vo.reliefType},
+            #{vo.receivingParkId}, #{vo.carRecordType}, #{vo.carType}, #{vo.advancePay}, #{vo.payHour},
+            #{vo.payTimeDay},#{vo.payTimeMonth},#{vo.payTimeYear}, #{vo.payDate},#{vo.payDt}
+            )
+        </foreach>
+    </insert>
+</mapper>

@@ -1,0 +1,195 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html {
+  background-color: #fff;
+}
+
+body {
+  font-family: "Microsoft Yahei";
+  font-size: 16px;
+}
+@media screen and (max-height: 800px) {
+  .main {
+    width: 62.5%;
+    height: 65%;
+    min-height: 440px;
+    position: absolute;
+    margin: auto;
+    left: 18.75%;
+    top: 17.5%
+  }
+}
+/*.main {
+  width: 62.5%;
+  height: 65%;
+  min-height: 623px;
+  position: absolute;
+  left: 18.75%;
+  top: 17.5%;
+}*/
+
+#login-shop {
+  background-image: url(../images/bg1.png);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  background-position: top left;
+}
+#login-shop .main{
+  min-width: 450px;
+  min-height: 440px;
+
+  width: 62.5%;
+  height: 65%;
+  position: absolute;
+  margin: auto;
+  left: 18.75%;
+  top: 17.5%
+}
+#login-shop .logo,
+#login-shop .login {
+  width: 50%;
+  height: 100%;
+  float: left;
+  min-width: 225px;
+}
+#login-shop .logo {
+  background-color: rgba(0, 64, 112, 0.5);
+  background-image: url(../images/logo.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 200px;
+}
+#login-shop .login {
+  background-color: white;
+  text-align: center;
+}
+#login-shop .login h1 {
+  color: #004070;
+  font-size: 32px;
+  margin: 120px 0 30px;
+  font-weight: normal;
+}
+#login-shop .login input {
+  color: #004070;
+  font-size: 1em;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding: 0.75em 0;
+  text-align: center;
+  width: 60%;
+}
+#login-shop .login input:focus {
+  outline: none;
+}
+#login-shop .login button {
+  font-size: 16px;
+  border: none;
+  border-radius: 5em;
+  background-color: #004070;
+  color: #fff;
+  cursor: pointer;
+  width: 60%;
+  margin-top: 40px;
+  height: 40px;
+  line-height: 40px;
+}
+#login-shop .login button:focus {
+  outline: none;
+}
+
+
+#login-user {
+  background-image: url(../images/bg3.png), url(../images/bg4.png);
+  background-position: right top, left bottom;
+  background-repeat: no-repeat;
+  background-size: 32%, 40%;
+}
+#login-user .main {
+  background-color: white;
+  box-shadow:0px 0px 20px #999;
+  -moz-box-shadow:0px 0px 20px #999;
+  -webkit-box-shadow:0px 0px 20px #999;
+  min-width: 450px;
+  min-height: 440px;
+
+  width: 62.5%;
+  height: 65%;
+  position: absolute;
+  margin: auto;
+  left: 18.75%;
+  top: 17.5%
+}
+#login-user .login {
+  width: 40%;
+  height: 100%;
+  float: left;
+  position: relative;
+  min-width: 180px;
+  background-color: #ffffff;
+}
+#login-user .login img {
+  margin: 2em 0 0 2em;
+  width: 140px;
+}
+#login-user .login form {
+  width: 66%;
+  position: absolute;
+  left: 17%;
+  top: 25%;
+}
+#login-user .login label {
+  font-size: 14px;
+  color: #333333;
+}
+#login-user .login input {
+  color: #004070;
+  font-size: 1em;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding: 0.75em 0;
+  display: block;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 0.75em;
+}
+#login-user .login input:focus {
+  outline: none;
+}
+#login-user .login button {
+  font-size: 14px;
+  border: none;
+  border-radius: 30px;
+  background-color: #004070;
+  color: #fff;
+  cursor: pointer;
+  width: 76px;
+  margin-top: 16px;
+  margin-left: 5px;
+  height: 30px;
+  line-height: 30px;
+
+}
+#login-user .login button:focus {
+  outline: none;
+}
+#login-user .right {
+  width: 60%;
+  height: 100%;
+  float: left;
+  background-image: url(../images/bg2.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-width: 270px;
+}
+
+
+
+/*# sourceMappingURL=style.css.map */

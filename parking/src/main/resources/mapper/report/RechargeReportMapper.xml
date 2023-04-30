@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.RechargeReportDao">
+
+
+    <select id="findRechargeDataList" resultType="com.xhb.report.dto.RechargeReportDTO">
+        SELECT
+            b.owner_name AS ownerName,
+            b.owner_mobile AS ownerMobile,
+            c.lease_name AS leaseName,
+            a.create_time AS createTime,
+            a.amount,
+            a.give_amount AS giveAmount,
+            a.from_type AS rechargeType,
+            a.create_user AS collectorName,
+            a.remark
+            FROM t_pay_inside_recharge a
+            LEFT JOIN t_pay_inside_car b ON b.id = a.inside_id
+            LEFT JOIN t_park_lease_type c ON c.id = b.lease_type_id
+            <where>
+                a.is_contract = 0
+                <if test="parkId != null and parkId != ''">
+                    AND a.park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(a.create_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND a.group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND a.park_id IN (${parkIds})
+                </if>
+            </where>
+            ORDER BY a.create_time DESC
+    </select>
+
+
+    <select id="findRechargeAmount" resultType="com.xhb.report.vo.DailyReportVo">
+        SELECT
+        SUM(a.amount) AS systemStorageCard
+        FROM t_pay_inside_recharge a
+        <where>
+            a.is_contract = 0
+            <if test="parkId != null and parkId != ''">
+                AND a.park_id = #{parkId}
+            </if>
+            <if test="payTime != null and payTime != ''">
+                AND DATE_FORMAT(a.create_time,"%Y-%m") = #{payTime}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND a.group_code = #{groupCode}
+            </if>
+            <if test="parkIds != null and parkIds != ''">
+                AND a.park_id IN (${parkIds})
+            </if>
+        </where>
+    </select>
+</mapper>

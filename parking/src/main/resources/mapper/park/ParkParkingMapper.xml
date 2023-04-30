@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.ParkParkingDao">
+
+
+
+    <select id="findProvinceSpaceCount" resultType="com.xhb.pay.dto.ParkProvinceidDTO">
+        SELECT
+            provinceid,
+            IFNULL(SUM(space_count),1) number
+        FROM t_park_parking
+        <if test="parkIds != null">
+            WHERE id IN (${parkIds})
+        </if>
+        GROUP BY provinceid
+    </select>
+
+    <select id="findParentParkId" resultType="com.xhb.park.bean.ParkParking">
+        select * from t_park_parking
+        where parent_park_id=#{parkId}
+    </select>
+</mapper>

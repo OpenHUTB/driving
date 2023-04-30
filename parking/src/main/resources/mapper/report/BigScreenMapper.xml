@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.BigScreenDao">
+
+    <select id="parkingSpaceUsageCount" resultType="com.xhb.report.vo.ParkingReportVO">
+        select
+            count(distinct id) as total,
+            ifnull(sum(is_road = 0),0) as close,
+            ifnull(sum(is_road = 1),0) as road
+        from t_park_parking
+        where
+        1=1
+        <if test="groupCode !=null and groupCode !=''">
+            and group_code = #{groupCode}
+        </if>
+        <if test="parkIds != null and parkIds != ''">
+           and id in ( ${parkIds} )
+        </if>
+    </select>
+    <select id="parkingSpaceUsageList" resultType="com.xhb.report.vo.ParkingVO">
+        select
+            distinct  tpp.id as id,
+                      tpp.park_name as name,
+                      count(tprl.id) as totalParkingSpace,
+                      ifnull(sum(tprl.status = 3),0) as occupyParkingSpace
+        from t_park_parking as tpp
+            left join t_park_region_lot as tprl on tprl.park_id = tpp.id
+        <if test="parkIds != null and parkIds != ''">
+            where tpp.id in ( ${parkIds} )
+        </if>
+        group by tpp.id
+    </select>
+    <select id="paymentStatistics" resultType="java.util.LinkedHashMap">
+        select
+            ifnull(sum(pay_time_month = #{month} and pay_time_day = #{day}),0)  '当日笔数',
+            ifnull(sum(pay_time_month = #{month}),0) '当月笔数',
+            count(id)                 '年度总笔数',
+            ifnull(sum(if(pay_time_month = #{month} and pay_time_day = #{day},actual_amount,0)),0)  '当日金额',
+            ifnull(sum(if(pay_time_month = #{month},actual_amount,0)),0) '当月金额',
+            ifnull(sum(actual_amount),0)  '年度总金额'
+        from t_pay_temp_order_history
+        where pay_time_year = #{year}
+          and order_status = 1
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode !=null and groupCode !=''">
+            and group_code = #{groupCode}
+        </if>
+    </select>
+    <select id="berthToday" resultType="java.util.LinkedHashMap">
+        select totali                                          as '泊位总数',
+                iNuse                                          as '已用',
+                leisure                                        as '空闲',
+                0                                              as '故障',
+                convert(iNuse / totali * 100, decimal(5, 2))   as '泊位使用率',
+                convert(number / totali * 100, decimal(5, 2))  as '泊位周转率'
+        from (
+                 select count(id)                    as totali,
+                        sum(status = 3)              as iNuse,
+                        sum(status != 3)             as leisure,
+                        (select count(1)
+                         from t_pay_carcome_history
+                         where type = 0
+                           and access_time_day = #{day}
+                           and access_time_month = #{month}
+                           and access_time_year = #{year}
+                            ) as number
+                 from t_park_region_lot
+        <if test="parkIds != null and parkIds != ''">
+            where park_id in ( ${parkIds} )
+        </if>
+             ) t
+    </select>
+    <select id="berthTodaySimpleness" resultType="java.util.LinkedHashMap">
+        select count(id)             as '总数(个)',
+        ifnull(sum(status = 3),0)               as '已用',
+        ifnull(sum(status != 3),0)            as '空闲'
+        from t_park_region_lot
+        where
+        1=1
+        <if test="groupCode !=null and groupCode !=''">
+            and group_code = #{groupCode}
+        </if>
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+    </select>
+    <select id="howToPayToday" resultType="java.util.LinkedHashMap">
+        select
+                ifnull(sum(pay_type in (0, 1)), 0) as '微信',
+                ifnull(sum(pay_type = 3), 0)       as '支付宝',
+                ifnull(sum(pay_type = 10), 0)      as '现金',
+                ifnull(sum(pay_type = 11), 0)      as '其他'
+        from t_pay_temp_order_history
+        where pay_time_day = #{day}
+          and pay_time_month = #{month}
+          and pay_time_year = #{year}
+          and order_status = 1
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode !=null and groupCode !=''">
+            and group_code = #{groupCode}
+        </if>
+    </select>
+    <select id="userReport" resultType="java.util.LinkedHashMap">
+        select count(user_id)                                                                      as '用户总数',
+                ifnull(sum(reg_time_day = #{day} and reg_time_month = #{month} and reg_time_year = #{year}), 0)   as '今日新增用户数',
+                (select count(id) from t_pay_inside_car where create_time like '${date}%'
+                                         <if test="parkIds != null and parkIds != ''">
+                                                          and park_id in ( ${parkIds} )
+                                         </if>
+                    )         as '今日新增用卡数',
+                (select count(distinct user_id)
+                 from t_pay_temp_order_history
+                 where order_status = 1
+                   and pay_time_day = #{day}
+                   and pay_time_month = #{month}
+                   and pay_time_year = #{year}
+            <if test="parkIds != null and parkIds != ''">
+                and park_id in ( ${parkIds} )
+            </if>
+                    )                                                     as '今日支付用户数',
+                (select count(name) from t_pay_owner_plate_bind where create_date = #{date})     as '今日绑定车牌数',
+                0 as '今日实名车牌'
+        from t_ucenter_front_user
+    </select>
+    <select id="admissionToday" resultType="java.util.LinkedHashMap">
+        select (count(id)+27+2+33) as '今日入场',
+                ifnull(sum(car_type != 2),0) as '普通燃油',
+                27 as '普通新能源',
+                33 as '普通混动',
+                ifnull(sum(car_type = 2),0) as '运营车',
+                2 as '其他'
+        from t_pay_carcome_history
+        where type = 0
+          and access_time_year = #{year}
+          and access_time_month = #{month}
+          and access_time_day = #{day}
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+    </select>
+    <select id="parkingTimeToday" resultType="java.util.LinkedHashMap">
+        select
+            sum(if(parking_time >= 0 and parking_time   <![CDATA[ < ]]>  30,1,0)) as `半小时内`,
+            sum(if(parking_time >= 30 and parking_time   <![CDATA[ < ]]>  60,1,0)) as `半小时到一小时内`,
+            sum(if(parking_time >= 60 and parking_time   <![CDATA[ < ]]>  180,1,0)) as `一小时到三小时`,
+            sum(if(parking_time >= 180 and parking_time   <![CDATA[ < ]]>  360,1,0))as `三小时到六小时`,
+            sum(if(parking_time >= 360,1,0)) as `六小时以上`
+        from t_pay_temp_order_history
+            where pay_time_day = #{day}
+            and pay_time_month = #{month}
+            and pay_time_year = #{year}
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode !=null and groupCode!=''">
+            and group_code = #{groupCode}
+        </if>
+    </select>
+    <select id="liveAdmission" resultType="com.xhb.report.vo.ParkingVO">
+        select
+            tpp.id as id,
+            tpp.park_name as name,
+            tpch.plate_number as value
+        from t_pay_carcome_history as tpch
+                 left join t_park_parking as tpp on tpch.park_id = tpp.id
+        where tpch.type = 0 and tpp.id is not null
+          and tpch.access_time_year = #{year}
+          and tpch.access_time_day  = #{day}
+          and tpch.access_time_month = #{month}
+        <if test="parkIds != null and parkIds != ''">
+            and tpch.park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode !=null and groupCode!=''">
+            and group_code = #{groupCode}
+        </if>
+        order by tpch.access_time desc
+            limit 5
+    </select>
+    <select id="todaySTradingVolumeTOP5" resultType="com.xhb.report.vo.ParkingVO">
+        select
+            tpp.id as id,
+            tpp.park_name as name,
+            ifnull(sum(tptoh.actual_amount),0) as value
+        from t_pay_temp_order_history as tptoh
+            left join t_park_parking as tpp on tptoh.park_id = tpp.id
+        where tptoh.order_status = 1
+         and pay_time_day = #{day} and pay_time_month = #{month} and pay_time_year = #{year}
+        <if test="parkIds != null and parkIds != ''">
+            and tptoh.park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode !=null and groupCode!=''">
+            and tptoh.group_code = #{groupCode}
+        </if>
+        group by tptoh.park_id
+        having value > 0
+        order by value desc
+            limit 5
+    </select>
+    <select id="todaySOrderTOP5" resultType="com.xhb.report.vo.ParkingVO">
+        select
+            tpp.id as id,
+            tpp.park_name as name,
+            count(tptoh.id) as value
+        from t_pay_temp_order_history as tptoh
+            left join t_park_parking as tpp on tptoh.park_id = tpp.id
+            where tptoh.order_status = 1
+              and pay_time_day = #{day} and pay_time_month = #{month} and pay_time_year = #{year}
+        <if test="parkIds != null and parkIds != ''">
+            and tpch.park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode !=null and groupCode!=''">
+            and tpch.group_code = #{groupCode}
+        </if>
+        group by tptoh.park_id
+        order by value desc
+            limit 5
+    </select>
+    <select id="chargeToday" resultType="java.util.Map">
+        select
+        count(id) as '订单数',
+        ifnull(sum(actual_amount),0)  '实收金额'
+        from t_pay_temp_order_history
+        where pay_time_year = #{year}
+        and pay_time_day = #{day}
+        and pay_time_month = #{month}
+        and order_status = 1
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode !=null and groupCode!=''">
+            and group_code = #{groupCode}
+        </if>
+    </select>
+    <select id="arrearsToday" resultType="java.util.Map">
+        select
+            count(id) as '欠费单',
+            ifnull(sum(actual_amount),0) as '欠费金额'
+        from t_pay_arrears
+        where status = 0
+         and create_date = #{date}
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode != null and groupCode != ''">
+            and group_code = #{groupCode}
+        </if>
+    </select>
+    <select id="trafficFlowToday" resultType="com.xhb.report.vo.DateReportVO">
+        select
+            hour                     as hour,
+            ifnull(sum(type = 0), 0) as entrance,
+            ifnull(sum(type = 1), 0) as prep
+        from (SELECT 0 hour
+        UNION ALL
+        SELECT 1 hour
+        UNION ALL
+        SELECT 2 hour
+        UNION ALL
+        SELECT 3 hour
+        UNION ALL
+        SELECT 4 hour
+        UNION ALL
+        SELECT 5 hour
+        UNION ALL
+        SELECT 6 hour
+        UNION ALL
+        SELECT 7 hour
+        UNION ALL
+        SELECT 8 hour
+        UNION ALL
+        SELECT 9 hour
+        UNION ALL
+        SELECT 10 hour
+        UNION ALL
+        SELECT 11 hour
+        UNION ALL
+        SELECT 12 hour
+        UNION ALL
+        SELECT 13 hour
+        UNION ALL
+        SELECT 14 hour
+        UNION ALL
+        SELECT 15 hour
+        UNION ALL
+        SELECT 16 hour
+        UNION ALL
+        SELECT 17 hour
+        UNION ALL
+        SELECT 18 hour
+        UNION ALL
+        SELECT 19 hour
+        UNION ALL
+        SELECT 20 hour
+        UNION ALL
+        SELECT 21 hour
+        UNION ALL
+        SELECT 22 hour
+        UNION ALL
+        SELECT 23 hour
+        ) as h
+        LEFT JOIN t_pay_carcome_history as tpch on tpch.access_time_hour = h.hour
+            and access_time_year = #{year}
+            and  access_time_day  = #{day}
+            and access_time_month = #{month}
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode != null and groupCode != ''">
+            and group_code = #{groupCode}
+        </if>
+        group by hour
+        order by hour
+    </select>
+    <select id="paymentTimeDistribution" resultType="com.xhb.report.vo.DateReportVO">
+        select
+        hour                     as hour,
+        ifnull(sum(order_status = 1), 0) as 'order'
+        from (SELECT 0 hour
+        UNION ALL
+        SELECT 1 hour
+        UNION ALL
+        SELECT 2 hour
+        UNION ALL
+        SELECT 3 hour
+        UNION ALL
+        SELECT 4 hour
+        UNION ALL
+        SELECT 5 hour
+        UNION ALL
+        SELECT 6 hour
+        UNION ALL
+        SELECT 7 hour
+        UNION ALL
+        SELECT 8 hour
+        UNION ALL
+        SELECT 9 hour
+        UNION ALL
+        SELECT 10 hour
+        UNION ALL
+        SELECT 11 hour
+        UNION ALL
+        SELECT 12 hour
+        UNION ALL
+        SELECT 13 hour
+        UNION ALL
+        SELECT 14 hour
+        UNION ALL
+        SELECT 15 hour
+        UNION ALL
+        SELECT 16 hour
+        UNION ALL
+        SELECT 17 hour
+        UNION ALL
+        SELECT 18 hour
+        UNION ALL
+        SELECT 19 hour
+        UNION ALL
+        SELECT 20 hour
+        UNION ALL
+        SELECT 21 hour
+        UNION ALL
+        SELECT 22 hour
+        UNION ALL
+        SELECT 23 hour
+        ) as h
+        LEFT JOIN t_pay_temp_order_history as tpch on tpch.pay_hour = h.hour
+        and pay_time_year = #{year}
+        and pay_time_month  =#{month}
+        and pay_time_day=  #{day}
+        <if test="parkIds != null and parkIds != ''">
+            and park_id in ( ${parkIds} )
+        </if>
+        <if test="groupCode != null and groupCode != ''">
+            and group_code = #{groupCode}
+        </if>
+        group by hour
+        order by hour
+    </select>
+    <select id="recordBerth" resultType="java.util.Map">
+        select
+            park_id   as id,
+            count(id) as count,
+            ifnull(sum(status = 3),0)as re
+        from t_park_region_lot
+        group by park_id
+    </select>
+</mapper>

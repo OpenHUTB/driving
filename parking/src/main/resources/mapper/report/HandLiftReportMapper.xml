@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.HandLiftReportDao">
+
+    <select id="findHandLiftAmount" resultType="com.xhb.report.vo.DailyReportVo">
+        SELECT SUM(cash_pay) AS cashPayLow
+	        FROM t_pay_hand_lift_rod
+            <where>
+                <if test="parkId != null and parkId != ''">
+                    AND park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(create_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND park_id IN (${parkIds})
+                </if>
+            </where>
+    </select>
+
+    <select id="findHandLiftDate" resultType="com.xhb.report.dto.HandLiftReportDTO">
+        SELECT  b.park_name AS parkName, c.name AS collectorName, d.port_name AS portName, a.cash_pay AS cashPay, a.remark, a.create_time AS payTime
+            FROM t_pay_hand_lift_rod a
+            LEFT JOIN t_park_parking b ON b.id = a.park_id
+            LEFT JOIN t_ucenter_toll_collector c ON c.collector_id = a.collector_id
+            LEFT JOIN t_park_parking_port d ON d.id = a.port_id
+            <where>
+                <if test="parkId != null and parkId != ''">
+                    AND a.park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(a.create_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND a.group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND a.park_id IN (${parkIds})
+                </if>
+            </where>
+            ORDER BY payTime
+    </select>
+
+
+
+</mapper>

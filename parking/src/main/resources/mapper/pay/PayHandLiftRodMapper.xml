@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayHandLiftRodDao">
+
+    <select id="findPayHandLiftRodAmountByTime" resultType="map" parameterType="com.xhb.pay.bean.CollectorChangeShifts">
+        SELECT IFNULL(SUM(r.`cash_pay`),0) as amount , COUNT(r.`cash_pay`) AS `count`
+        FROM `t_pay_hand_lift_rod` r WHERE 1=1
+        AND r.`collector_id` = #{collectorId}
+        AND r.`create_time` <![CDATA[ >= ]]> #{startTime}
+        AND r.`create_time` <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+    <select id="getHandLiftRodCount" resultType="java.lang.Integer">
+        SELECT COUNT(*) FROM `t_pay_hand_lift_rod` r
+        JOIN `t_park_parking_port` p ON p.`id` = r.`port_id`
+        WHERE r.`collector_id` = #{collectorId}
+        AND p.`port_fun_type` = #{type}
+        AND r.`create_time` <![CDATA[ >= ]]> #{startTime}
+        AND r.`create_time` <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+    <select id="getcashPaySum" resultType="java.lang.Double">
+        SELECT IFNULL(SUM(r.`cash_pay`),0) FROM `t_pay_hand_lift_rod` r
+        WHERE r.`collector_id` = #{collectorId}
+        AND r.`create_time` <![CDATA[ >= ]]> #{startTime}
+        AND r.`create_time` <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+    <select id="getMonthRod" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(cash_pay),0)
+        FROM t_pay_hand_lift_rod
+        WHERE park_id = #{parkId}
+        AND DATE_FORMAT(create_time,'%Y-%m') = #{dateTime}
+    </select>
+
+    <select id="geDaysRodByMonth" resultType="map">
+        SELECT
+            DATE_FORMAT(create_time,'%Y-%m-%d') as date,
+            IFNULL(cash_pay,0) as amount
+            FROM t_pay_hand_lift_rod
+        WHERE park_id = #{parkId}
+        AND DATE_FORMAT(create_time,'%Y-%m') = #{dateTime}
+        GROUP BY DATE_FORMAT(create_time,'%Y-%m-%d')
+    </select>
+
+
+
+    <select id="getPayHandLiftRodVo" resultType="java.util.Map">
+          SELECT
+            t.create_time 'time',
+            t.id eventId,
+            t.plate_number objectId,
+            s.data_center_parkid parkId,
+            p.port_name portName,
+            p.port_fun_type isEnter,
+            t.remark passReason,
+            t.cash_pay payAmount,
+            u.name collectorName
+             FROM t_pay_hand_lift_rod t
+             LEFT JOIN t_park_parking_port p On p.id = t.port_id
+             LEFT JOIN t_ucenter_toll_collector u On u.collector_id = t.collector_id
+               LEFT JOIN t_sync_park_sett s ON s.park_id  = t.park_id
+             WHERE
+            t.update_time <![CDATA[ >= ]]> #{staTime}
+            AND t.update_time <![CDATA[ < ]]> #{endTime}
+            AND t.park_id = #{parkId}
+
+
+    </select>
+
+    <!-- 批量导入 -->
+    <insert id="batchReplace" parameterType="com.xhb.pay.bean.PayHandLiftRod" >
+        replace into t_pay_hand_lift_rod
+        (id, park_id,is_sync,collector_id,plate_number,remark,update_time,cash_pay
+        ,port_id, group_code,create_time,create_user )
+        value
+        <foreach collection="list" item="vo" separator="," close=";">
+            (#{vo.id}, #{vo.parkId},  #{vo.isSync}, #{vo.collectorId}, #{vo.plateNumber}
+            ,#{vo.remark},#{vo.updateTime},#{vo.cashPay},#{vo.portId}
+            , #{vo.groupCode},#{vo.createTime},#{vo.createUser} )
+        </foreach>
+    </insert>
+</mapper>

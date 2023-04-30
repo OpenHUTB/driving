@@ -1,0 +1,84 @@
+
+###################  项目启动端口  ###################
+
+server:
+  port: 80
+
+spring:
+  rabbitmq:
+    host: 192.168.0.213
+    password: 123456
+    port: 5672
+    username: admin
+    virtual-host: /
+    listener:
+      direct:
+        acknowledge-mode: manual
+      simple:
+        acknowledge-mode: manual
+  redis:
+    database: 3
+    password: 123456
+    pool:
+      max-active: 100
+      max-idle: 10
+      max-wait: -1
+      min-idle: 10
+    host: 192.168.0.213
+    port: 6379
+    timeout: 6000
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    filters: stat
+    initialSize: 1
+    maxActive: 20
+    maxOpenPreparedStatements: 20
+    maxWait: 60000
+    minEvictableIdleTimeMillis: 300000
+    minIdle: 1
+    name: allinone
+    poolPreparedStatements: true
+    testOnBorrow: false
+    testOnReturn: false
+    testWhileIdle: trueserver
+    timeBetweenEvictionRunsMillis: 60000
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://192.168.0.213:3306/iparking?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&allowMultiQueries=true&useSSL=false
+    username: root
+    password: 123456
+    validationQuery: select 'x'
+
+
+logging:
+  config: classpath:log4j2.xml
+  level:
+    com.fhs.ucenter.dao: DEBUG
+    com.fhs.pagex: DEBUG
+    com.fhs.system.dao: DEBUG
+    com.xhb.pay.dao: DEBUG
+    com.xhb.park.dao: DEBUG
+    #    com.xhb.business.dao: DEBUG
+    #    com.xhb.report.dao: DEBUG
+    com.xhb.road.dao: DEBUG
+
+
+jetcache:
+  remote:
+    default:
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        maxTotal: 50
+      host: ${spring.redis.host}
+      port: ${spring.redis.port}
+      password: ${spring.redis.password}
+
+JWT:
+  token-expiration-day: 30
+
+# 公众号配置
+mp:
+  app-id: wxaaaa
+  app-secret: 1231231312
+  token: xhb
+  aes-key: xhb

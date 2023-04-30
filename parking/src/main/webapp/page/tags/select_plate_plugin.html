@@ -1,0 +1,970 @@
+<style type="text/css">
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        border: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .clearfix:after {
+        content: ".";
+        display: block;
+        font-size: 0;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+
+    .clearfix {
+        display: inline-table;
+    }
+
+    * html .clearfix {
+        height: 1%;
+    }
+
+    .clearfix {
+        display: block;
+    }
+
+    * + html .clearfix {
+        min-height: 1%;
+    }
+
+    .che_tit {
+        text-align: center;
+        padding: 20px;
+    }
+
+    .ul_pro {
+        background-color: #CED3D9;
+        text-align: center;
+        padding: 0.2rem 0.1rem;
+        font-size: 14px;
+    }
+
+    .ul_pro li {
+        float: left;
+        width: 11.11%;
+        padding: 0.1rem;
+        box-sizing: border-box;
+    }
+
+    .ul_pro .li_close {
+        float: right;
+        width: 22.22%;
+    }
+
+    .ul_pro .li_close span {
+        background-color: #ACB3BB;
+    }
+
+    .ul_pro .li_clean {
+        float: right;
+        width: 22.22%;
+    }
+
+    .ul_pro li span {
+        display: block;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 2px 2px 2px #888888;
+        /* max-width:48px; margin:0 auto; */
+        line-height: 32px;
+        padding-top: 2px;
+    }
+
+    .ul_pro li span:active {
+        background-color: #4DA9F2;
+        color: #fff;
+    }
+
+    .ul_input {
+        padding: 1rem;
+        width: 100%;
+        margin: 0 auto;
+    }
+
+    .ul_input li {
+        float: left;
+        width: 12.5%;
+        padding: 0.2rem;
+        text-align: center;
+    }
+
+    .ul_input li span {
+        display: block;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 0.2rem;
+        width: 2.2rem;
+        margin: 0 auto;
+        height: 2.2rem;
+        line-height: 2.2rem;
+    }
+
+    .ul_keybord {
+        background-color: #CED3D9;
+        text-align: center;
+        padding: 4px 2px;
+        font-size: 14px;
+    }
+
+    .ul_keybord li {
+        float: left;
+        width: 10%;
+        padding: 2px;
+        box-sizing: border-box;
+    }
+
+    .ul_keybord .ikey20 {
+        margin-left: 5%;
+    }
+
+    .ul_keybord .li_w {
+        width: 11.11%;
+    }
+
+    .ul_keybord .li_close {
+        float: right;
+        width: 22.22%;
+    }
+
+    .ul_keybord .li_close span {
+        background-color: #ACB3BB;
+    }
+
+    .ul_keybord .li_clean {
+        float: right;
+        width: 22.22%;
+    }
+
+    .ul_keybord li span {
+        display: block;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 2px 2px 2px #888888;
+        /* max-width:48px; margin:0 auto; */
+        line-height: 32px;
+        padding-top: 2px;
+    }
+
+    .ul_keybord li span:active {
+        background-color: #4DA9F2;
+        color: #fff;
+    }
+
+</style>
+<link rel="stylesheet" type="text/css" href="${basePath}/js/keyboard/keyboard.css">
+<link rel="stylesheet" type="text/css" href="${basePath}/js/keyboard/self.css">
+<link rel="stylesheet" type="text/css" href="${basePath}/js/keyboard/base.css">
+<link rel="stylesheet" type="text/css" href="${basePath}/js/keyboard/color.css">
+<script src="${basePath}/js/keyboard/keyboard.js"></script>
+<script src="${basePath}/js/keyboard/jquery-ui.min.js"></script>
+<script src="${basePath}/js/keyboard/jweixin-1.0.0.js"></script>
+<script src="${basePath}/js/keyboard/common.js"></script>
+<script src="${basePath}/js/keyboard/self.js"></script>
+<div class="pdl-18 pdr-18">
+    <div style="padding-top: 4rem;">
+        <div class="w10 tx-c t-bla ftb">输入车牌</div>
+        <div class="w10 pdt-10 ftz-18 ov-h pstnr" id="carNumBox" onclick="showKeyboard()">
+            <div class="w22 fll box-s pdr-02">
+                <div class="line-h-35 ov-h bor-b3b3b3 bor-r-4">
+                    <input onfocus="this.blur();" class="fll w5 tx-c line-h-25 mart-5 b-r-b3b3b3" type="text"
+                           readonly="readonly" value="">
+                    <input onfocus="this.blur();" class="fll w5 tx-c line-h-25 mart-5" type="text" readonly="readonly"
+                           value="">
+                </div>
+            </div>
+            <div class="fll w-p-3 line-h-35">
+                <div class="dot"></div>
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus="this.blur();" class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text"
+                       readonly="readonly" value="">
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus="this.blur();" class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text"
+                       readonly="readonly" value="">
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus="this.blur();" class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text"
+                       readonly="readonly" value="">
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus="this.blur();" class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text"
+                       readonly="readonly" value="">
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus="this.blur();" class="w10 tx-c line-h-35 bor-b3b3b3 bor-r-4" type="text"
+                       readonly="readonly" value="">
+            </div>
+            <div class="fll w12-5 box-s pdl-02 pdr-02">
+                <input onfocus="this.blur();" class="w10 tx-c line-h-35 bor-r-4 bor-1-5cade2 dspn" id="new" type="text"
+                       readonly="readonly" value="">
+                <div class="tx-c bor-r-4 bor-1-5cade2 " id="new1">
+                    <p class="ftz-14 t-999 h-16">+</p>
+                    <p class="ftz-8 t-999 h-17">新能源</p>
+                </div>
+            </div>
+            <img class="pstna w12-5 bottom-10 flicker dspn" id="cursor" src="${basePath}/js/keyboard/icon-17.png"
+                 style="left: 87.5%;">
+            <img class="pstna w11 bottom-10 flicker dspn" id="cursor1" src="${basePath}/js/keyboard/icon-17.png"
+                 style="left: 11%;">
+        </div>
+    </div>
+</div>
+<div class="w10 pdl-18 pdr-18 pdt-32 pdb-20">
+    <div class="line-h-45 c-149bfe tx-c t-wh ftz-16 b-radius-5" onclick="search()" id="nextBTN">
+            <@=lisc@>
+    </div>
+    <div class="line-h-40 tx-c ftz-12 t-999">
+        请输入正确的车牌
+    </div>
+</div>
+
+<div class="w10 pstnf c-edf1f4 bottom-0 dspn zindex9" id="keyBoard">
+    <div class="ov-h">
+        <div class="w10 pd-2">
+            <div id="provinceKeyboard">
+                <!--第一行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">京</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">津</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">沪</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">渝</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">苏</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">浙</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">豫</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">粤</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">川</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">陕</div>
+                    </li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li style="width: 5%;">
+                        <div class="pdt-10 pdb-10"></div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">冀</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">辽</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">吉</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">皖</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">闽</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">鄂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">湘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">鲁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">晋</div>
+                    </li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li style="width: 5%;">
+                        <div class="pdt-10 pdb-10"></div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">黑</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">赣</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">贵</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">甘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">桂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">琼</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">云</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">青</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">蒙</div>
+                    </li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li style="width: 10%;">
+                        <div class="pdt-10 pdb-10"></div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">藏</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">宁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">新</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">W</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseOne(this)">临</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25 marb-5" src="${basePath}/js/keyboard/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li style="width: 22.22222%;">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure t-999">确定</div>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure1 dspn" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="wjKeyboard">
+                <!--第一行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">1</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">2</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">3</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">4</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">5</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">6</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">7</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">8</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">9</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">0</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">京</div>
+                    </li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">津</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">晋</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">冀</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">蒙</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">辽</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">吉</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">黑</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">沪</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">苏</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">浙</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">皖</div>
+                    </li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">闽</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">赣</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">鲁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">豫</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">鄂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">湘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">粤</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">桂</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">琼</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">渝</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">川</div>
+                    </li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">贵</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">云</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">藏</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">陕</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">甘</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">青</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">宁</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">新</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="${basePath}/js/keyboard/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li style="width: 18.181818%;">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure t-999">确定</div>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure1 dspn" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="wjKeyboardDel">
+                <!--第一行-->
+                <ul class="tx-c t-999">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">1</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">2</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">3</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">4</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">5</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">6</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">7</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">8</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">9</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">0</div>
+                    </li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Q</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">W</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">E</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">R</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">T</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Y</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">U</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">O</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">P</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div>
+                    </li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">A</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">S</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">D</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">F</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">G</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">H</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">J</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">K</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">L</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div>
+                    </li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Z</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">X</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">C</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">V</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">B</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">N</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">M</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="${basePath}/js/keyboard/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li class="w2">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="alphabetKeyboard">
+                <!--第一行-->
+                <ul class="tx-c t-999" id="first">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">1</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">2</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">3</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">4</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">5</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">6</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">7</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">8</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">9</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">0</div>
+                    </li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c dspn" id="first1">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">1</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">2</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">3</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">4</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">5</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">6</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">7</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">8</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">9</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">0</div>
+                    </li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">A</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">B</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">C</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">D</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">E</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">F</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">G</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">H</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">J</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">K</div>
+                    </li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">L</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">M</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">N</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">P</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">Q</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">R</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">S</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">T</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">U</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">V</div>
+                    </li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">W</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">X</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">Y</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">Z</div>
+                    </li>
+                    <li class="two dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">港</div>
+                    </li>
+                    <li class="one">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div>
+                    </li>
+                    <li class="two dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div>
+                    </li>
+                    <li class="three dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">港</div>
+                    </li>
+                    <li class="three dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">澳</div>
+                    </li>
+                    <li class="one">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">港</div>
+                    </li>
+                    <li class="one">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div>
+                    </li>
+                    <li class="two dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div>
+                    </li>
+                    <li class="three dspn">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="chooseTwo(this)">学</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="${basePath}/js/keyboard/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li class="w2">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure t-999">确定</div>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 sure1 dspn" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="dspn" id="alphabetKeyboardDel">
+                <!--第一行-->
+                <ul class="tx-c t-999">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">1</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">2</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">3</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">4</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">5</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">6</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">7</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">8</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">9</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5">0</div>
+                    </li>
+                </ul>
+                <!--第2行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">A</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">B</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">C</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">D</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">E</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">F</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">G</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">H</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">J</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">K</div>
+                    </li>
+                </ul>
+                <!--第3行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">L</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">M</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">N</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">P</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Q</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">R</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">S</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">T</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">U</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">V</div>
+                    </li>
+                </ul>
+                <!--第4行-->
+                <ul class="tx-c">
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">W</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">X</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Y</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">Z</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">港</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">澳</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5 t-999">学</div>
+                    </li>
+                    <li>
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="del()">
+                            <p style="line-height: 15px;">删</p>
+                            <img class="w-20 line-h-25" src="${basePath}/js/keyboard/icon-13.png"/>
+                        </div>
+                    </li>
+                    <li class="w2">
+                        <div class="pdt-10 pdb-10 us6 c-wh b-radius-5" onclick="sure()">确定</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

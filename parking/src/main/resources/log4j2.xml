@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration status="error">
+    <Properties>
+        <Property name="LOG_PATTERN">%d{yyyy-MM-dd HH:mm:ss} %p %m%n</Property>
+        <Property name="APP_LOG_ROOT">c:/park_server</Property>
+    </Properties>
+    <!-- 先定义所有的appender -->
+    <appenders>
+        <!-- 输出控制台配置 -->
+        <Console name="Console" target="SYSTEM_OUT">
+            <!-- 控制台只输出debug及以上级别的信息 -->
+            <ThresholdFilter level="debug"/>
+            <!-- 输出日志的格式 -->
+            <PatternLayout pattern="%d %-5level %logger{36} %t %M - %msg%xEx%n"/>
+        </Console>
+        <RollingFile name="RollingFileInfo" fileName="${APP_LOG_ROOT}/logs/info.log"
+                     filePattern="${APP_LOG_ROOT}/tmall_logs/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="RollingFileError" fileName="${APP_LOG_ROOT}/logs/error.log"
+                     filePattern="${APP_LOG_ROOT}/tmall_logs/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log">
+            <!--控制台只输出warn及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingFile>
+        <RollingFile name="RollingFileDebug" fileName="${APP_LOG_ROOT}/logs/debug.log"
+                     filePattern="${APP_LOG_ROOT}/tmall_logs/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log">
+            <!--控制台只输出warn及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - %l - %m%n"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="100 MB"/>
+            </Policies>
+        </RollingFile>
+    </appenders>
+    <!-- 然后定义logger，只有定义了logger并引入的appender，appender才会生效 -->
+    <loggers>
+        <!-- 过滤掉无用的框架DEBUG信息 -->
+        <logger name="org.springframework" level="WARN"/>
+        <logger name="org.mybatis" level="WARN"/>
+        <AsyncRoot level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="RollingFileInfo"/>
+            <AppenderRef ref="RollingFileError"/>
+            <AppenderRef ref="RollingFileDebug"/>
+        </AsyncRoot>
+        <!-- <root level="all">
+             &lt;!&ndash; 定义对日志信息如何处理 &ndash;&gt;
+             <appender-ref ref="Console"/>
+             <appender-ref ref="RollingFileInfo"/>
+             <appender-ref ref="RollingFileError"/>
+         </root>-->
+    </loggers>
+</configuration>

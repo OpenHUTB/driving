@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>停车时长统计</title>
+    <%
+    layout("/page/tags/header.html",{date:true}){}
+    %>
+    <script type="text/javascript" src="${staticPath}/js/echart/echarts.min.js"></script>
+    <script type="text/javascript" src="${staticPath}/js/easyui/datagrid-export.js"></script>
+</head>
+<style>
+    .filterDiv {
+        margin-left: 10px;
+    }
+
+    .chartDiv {
+        width: 96%;
+        height: 400px;
+        margin-left: 30px;
+    }
+
+    .aButton {
+        height:15px;
+        line-height:15px;
+        float: right;
+    }
+</style>
+<body style="background-color: white">
+<div id="len">
+    <div class="filterDiv">
+        月份
+        <input id="monthF" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM',maxDate:'%y-%M'})"/>
+        <label>记录类型:</label> <input type='text' autocomplete='off'  class='easyui-combobox ' id='typeF'
+                                     valueField='wordbookCode'
+                                    url='${pub_service_url}/webApi/wordbook/getData?wordbookGroupCode=record_type&jsonpCallback=?'
+                                    textField='wordbookDesc' data-options="showAll:true"
+                                    prompt='请选择记录类型'>
+
+        <label>停车场:</label> <input type='text' autocomplete='off'  class='easyui-combobox '
+                                   id='parkId_import' name='id' valuefield='parkId' textfield='parkName'
+                                   url='${pay_api_basePath}/ms/parking/getParkParkingList?jsonpCallback=?'/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" plain="true"
+           onclick="loadDate()">查询</a>
+    </div>
+    <div class="infoGroup" style="height: 50px; line-height: 50px;padding-right: 10px">
+       日平均停车时长
+    </div>
+    <div class="chartDiv" id="chartDiv">
+
+    </div>
+    <div class="infoGroup" style="height: 50px; line-height: 50px;padding-right: 10px">
+        日停车时长车次数分布 <a href="javascript:void(0)" class="easyui-linkbutton aButton" plain="true" onclick="toExcel()">导出</a>
+    </div>
+    <div class="chartDiv">
+        <table id="dg"></table>
+    </div>
+
+</div>
+<script>
+    $(function(){
+        var myDate = new Date();//获取系统当前时间
+        var month;
+        if((myDate.getMonth()+1)<=9){
+            month="0"+(myDate.getMonth()+1);
+        }else{
+            month=myDate.getMonth()+1;
+        }
+        var dateFull= myDate.getFullYear()+"-"+ month;
+        $("#monthF").val(dateFull);
+
+        $('#typeF').combobox({
+            onLoadSuccess : function(){
+                var typeF = $("#typeF").combobox("getData");
+                if (typeF && typeF.length > 0) {
+                    $("#typeF").combobox("setValue", typeF[0].wordbookCode);
+                }
+            }
+        })
+
+        $('#parkId_import').combobox({
+            onLoadSuccess : function(){
+                var parkId_import = $("#parkId_import").combobox("getData");
+                if (parkId_import && parkId_import.length > 0) {
+                    $("#parkId_import").combobox("setValue", parkId_import[0].parkId);
+                }
+                loadDate();
+            }
+        })
+    })
+
+
+
+    function loadDate(){
+        var dateFull=$("#monthF").val();
+        var typeF=$("#typeF").combobox('getValue');
+        var parkId_import=$("#parkId_import").combobox('getValue');
+        $.get('${basePath}/ms/p' +
+            'arkingStatistics/findCountData', {dateFull:dateFull,typeF:typeF,parkIdImport:parkId_import}, function (res) {
+            if(res[0].resultDate.code!=1){
+                Ealert(res[0].resultDate.data);
+            }else{
+                    option = {
+                        xAxis: {
+                            type: 'category',
+                            data: res[0].resultDate.xDate,
+                            axisLabel: {
+                                fontSize: 10,
+                                color:'#333333',
+                                formatter: function (value, index) {
+                                    var week =getWeek(value); //获取时间的星期数
+
+                                    var ss=value.substr(8,2)
+                                    return ss+'\n'+week;
+                                }
+                            }
+                        },
+                        yAxis: {
+                            type: 'value'
+                        },
+                        tooltip : {
+                            trigger: 'item',
+                            formatter: function(params) {
+                                var axisValue = params.seriesName;
+                                var seriousData = '';
+                                seriousData += '<p style="margin:7.5% auto;">' + axisValue + '：' + params.data + '小时' + '</p>';
+                                var week =getWeek(params.name);
+                                return '<p style="margin:7.5% auto;">' + params.name.substr(5,5)  +' 周'+ week + '<p/>' + seriousData;
+                            }
+                        },
+                        series: [{
+                            name: '停车平均时长',
+                            data:  res[0].resultDate.numDate,
+                            type: 'line'
+                        }]
+                    };
+                    var myChart = echarts.init(document.getElementById("chartDiv"));
+                    myChart.setOption(option);
+
+            }
+        });
+
+        $('#dg').datagrid({
+            url:'${basePath}/ms/parkingStatistics/findCountData',
+            queryParams: {
+                dateFull:dateFull,
+                typeF:typeF,
+                parkIdImport:parkId_import
+            },
+            fitColumns:true,
+            columns:[[
+                {field:'da',title:'日期',width:90,align:'center'},
+                {field:'week',title:'星期',width:90,align:'center'},
+                {field:'lt15',title:'0-15分钟',width:90,align:'center',formatter: function(value,row){
+                    var dd=row.lt15+row.lt15gt60+row.lt60gt120+row.lt120gt180+row.lt180gt240+row.lt240gt300+row.gt300;
+                    if(dd==0){
+                        return value+" / "+0+"%";
+                    }else if(row.lt15==undefined){
+                        return
+                    }else{
+                        return value+" / "+parseFloat((value/dd*100).toFixed(2))+"%";
+                    }
+                }},
+                {field:'lt15gt60',title:'15分钟-1小时',width:100,align:'center',formatter: function(value,row){
+                        var dd=row.lt15+row.lt15gt60+row.lt60gt120+row.lt120gt180+row.lt180gt240+row.lt240gt300+row.gt300;
+                        if(dd==0){
+                            return value+" / "+0+"%";
+                        }else if(row.lt15==undefined){
+                            return
+                        }else{
+                            return value+" / "+parseFloat((value/dd*100).toFixed(2))+"%";
+                        }
+                }},
+                {field:'lt60gt120',title:'1-2小时',width:90,align:'center',formatter: function(value,row){
+                        var dd=row.lt15+row.lt15gt60+row.lt60gt120+row.lt120gt180+row.lt180gt240+row.lt240gt300+row.gt300;
+                        if(dd==0){
+                            return value+" / "+0+"%";
+                        }else if(row.lt15==undefined){
+                            return
+                        }else{
+                            return value+" / "+parseFloat((value/dd*100).toFixed(2))+"%";
+                        }
+                }},
+                {field:'lt120gt180',title:'2-3小时',width:90,align:'center',formatter: function(value,row){
+                        var dd=row.lt15+row.lt15gt60+row.lt60gt120+row.lt120gt180+row.lt180gt240+row.lt240gt300+row.gt300;
+                        if(dd==0){
+                            return value+" / "+0+"%";
+                        }else if(row.lt15==undefined){
+                            return
+                        }else{
+                            return value+" / "+parseFloat((value/dd*100).toFixed(2))+"%";
+                        }
+
+                }},
+                {field:'lt180gt240',title:'3-4小时',width:90,align:'center',formatter: function(value,row){
+                        var dd=row.lt15+row.lt15gt60+row.lt60gt120+row.lt120gt180+row.lt180gt240+row.lt240gt300+row.gt300;
+                        if(dd==0){
+                            return value+" / "+0+"%";
+                        }else if(row.lt15==undefined){
+                            return
+                        }else{
+                            return value+" / "+parseFloat((value/dd*100).toFixed(2))+"%";
+                        }
+                }},
+                {field:'lt240gt300',title:'4-5小时',width:90,align:'center',formatter: function(value,row){
+                        var dd=row.lt15+row.lt15gt60+row.lt60gt120+row.lt120gt180+row.lt180gt240+row.lt240gt300+row.gt300;
+                        if(dd==0){
+                            return value+" / "+0+"%";
+                        }else if(row.lt15==undefined){
+                            return
+                        }else{
+                            return value+" / "+parseFloat((value/dd*100).toFixed(2))+"%";
+                        }
+                }},
+                {field:'gt300',title:'大于5小时',width:100,align:'center',formatter: function(value,row){
+                        var dd=row.lt15+row.lt15gt60+row.lt60gt120+row.lt120gt180+row.lt180gt240+row.lt240gt300+row.gt300;
+                        if(dd==0){
+                            return value+" / "+0+"%";
+                        }else if(row.lt15==undefined){
+                            return
+                        }else{
+                            return value+" / "+parseFloat((value/dd*100).toFixed(2))+"%";
+                        }
+                }},
+                {field:'eval',title:'平均停车时长（小时）',width:120,align:'center'}
+            ]]
+        });
+    }
+    function getWeek(value){
+        var week =(new Date(value)).getDay(); //获取时间的星期数
+        if(week==0){
+            week="日";
+        }else if(week==1){
+            week="一";
+        }else if(week==2){
+            week="二";
+        }else if(week==3){
+            week="三";
+        }else if(week==4){
+            week="四";
+        }else if(week==5){
+            week="五";
+        }else if(week==6){
+            week="六";
+        }
+        return week;
+    }
+    
+    function toExcel() {
+        $('#dg').datagrid('selectRow',0);//grid加载完成后自动选中第一行
+        var row=$('#dg').datagrid("getSelections");//获取选中的数据
+        if(row[0].da!=undefined){
+            $('#dg').datagrid('toExcel','日停车次数分布.xls');
+        }else{
+            Ealert("查无数据！");
+        }
+
+    }
+</script>
+</body>
+</html>

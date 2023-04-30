@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.ParkingStatisticsDao">
+    <select id="getParkIncomeCountList" parameterType="map" resultType="map">
+        select  DAY(tpo.create_time) da, <!--获取天-->
+                tpo.create_time createTime,
+                sum(case when tpo.parking_time &lt;=15 and tpo.parking_time &gt;=0 then 1 else 0 end) lt15, <!--小于15分钟-->
+                sum(case when tpo.parking_time &gt;15 and tpo.parking_time &lt;=60 then 1 else 0 end) lt15gt60,
+                sum(case when tpo.parking_time &gt;60 and tpo.parking_time &lt;=120 then 1 else 0 end) lt60gt120,
+                sum(case when tpo.parking_time &gt;120 and tpo.parking_time &lt;=180 then 1 else 0 end) lt120gt180,
+                sum(case when tpo.parking_time &gt;180 and tpo.parking_time &lt;=240 then 1 else 0 end) lt180gt240,
+                sum(case when tpo.parking_time &gt;240 and tpo.parking_time &lt;=300 then 1 else 0 end) lt240gt300,
+                sum(case when tpo.parking_time &gt;300 and tpo.parking_time &lt;= 1440  then 1 else 0 end) gt300,
+                (select sum(tos.parking_time)  from t_pay_temp_order_history tos  LEFT JOIN t_pay_carcome_history tcs ON tos.enter_id = tcs.id
+                    where left(tos.create_time,10)=left(tpo.create_time,10)
+                    and tos.order_status IN (2, 1)
+                    and tos.parking_time &lt;=1440
+                    and tos.parking_time &gt;=0
+                    <choose>
+                        <when test="typeF !=null and typeF!=''">
+                            and tcs.record_type=#{typeF}
+                        </when>
+                        <otherwise>
+                            and tcs.record_type in(0,1,2)
+                        </otherwise>
+                    </choose>
+                    <if test="parkIdImport !=null and parkIdImport!=''">
+                        and tos.park_id=#{parkIdImport}
+                    </if>
+                    <if test="parkIds !=null and parkIds!='' ">
+                        AND tos.park_id IN (${parkIds})
+                    </if>
+                    <if test="groupCode != null and groupCode != ''">
+                        AND tos.group_code = #{groupCode}
+                    </if>
+                ) totalTime, <!--当天总停车时长-->
+                (select count(tos.id)  from t_pay_temp_order_history tos LEFT JOIN t_pay_carcome_history tcs ON tos.enter_id = tcs.id
+                  where left(tos.create_time,10)=left(tpo.create_time,10)
+                  and tos.order_status IN (2, 1)
+                  and tos.parking_time &lt;=1440
+                  and tos.parking_time &gt;=0
+                    <choose>
+                        <when test="typeF !=null and typeF!=''">
+                            and tcs.record_type=#{typeF}
+                        </when>
+                        <otherwise>
+                            and tcs.record_type in(0,1,2)
+                        </otherwise>
+                    </choose>
+                    <if test="parkIdImport !=null and parkIdImport!=''">
+                        and tos.park_id=#{parkIdImport}
+                    </if>
+                    <if test="parkIds !=null and parkIds!='' ">
+                        AND tos.park_id IN (${parkIds})
+                    </if>
+                    <if test="groupCode != null and groupCode != ''">
+                        AND tos.group_code = #{groupCode}
+                    </if>
+                  ) totalNum <!--当天总停车次数-->
+                from t_pay_temp_order_history tpo left join t_pay_carcome_history tc on  tpo.enter_id=tc.id
+            <where>
+                tpo.order_status in(2,1)
+                <if test="dateFull !=null and dateFull!=''">
+                    and left(tpo.create_time,7)=#{dateFull}
+                </if>
+                <choose>
+                    <when test="typeF !=null and typeF!=''">
+                        and tc.record_type=#{typeF}
+                    </when>
+                    <otherwise>
+                        and tc.record_type in(0,1,2)
+                    </otherwise>
+                </choose>
+
+                <if test="parkIdImport !=null and parkIdImport!=''">
+                    and tpo.park_id=#{parkIdImport}
+                </if>
+                <if test="parkIds !=null and parkIds!='' ">
+                    AND tpo.park_id IN (${parkIds})
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND tpo.group_code = #{groupCode}
+                </if>
+            </where>
+        group by left(tpo.create_time,10)
+
+    </select>
+
+    <select id="findParkingFlows" parameterType="map" resultType="map">
+        select
+        left(tc.create_time,10) createTime,
+        (
+        select sum( if(tpo.cash_pay is null,0,tpo.cash_pay) ) from t_pay_temp_order_history tpo left join t_pay_carcome_history tpc on tpo.enter_id=tpc.id
+        <where>
+            tpo.order_status in(2,1) and
+            left(tc.create_time, 10)=DATE_FORMAT(tpo.pay_time, "%Y-%m-%d")
+
+            <if test="typeF !=null and typeF!=''">
+                and tpc.record_type=#{typeF}
+            </if>
+            <if test="parkIdImport !=null and parkIdImport!=''">
+                and tpo.park_id=#{parkIdImport}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND tpo.group_code = #{groupCode}
+            </if>
+        </where>
+        ) cashPaySum, <!--现金支付金额总和-->
+
+        (
+        select sum(if(tpo.gate_pay is null ,0,tpo.gate_pay)) from t_pay_temp_order_history tpo left join t_pay_carcome_history tpc on tpo.enter_id=tpc.id
+        <where>
+            tpo.order_status in(2,1) and
+            left(tc.create_time, 10)=DATE_FORMAT(tpo.pay_time, "%Y-%m-%d")
+
+            <if test="typeF !=null and typeF!=''">
+                and tpc.record_type=#{typeF}
+            </if>
+            <if test="parkIdImport !=null and parkIdImport!=''">
+                and tpo.park_id=#{parkIdImport}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND tpo.group_code = #{groupCode}
+            </if>
+        </where>
+        ) gatePaySum, <!--网络支付金额总和-->
+
+        sum(case when tc.type =0 then 1 else 0 end) admissionSum,<!--入场记录总和-->
+        sum(case when tc.type =1 then 1 else 0 end) appearanceSum<!--出场记录总和-->
+        from  t_pay_carcome_history tc
+        <where>
+            <if test="dateFull !=null and dateFull!=''">
+                and left(tc.create_time,7)=#{dateFull}
+            </if>
+            <if test="typeF !=null and typeF!=''">
+                and tc.record_type=#{typeF}
+            </if>
+            <if test="parkIdImport !=null and parkIdImport!=''">
+                and tc.park_id=#{parkIdImport}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tc.park_id IN (${parkIds})
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND tc.group_code = #{groupCode}
+            </if>
+
+        </where>
+        group by left(tc.create_time,10)
+
+    </select>
+
+    <select id="findParkReportHoliday" parameterType="map" resultType="map">
+        select holiday_name holidayName,
+                holiday_date_start holidayDateStart,
+                holiday_date_end holidayDateEnd,
+                `type`
+            from t_park_report_holiday
+        <where>
+            <if test="dateFull!=null and dateFull!=''">
+                left(holiday_date_start,7) = #{dateFull} or left(holiday_date_end,7) = #{dateFull}
+            </if>
+        </where>
+
+
+    </select>
+
+    <select id="findTrafficIncome" parameterType="map" resultType="map">
+        select
+                tpo.create_time createTime,
+                sum(if(tpc.record_type =0,1,0)) temporaryNum,<!--临时车-->
+                sum(if(tpc.record_type !=0,1,0)) otherNum, <!--其他车-->
+                sum(if(tpo.total_amount is not null,tpo.total_amount,0)) totalAmount,
+                sum(if(tpo.cash_pay is not null,tpo.cash_pay,0)+if(tpo.gate_pay is not null,tpo.gate_pay,0)) netReceipts
+        from t_pay_temp_order_history tpo
+            left join t_pay_carcome_history tpc on tpo.enter_id=tpc.id
+        <where>
+            tpo.order_status in (1,2)
+            <if test="dateFull !=null and dateFull!=''">
+                and left(tpo.create_time,7)=#{dateFull}
+            </if>
+            <if test="parkIdImport !=null and parkIdImport!=''">
+                and tpo.park_id=#{parkIdImport}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND tpo.group_code = #{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+        </where>
+        group by left(tpo.create_time,10)
+    </select>
+
+    <select id="findTraffic" parameterType="map" resultType="map">
+        SELECT
+        (weekofyear(tpo.create_time) - weekofyear(tpo.create_time - INTERVAL DAY (tpo.create_time) - 1 DAY) + 1) weekNum,<!--当月第几周-->
+        sum(IF ((DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY) )= 6 OR DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY)) = 7) and tpc.record_type=0,1,0)) weekCountL,<!--临时周统计-->
+        sum(IF ((DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY) )= 6 OR DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY)) = 7) and tpc.record_type !=0,1,0)) weekCountQ,<!--其他周统计-->
+        sum(IF (DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY) ) != 6 and DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY)) != 7 and tpc.record_type=0,1,0)) workCountL,<!--临时非周统计-->
+        sum(IF (DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY) ) != 6 and DAYOFWEEK(DATE_SUB(tpo.create_time,INTERVAL 1 DAY)) != 7 and tpc.record_type !=0,1,0)) workCountQ,<!--其他非周统计-->
+        DAYOFWEEK(DATE_SUB(CONCAT(LEFT (tpo.create_time, 7),'-01'),INTERVAL 1 DAY)) firstW<!--当月第一天的星期-->,
+        DAYOFWEEK(DATE_SUB(last_day(tpo.create_time),INTERVAL 1 DAY)) lastW<!--当月第一天的星期-->
+        FROM
+        t_pay_temp_order tpo
+        LEFT JOIN t_pay_carcome_history tpc ON tpo.enter_id = tpc.id
+        <where>
+            tpo.order_status in (1,2)
+            <if test="dateFull !=null and dateFull!=''">
+                and left(tpo.create_time,7)=#{dateFull}
+            </if>
+            <if test="parkIdImport !=null and parkIdImport!=''">
+                and tpo.park_id=#{parkIdImport}
+            </if>
+            <if test="groupCode != null and groupCode != ''">
+                AND tpo.group_code = #{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND tpo.park_id IN (${parkIds})
+            </if>
+        </where>
+        group by weekNum
+    </select>
+</mapper>

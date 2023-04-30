@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PaySpecialPassDao">
+
+    <sql id="pub_where">
+        WHERE psp.group_code = #{groupCode}
+        <if test="parkId != null and parkId != ''">
+            AND psp.park_id = #{parkId}
+        </if>
+        <if test="createTimeMin != null  and createTimeMin != ''">
+            AND psp.`create_time` <![CDATA[>=]]> #{createTimeMin}
+        </if>
+        <if test="createTimeMax != null  and createTimeMax != ''">
+            AND psp.`create_time` <![CDATA[<=]]> #{createTimeMax}
+        </if>
+        <if test="plateNumber != null  and plateNumber != ''">
+            AND psp.`plate_number` LIKE CONCAT('%',#{plateNumber},'%')
+        </if>
+        <if test="isSync != null and isSync != ''">
+            AND psp.`is_sync` = #{isSync}
+        </if>
+        <if test="parkIds !=null and parkIds!='' ">
+            AND psp.park_id IN (${parkIds})
+        </if>
+    </sql>
+
+
+    <select id="findPage" parameterType="java.util.Map" resultType="com.xhb.pay.dto.PaySpecialPassDTO">
+      SELECT
+        psp.id id,
+        psp.park_id,
+        ppp.port_name portName,
+        psp.collector_id,
+        psp.plate_number plateNumber,
+        psp.park_time parkTime,
+        psp.type,
+        psp.create_time createTime,
+        psp.is_sync isSync,
+        psp.temp_order_id
+      FROM t_pay_special_pass psp
+      LEFT JOIN t_park_parking_port ppp ON psp.out_port_id = ppp.id
+        <include refid="pub_where"/>
+        <choose>
+            <when test="sortTzw != null and sortTzw != ''">
+                ORDER BY ppp.${sortTzw}
+            </when>
+            <otherwise>
+                ORDER BY psp.create_time desc
+            </otherwise>
+        </choose>
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+    </select>
+
+    <select id="getCount"  parameterType="java.util.Map" resultType="int">
+        SELECT COUNT(1) FROM t_pay_special_pass psp LEFT JOIN t_pay_temp_order_history pto ON psp.temp_order_id = pto.id
+        <include refid="pub_where"/>
+    </select>
+
+    <select id="findPaySpecialPassAmountByTime" parameterType="com.xhb.pay.bean.CollectorChangeShifts" resultType="map">
+        SELECT IFNULL(SUM(p.`loss_amount`),0) AS amount, COUNT(p.`loss_amount`) AS `count`
+        FROM `t_pay_special_pass` p WHERE 1=1
+        AND p.`collector_id` = #{collectorId}
+        AND p.`create_time` <![CDATA[ >= ]]> #{startTime}
+        AND p.`create_time` <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+    <select id="findPaySpecialPassByCollectorId" parameterType="com.xhb.pay.bean.CollectorChangeShifts" resultType="com.xhb.pay.vo.PaySpecialPassVo">
+        SELECT IFNULL(SUM(p.`loss_amount`),0) AS amount, COUNT(p.`loss_amount`) AS `count`, pt.describ
+        FROM `t_pay_special_pass` p
+        LEFT JOIN `t_park_special_pass_type` pt ON pt.`id` = p.`type`
+        WHERE 1=1
+        AND p.`collector_id` = #{collectorId}
+        AND p.`create_time` <![CDATA[ >= ]]> #{startTime}
+        AND p.`create_time` <![CDATA[ <= ]]> #{endTime}
+        GROUP BY p.type
+    </select>
+
+    <select id="getSpecialPassCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM t_pay_special_pass p
+        WHERE p.`collector_id` = #{collectorId}
+        AND p.`create_time` <![CDATA[ >= ]]> #{startTime}
+        AND p.`create_time` <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+
+    <select id="getPaySpecialPassVoData" resultType="java.util.Map">
+        SELECT
+            t.id eventId,
+            t.plate_number objectId,
+            s.data_center_parkid parkId,
+            t.create_time 'time',
+            p.port_name portName,
+            r.describ passReason,
+            t.loss_amount lossAmount,
+            t.park_time parkTime,
+            u.name collectorName,
+            t.temp_order_id tempOrderId,
+            t.enter_id enterRecordId,
+             t.out_id outRecordId
+             FROM t_pay_special_pass t
+             LEFT JOIN t_park_parking_port p On p.id = t.out_port_id
+             LEFT JOIN t_ucenter_toll_collector u On u.collector_id = t.collector_id
+             LEFT JOIN t_sync_park_sett s ON s.park_id  = t.park_id
+             LEFT JOIN t_park_special_pass_type r ON r.id = t.type
+             WHERE
+               t.update_time <![CDATA[ >= ]]> #{staTime}
+               AND t.update_time <![CDATA[ < ]]> #{endTime}
+               AND t.park_id = #{parkId}
+    </select>
+    <!-- 批量导入 -->
+    <insert id="batchReplace" parameterType="com.xhb.pay.bean.PaySpecialPass" >
+        replace into t_pay_special_pass
+        (id, park_id,is_sync,collector_id,plate_number
+        ,remark,type,park_time,loss_amount,out_port_id
+        , group_code,create_time,create_date,create_user )
+        value
+        <foreach collection="list" item="vo" separator="," close=";">
+            (#{vo.id}, #{vo.parkId},  #{vo.isSync}, #{vo.collectorId}, #{vo.plateNumber}
+            ,#{vo.remark},#{vo.type},#{vo.parkTime},#{vo.lossAmount},#{vo.outPortId}
+            , #{vo.groupCode},#{vo.createTime},#{vo.createDate},#{vo.createUser} )
+        </foreach>
+    </insert>
+</mapper>

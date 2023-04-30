@@ -1,0 +1,99 @@
+
+###################  项目启动端口  ###################
+
+server:
+  context-path: /
+  jsp-servlet:
+    init-parameters:
+      development: true
+  tomcat:
+    uri-encoding: UTF-8
+  servlet:
+    encoding: true
+    force: true
+    charset: UTF-8
+# 该配置节点为独立的节点，有很多同学容易将这个配置放在spring的节点下，导致配置无法被识别
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*/*.xml
+  type-aliases-package: com.fhs.system.bean;com.fhs.ucenter.bean;com.fhs.fileService.bean;com.fhs.pubservice.bean;com.xhb.park.bean;com.xhb.pay.bean;com.xhb.business.bean;com.xhb.staff.bean;com.xhb.staff.vo;com.xhb.report.bean;com.xhb.wx.bean;com.fhs.file.bean;
+
+fhs:
+  autoware:
+    package: com.fhs.*;com.fhs.*.*;com.xhb.*;com.xhb.*.*
+  login:
+    enable-cas: false
+    url: /b/page/login
+  mybatis-jpa:
+    entity-package: com.fhs.**.bean;com.xhb.**.bean;
+    mapper-package: com.fhs.**.dao;com.xhb.**.dao;
+  safe:
+    enable-xss: true
+  session:
+    timeout: -1
+  task:
+    default-lock-Minutes: 10
+    pool-size: 10
+  transcatoin:
+    contains: service
+    not-contains: api;action;dao
+    package: com.fhs;com.xhb
+  disable-apollo: true
+spring:
+  profiles:
+    active: dev
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 20MB
+      max-request-size: 20MB
+  session:
+    store-type: redis
+  application:
+    name: park_server
+  mvc:
+    view:
+      prefix: /page/
+      suffix: .jsp
+
+
+swagger:
+  basepackage: com.xhb
+  service:
+    description: 项目api
+    developer: fhs developers
+    name: 公共接口文档
+
+logging:
+  config: classpath:log4j2.xml
+  level:
+    com.fhs.ucenter.dao: DEBUG
+    com.fhs.pagex: DEBUG
+    com.fhs.system.dao: DEBUG
+    com.xhb.pay.dao: DEBUG
+    com.xhb.park.dao: DEBUG
+    #    com.xhb.business.dao: DEBUG
+    #    com.xhb.report.dao: DEBUG
+    com.xhb.road.dao: DEBUG
+
+
+jetcache:
+  statIntervalMinutes: 15
+  areaInCacheName: false
+  hidePackages: com.alibaba
+  local:
+    default:
+      type: caffeine
+      limit: 100
+      keyConvertor: fastjson
+      expireAfterWriteInMillis: 300000
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson
+      valueEncoder: java
+      valueDecoder: java
+      poolConfig:
+        minIdle: 5
+        maxIdle: 20
+        maxTotal: 50
+

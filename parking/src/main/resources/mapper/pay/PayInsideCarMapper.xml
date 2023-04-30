@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayInsideCarDao">
+
+    <sql id="parkIdListFilter">
+        <if test="parkIdList != null and parkIdList.size > 0">
+            AND
+            <foreach collection="parkIdList" index="index" item="item" open="(" separator="or" close=")">
+                b.park_id=#{item}
+            </foreach>
+        </if>
+    </sql>
+
+
+    <select id="selectBalance" parameterType="map" resultType="PayInsideCar">
+        SELECT
+          c.*
+        FROM t_pay_inside_car c
+        WHERE c.id in (
+          SELECT inside_id FROM (
+            SELECT b.inside_id inside_id,b.create_time create_time
+            FROM  t_pay_inside_plate_bind b
+            JOIN t_pay_inside_contract c ON b.inside_id = c.inside_id
+            WHERE
+            <choose>
+                <when test="_parameter.containsKey('calcFeeEndDate') and calcFeeEndDate != null">
+                    DATE_FORMAT(c.start_date,'%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{calcFeeEndDate},'%Y-%m-%d')
+                    AND DATE_FORMAT(c.end_date,'%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{calcFeeStartDate},'%Y-%m-%d')
+                </when>
+                <otherwise>
+                    DATE_FORMAT(c.start_date,'%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y-%m-%d')
+                    AND DATE_FORMAT(c.end_date,'%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(NOW(),'%Y-%m-%d')
+                </otherwise>
+            </choose>
+            <include refid="parkIdListFilter"/>
+            AND b.plate_number=#{plateNumber}
+            UNION
+            SELECT
+              b.inside_id inside_id,b.create_time create_time
+            FROM  t_pay_inside_plate_bind b
+            JOIN t_pay_inside_car c ON b.inside_id = c.id
+            WHERE c.monthly_type = 3
+            <include refid="parkIdListFilter"/>
+            AND b.plate_number=#{plateNumber}
+            UNION
+            SELECT
+              b.inside_id inside_id,b.create_time create_time
+            FROM t_pay_inside_plate_bind b
+            JOIN t_pay_inside_car c on b.inside_id = c.id
+            WHERE c.monthly_type = 4 AND c.balance > 0
+            <include refid="parkIdListFilter"/>
+            AND b.plate_number=#{plateNumber}) temp order by create_time  desc
+        ) limit 0,1
+    </select>
+
+
+    <select id="selectBalanceList" parameterType="map" resultType="PayInsideCar">
+        SELECT
+        c.*
+        FROM t_pay_inside_car c
+        WHERE c.id in (
+        SELECT inside_id FROM (
+        SELECT b.inside_id inside_id,b.create_time create_time
+        FROM  t_pay_inside_plate_bind b
+        JOIN t_pay_inside_contract c ON b.inside_id = c.inside_id
+        WHERE
+        <choose>
+            <when test="_parameter.containsKey('calcFeeEndDate') and calcFeeEndDate != null">
+                DATE_FORMAT(c.start_date,'%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(#{calcFeeEndDate},'%Y-%m-%d')
+                AND DATE_FORMAT(c.end_date,'%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(#{calcFeeStartDate},'%Y-%m-%d')
+            </when>
+            <otherwise>
+                DATE_FORMAT(c.start_date,'%Y-%m-%d') <![CDATA[ <= ]]> DATE_FORMAT(NOW(),'%Y-%m-%d')
+                AND DATE_FORMAT(c.end_date,'%Y-%m-%d') <![CDATA[ >= ]]> DATE_FORMAT(NOW(),'%Y-%m-%d')
+            </otherwise>
+        </choose>
+        AND b.plate_number=#{plateNumber}
+        UNION
+        SELECT
+        b.inside_id inside_id,b.create_time create_time
+        FROM  t_pay_inside_plate_bind b
+        JOIN t_pay_inside_car c ON b.inside_id = c.id
+        WHERE c.monthly_type = 3
+        AND b.plate_number=#{plateNumber}
+        UNION
+        SELECT
+        b.inside_id inside_id,b.create_time create_time
+        FROM t_pay_inside_plate_bind b
+        JOIN t_pay_inside_car c on b.inside_id = c.id
+        WHERE c.monthly_type = 4 AND c.balance > 0
+        AND b.plate_number=#{plateNumber}) temp order by create_time  desc
+        )
+    </select>
+
+
+    <update id="updateBalance" parameterType="map">
+      UPDATE t_pay_inside_car c SET c.balance = c.balance - #{toatlCharge},is_sync=0
+      WHERE c.id = #{id} AND c.balance >= #{toatlCharge}
+    </update>
+
+    <select id="findInsideCarList" parameterType="map" resultType="com.xhb.pay.bean.PayInsideCar">
+        SELECT
+            pic.`id`,
+            pic.`owner_name`,
+            pic.`owner_mobile`,
+            pic.`lot_num`,
+            pic.`monthly_type` AS monthlyType,
+            pic.`plate_nums`AS plateNums,
+            IF(pic.`monthly_type`>2,NULL,pic.`end_date`) AS endDate
+        FROM `t_pay_inside_car` pic
+        WHERE pic.`group_code` = #{groupCode}
+        AND pic.`park_id` = #{parkId}
+        AND CONCAT(pic.`owner_name`,pic.`owner_mobile`,pic.`plate_nums` ) LIKE CONCAT('%',#{keys},'%')
+        ORDER BY update_time DESC
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+    </select>
+
+    <select id="findInsideCarById" parameterType="map" resultType="com.xhb.pay.bean.PayInsideCar">
+        SELECT
+            pic.`id`,
+            pic.`owner_name`,
+            pic.`owner_mobile`,
+            pic.`lot_num`,
+            pic.`monthly_type` AS monthlyType,
+            pic.`plate_nums`AS plateNums,
+            IF(pic.`monthly_type`>2,NULL,pic.`end_date`) AS endDate,
+            pic.`start_date`,
+            plt.`lease_name` AS leaseTypeName,
+            pmr.`rule_name` AS monthlyRuleName
+        FROM `t_pay_inside_car` pic
+        LEFT JOIN `t_park_lease_type` plt ON plt.`id` = pic.`lease_type_id`
+        LEFT JOIN `t_park_monthly_rule` pmr ON pmr.`id` = pic.`rule_id`
+        WHERE pic.id = #{id}
+    </select>
+
+    <select id="findInsideCarCount" resultType="java.lang.Integer">
+    SELECT
+        COUNT(*)
+    FROM t_pay_inside_car
+    WHERE park_id = #{parkId}
+    AND DATE_FORMAT(create_time,'%Y-%m') = #{dateTime}
+    </select>
+
+    <select id="findMonthlyVehicleList" resultType="com.xhb.pay.vo.MonthlyVehicleVo">
+        SELECT
+	        pic.id insideId,
+	        pic.plate_nums plateNums,
+	        pic.rule_id ruleId,
+	        ic.end_date endDate,
+	        ic.amount amount
+        FROM t_pay_inside_car pic
+        INNER JOIN (
+          SELECT * FROM (SELECT * FROM t_pay_inside_contract ORDER BY create_time DESC) tpic GROUP BY tpic.inside_id
+          ) ic ON pic.id = ic.inside_id
+        WHERE pic.front_user_id = #{frontUserId}
+    </select>
+
+</mapper>

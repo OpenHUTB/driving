@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.UcenterTollCollectorDao">
+
+
+    <select id="findUcenterListByParkIds" resultType="com.xhb.park.bean.UcenterTollCollector">
+        SELECT
+        collector_id,
+        NAME,
+        park_id,
+        org_id,
+        mobile,
+        is_sync,
+        PASSWORD,
+        login_name,
+        group_code,
+        is_road,
+        park_ids,
+        create_user,
+        create_time,
+        update_user,
+        update_time
+        FROM
+        t_ucenter_toll_collector
+        WHERE is_road = #{road}
+        AND (
+        <foreach item="parkId" collection="parkIds" separator="or" index="index">
+            park_ids LIKE CONCAT('%',#{parkId},'%')
+        </foreach>
+        )
+
+    </select>
+</mapper>

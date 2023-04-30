@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>出入场数量趋势统计</title>
+    <%
+    layout("/page/tags/header.html",{date:true}){}
+    %>
+    <script type="text/javascript" src="${staticPath}/js/echart/echarts.min.js"></script>
+    <script type="text/javascript" src="${staticPath}/js/easyui/datagrid-export.js"></script>
+</head>
+<style>
+    .filterDiv {
+        margin-left: 10px;
+    }
+
+    .chartDiv {
+        width: 96%;
+        height: 400px;
+        margin-left: 30px;
+    }
+
+    .aButton {
+        height: 15px;
+        line-height: 15px;
+        float: right;
+    }
+</style>
+<body style="background-color: white">
+<div id="len">
+    <div class="filterDiv">
+        开始时间:
+        <input id="startTime" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})"/>
+        截止时间:
+        <input id="endTime" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})"/>
+        <label>停车场:</label> <input type='text' autocomplete='off' class='easyui-combobox '
+                                   id='parkId_import' name='id' valuefield='parkId' textfield='parkName'
+                                   url='${pay_api_basePath}/ms/parking/getParkParkingList?jsonpCallback=?'/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" plain="true"
+           onclick="submitDay()">查询</a>
+    </div>
+
+    <div class="chartDiv" id="chartDiv">
+        <div style="height:410px;width: 100%;padding-top: 5px;" id="day">
+
+        </div>
+    </div>
+</div>
+
+<div class="infoGroup" style="height: 50px; line-height: 50px">
+
+</div>
+<div id="len2">
+    <div class="filterDiv">
+        开始日期:
+        <input id="startDate" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})"/>
+        截止日期:
+        <input id="endDate" class="Wdate" type="text" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})"/>
+        <label>停车场:</label> <input type='text' autocomplete='off' class='easyui-combobox '
+                                   id='parkId_import2' name='id' valuefield='parkId' textfield='parkName'
+                                   url='${pay_api_basePath}/ms/parking/getParkParkingList?jsonpCallback=?'/>
+        <a href="javascript:void(0)" class="easyui-linkbutton" plain="true"
+           onclick="submitDate()">查询</a>
+    </div>
+    <div class="chartDiv" id="chartDiv2">
+        <div style="height:410px;width: 100%;padding-top: 5px;" id="date">
+
+        </div>
+    </div>
+</div>
+<script>
+    //基于准备好的DOM，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('day'));
+    var myChart2 = echarts.init(document.getElementById('date'));
+
+    $(function () {
+        //时间
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var lastMonth;
+        if((date.getMonth())<=9){
+            lastMonth="0"+(date.getMonth());
+        }else{
+            lastMonth=date.getMonth();
+        }
+        //过去一个月
+        var Last = year + seperator1 + lastMonth + seperator1 + strDate;
+        //当期时间
+        var currentTime = year + seperator1 + month + seperator1 + strDate;
+
+        $("#startTime").val(currentTime);
+        $("#endTime").val(currentTime);
+        $('#parkId_import').combobox({
+            onLoadSuccess : function(){
+                var parkId_import = $("#parkId_import").combobox("getData");
+                if (parkId_import && parkId_import.length > 0) {
+                    $("#parkId_import").combobox("setValue", parkId_import[0].parkId);
+                }
+                submitDay();
+            }
+        });
+
+        $('#startDate').val(Last);
+        $('#endDate').val(currentTime);
+        $('#parkId_import2').combobox({
+            onLoadSuccess : function(){
+                var parkId_import = $("#parkId_import2").combobox("getData");
+                if (parkId_import && parkId_import.length > 0) {
+                    $("#parkId_import2").combobox("setValue", parkId_import[0].parkId);
+                }
+                submitDate();
+            }
+        })
+    });
+
+    function submitDay() {
+        var startTime=$("#startTime").val();
+        if(startTime == "" ){
+            EalertE("开始时间不能为空");
+            return;
+        }
+        var endTime=$("#endTime").val();
+        if(endTime == ""){
+            EalertE("截止时间不能为空");
+            return;
+        }
+        if(startTime > endTime){
+            EalertE("开始时间不能大于截止时间");
+            return;
+        }
+        var parkId=$("#parkId_import").combobox('getValue');
+
+        //封装24小时折线图
+        function timelineChart(res,enter,out){
+            option = {
+                title: {
+                    text: "出入场数量趋势   总入场 : " + enter + '  总出场 : ' + out
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    formatter: function(params) {
+                        var seriousData = '';
+                        for(var i=0;i<params.length;i++){
+                            var percentage = '0%';
+                            if(params[i].seriesName == '入场'){
+                                if(enter != 0){
+                                    percentage = Math.round(params[i].value / enter * 10000) / 100.00 + "%";
+                                }
+                            }else{
+                                if(out != 0){
+                                    percentage = Math.round(params[i].value / out * 10000) / 100.00 + "%";
+                                }
+                            }
+                            seriousData +='<p>'+ params[i].marker+params[i].seriesName+'：'+params[i].value+'&nbsp;&nbsp;&nbsp;&nbsp;百分比：'+percentage+ '</p>';
+                        }
+                        return  '<p >' + params[0].axisValue + '<p/>' + seriousData;
+                    }
+                },
+                legend: {
+                    data: res.data.parkNameList
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: res.data.dateList
+                },
+                yAxis:
+                    {
+                        type: 'value'
+                    },
+                series: res.data.parkDataList
+            };
+        }
+
+        $.ajax({
+            type : 'post',
+            url : '${basePath}/ms/admissionReport/findOutEnterCount',
+            data: {startTime : startTime, endTime : endTime, parkId : parkId},
+            dataType: 'json',
+            success: function (val) {
+                if(val.data == null){
+                    Ealert("暂无数据！");
+                    return;
+                }
+                var enter = val.data.enter;
+                var out = val.data.out;
+                $.ajax({
+                    type: 'post',
+                    url: '${basePath}/ms/admissionReport/dayReport',
+                    data: {startTime : startTime, endTime : endTime, parkId : parkId},
+                    dataType: 'json',
+                    success: function (res) {
+                        timelineChart(res,enter,out);
+                        myChart.setOption(option);
+                    }
+                });
+            }
+        });
+
+    }
+
+    function submitDate() {
+        var startDate=$("#startDate").val();
+        if(startDate == ""){
+            EalertE("开始日期不能为空");
+            return;
+        }
+        var endDate=$("#endDate").val();
+        if(endDate == ""){
+            EalertE("截止日期不能为空");
+            return;
+        }
+        if(startDate > endDate){
+            EalertE("开始日期不能大于截止日期");
+            return;
+        }
+        var parkId=$("#parkId_import2").combobox('getValue');
+
+        //封装起止日期折线图
+        function datelineChart(res,enter,out){
+            option = {
+                title: {
+                    text: "出入场数量趋势   总入场 : " + enter + '  总出场 : ' + out
+                },
+                tooltip: {
+                    trigger: 'axis',
+                },
+                legend: {
+                    data: res.data.parkNameList
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: res.data.dateList
+                },
+                yAxis:
+                    {
+                        type: 'value'
+                    },
+                series: res.data.parkDataList
+            };
+        }
+
+        $.ajax({
+            type : 'post',
+            url : '${basePath}/ms/admissionReport/findOutEnterCount',
+            //匹配xml中参数名
+            data : {startTime:startDate, endTime: endDate, parkId: parkId},
+            dataType : 'json',
+            success: function(val){
+                if(val.data == null){
+                    Ealert("暂无数据！");
+                    return;
+                }
+                var enter = val.data.enter;
+                var out = val.data.out;
+                $.ajax({
+                    type: 'post',
+                    url:'${basePath}/ms/admissionReport/dateReport',
+                    data: {startDate:startDate, endDate: endDate, parkId: parkId},
+                    dataType:'json',
+                    success:function(res){
+                        datelineChart(res,enter,out);
+                        myChart2.setOption(option);
+                    }
+                });
+            },
+        });
+
+    }
+
+</script>
+</body>
+</html>

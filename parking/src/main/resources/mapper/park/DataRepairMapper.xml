@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.DataRepairDao">
+
+    <update id="updateOneData" parameterType="map">
+        update ${tableName} set is_sync = 0 where park_id = #{parkId}
+    </update>
+    <update id="updateDataByTime" parameterType="map">
+         update ${tableName} set is_sync = 0 where park_id = #{parkId}
+         and create_time between #{startDate} and #{endDate}
+    </update>
+    <update id="updateDataByTableName" parameterType="map">
+         update ${tableName} set is_sync = 0 where id = #{parkId}
+    </update>
+
+    <update id="updateDataByTableNameAndTime" parameterType="map">
+          update ${tableName} set is_sync = 0 where park_id = #{parkId}
+        <if test="startDate != null and startDate != '' and endDate != null and  endDate != ''">
+            and create_time between #{startDate} and #{endDate}
+        </if>
+    </update>
+
+    <update id="updateDataByParkTableNameAndTime" parameterType="map">
+          update ${tableName} set is_sync = 0 where id = #{parkId}
+        <if test="startDate != null and startDate !=  '' and endDate != null and  endDate != ''">
+            and create_time between #{startDate} and #{endDate}
+        </if>
+    </update>
+
+
+
+</mapper>

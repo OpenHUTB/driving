@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayInsideRechargeDao">
+
+    <sql id="pub_where">
+        WHERE c.`group_code`=#{groupCode}
+        <if test="ownerName != null and ownerName != ''">
+            AND `owner_name` LIKE CONCAT('%',#{ownerName},'%')
+        </if>
+        <if test="ownerMobile != null  and ownerMobile != ''">
+            AND `owner_mobile` LIKE CONCAT('%',#{ownerMobile},'%')
+        </if>
+        <if test="plateNums != null  and plateNums != ''">
+            AND `plate_nums` LIKE CONCAT('%',#{plateNums},'%')
+        </if>
+        <if test="createTimeMin != null  and createTimeMin != ''">
+            <![CDATA[ AND r.`create_time` >= #{createTimeMin} ]]>
+        </if>
+        <if test="createTimeMax != null  and createTimeMax != ''">
+            <![CDATA[ AND r.`create_time` <= #{createTimeMax} ]]>
+        </if>
+        <if test="parkId !=null and parkId!='' ">
+            AND r.`park_id` = #{parkId}
+        </if>
+        <if test="parkIds !=null and parkIds!='' ">
+            AND r.`park_id` IN (${parkIds})
+        </if>
+        <if test="isContract != null">
+            AND r.`is_contract` = #{isContract}
+        </if>
+    </sql>
+
+    <select id="findDateList" parameterType="map" resultType="com.xhb.pay.dto.PayInsideRechargeExportDTO">
+        SELECT r.`inside_id`,
+        c.`owner_name`,
+        c.`owner_mobile`,
+        c.`plate_nums`,
+        c.`room_num`,
+        r.`remark`, r.`amount`,
+        r.`give_amount`,
+        r.`is_contract`,
+        r.`from_type`,
+        r.`create_user`,
+        r.`create_time`,
+        p.`park_name`
+        from `t_pay_inside_recharge` r
+        JOIN `t_pay_inside_car` c ON c.`id`=r.`inside_id`
+        LEFT JOIN `t_park_parking` p on p.`id` = r.`park_id`
+        <include refid="pub_where"/>
+        <choose>
+            <when test="sortTzwName != null and sortTzwName != ''">
+                ORDER BY ${sortTzwName}
+            </when>
+            <otherwise>
+                ORDER BY create_time desc
+            </otherwise>
+        </choose>
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+    </select>
+
+    <select id="findSum" parameterType="map" resultType="PayInsideRecharge">
+        SELECT SUM(amount) AS amount, SUM(give_amount) AS giveAmount FROM `t_pay_inside_recharge` r
+        JOIN `t_pay_inside_car` c ON c.`id`=r.`inside_id`
+        LEFT JOIN `t_park_parking` p ON p.`id` = r.`park_id`
+        <include refid="pub_where"/>
+    </select>
+
+    <select id="findCount"  resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM `t_pay_inside_recharge` r
+        JOIN `t_pay_inside_car` c ON c.`id`=r.`inside_id`
+        <include refid="pub_where"/>
+    </select>
+
+
+    <select id="findLastRecord" parameterType="PayInsideRecharge" resultType="PayInsideRecharge">
+        select * from t_pay_inside_recharge WHERE 1=1
+        <if test="parkId != null and parkId != ''">
+            AND park_id = #{parkId}
+        </if>
+        <if test="insideId != null and insideId != ''">
+            AND inside_id = #{insideId}
+        </if>
+        ORDER BY create_time DESC
+        limit 0,1
+    </select>
+
+    <select id="isRecharge" parameterType="String" resultType="Long">
+        SELECT DISTINCT pir.`inside_id` FROM `t_pay_inside_recharge` pir
+        WHERE pir.`inside_id` IN (${ids})
+    </select>
+
+    <select id="getMonthRecharge"  resultType="java.lang.Double">
+        SELECT
+            IFNULL(SUM(amount), 0) amount
+        FROM t_pay_inside_recharge
+        WHERE park_id = #{parkId}
+        AND DATE_FORMAT(create_time,'%Y-%m') = #{dateTime}
+    </select>
+
+
+</mapper>

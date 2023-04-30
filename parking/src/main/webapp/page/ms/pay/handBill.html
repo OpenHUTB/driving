@@ -1,0 +1,59 @@
+<form id="addUpdateForm" method="post">
+    <div class="fitem">
+        <div class='fitemDiv'>
+            <label>商户名称:</label>
+            <input type='text' autocomplete='off' dataType='*' nullmsg='商户名称不能为空' errormsg='商户名称输入了错误的格式' class='easyui-combobox '
+                   id='mch_id' name='id' valuefield='id' textfield='mchName'
+                   url='${basePath}/ms/x/pay_mch/findListData' />
+            <span class='form-field-required'>*</span>
+        </div>
+    </div>
+    <div class="fitem">
+        <div class='fitemDiv'>
+            <label>日期:</label>
+            <input type="text" autocomplete="off" datatype="*" nullmsg="日期不能为空" errormsg="日期输入了错误的格式" class="Wdate " id="bill_task_date" onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',maxDate:'%y-%M-%d'})">
+            <span class="Validform_checktip" checkobj="accessTime"></span>
+            <span class="form-field-required">*</span>
+        </div>
+    </div>
+</form>
+
+<script>
+    var addUpdateForm = null;
+
+    $(function () {
+        $('#subBtn').show();
+        addUpdateForm = $('#addUpdateForm').Validform({
+            tiptype: 5
+        });
+        $('#mch_id').combobox({
+            onLoadSuccess: function () {
+                var mchId = $("#mch_id").combobox("getData");
+                if (mchId && mchId.length > 0) {
+                    $("#mch_id").combobox("setValue", mchId[0].id);
+                }
+            }
+        })
+        var sameDay = dayjs().format('YYYY-MM-DD');
+        $('#bill_task_date').val(sameDay);
+    })
+
+    function save() {
+        $('#addUpdateForm').form('submit', {
+            url: '${basePath}ms/pay_gateway_bill_task/billReconciliation?mch_id=' + $('#mch_id').combobox("getValue") + "&bill_task_date=" + $('#bill_task_date').val()  ,
+            onSubmit: function () {
+                return (addUpdateForm.check());
+            },
+            success: function (res) {
+                res = $.parseJSON(res);
+                if (res.code == 200) {
+                    Ealert("操作成功");
+                    closeDialog();
+                    reload();
+                } else {
+                    EalertE(res.message);
+                }
+            }
+        });
+    }
+</script>

@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayCarcomeHistoryDao">
+
+
+    <insert id="copyPayCarcome2History" parameterType="map">
+        replace into t_pay_carcome_history (id,park_id,access_time,port_id,car_type,update_time,plate_number,status,is_sync,type,
+                                            record_type,create_user,update_user,create_time,group_code,version,is_valid,access_time_hour,
+                                            access_time_day,access_time_month,access_time_year,access_time_dt,access_time_date)
+        (select id,park_id,access_time,port_id,car_type,update_time,plate_number,status,is_sync,type,
+                record_type,create_user,update_user,create_time,group_code,version,is_valid,
+                (case  when access_time = '' then null when access_time is null then null else substr(access_time,12,2) end) as access_time_hour,
+                (case  when access_time = '' then null when access_time is null then null else substr(access_time,9,2) end) as access_time_day,
+                (case  when access_time = '' then null when access_time is null then null else substr(access_time,6,2) end) as access_time_month,
+                (case  when access_time = '' then null when access_time is null then null else substr(access_time,1,4) end) as access_time_year,
+                (case  when access_time = '' then null when access_time is null then null else concat(substr(access_time,1,4),substr(access_time,6,2)) end) as access_time_dt,
+                (case  when access_time = '' then null when access_time is null then null else concat(substr(access_time,1,4),substr(access_time,6,2),substr(access_time,9,2)) end) as access_time_date
+        from t_pay_carcome
+        <where>
+            t_pay_carcome.park_id = #{id}
+            <if test="time != null and time != ''">
+                and (t_pay_carcome.create_time <![CDATA[>=]]> #{time} or t_pay_carcome.access_time <![CDATA[>=]]> #{time})
+            </if>
+        </where>
+        )
+    </insert>
+
+    <insert id="copyPayCarcome2Ext" parameterType="map">
+        replace into t_pay_carcome_ext (id,img_path,img,car_color,update_time,remark,is_sync,create_user,update_user,create_time,update_collector_id,
+                                            group_code,region_id,road_lot_id,sync_time,park_id)
+        (select id,img_path,img,car_color,update_time,remark,is_sync,create_user,update_user,create_time,update_collector_id,
+        group_code,region_id,road_lot_id,sync_time,park_id
+        from t_pay_carcome
+        <where>
+            t_pay_carcome.park_id = #{id}
+            <if test="time != null and time != ''">
+                and (t_pay_carcome.create_time <![CDATA[>=]]> #{time} or t_pay_carcome.access_time <![CDATA[>=]]> #{time})
+            </if>
+        </where>
+        )
+    </insert>
+    <select id="queryPayCarcomePage" parameterType="com.xhb.pay.form.PayCarcomeForm" resultType="com.xhb.pay.dto.PayCarcomeExportDTO">
+        select
+        his.id,his.park_id,his.port_id,his.plate_number,his.status,his.record_type,his.car_type,his.type,his.access_time
+        from t_pay_carcome_history his
+        <where>
+            <if test="parkId != null">
+                and his.park_id = #{parkId}
+            </if>
+            <if test="portId != null">
+                and his.port_id = #{portId}
+            </if>
+            <if test="plateNumber != null  and plateNumber != ''">
+                and his.plate_number = #{plateNumber}
+            </if>
+            <if test="accessTimeMin != null  and accessTimeMin != ''">
+                and his.access_time <![CDATA[>=]]> #{accessTimeMin}
+            </if>
+            <if test="accessTimeMax != null  and accessTimeMax != ''">
+                and his.access_time <![CDATA[<=]]> #{accessTimeMax}
+            </if>
+            <if test="isValid != null">
+                and his.is_valid = #{isValid}
+            </if>
+            <if test="groupCode != null  and groupCode != ''">
+                and his.group_code = #{groupCode}
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND park_id IN (${parkIds})
+            </if>
+        </where>
+        order by his.create_time desc
+        limit #{num},#{rows};
+    </select>
+    <select id="queryPayCarcome" parameterType="long" resultType="com.xhb.pay.dto.PayCarcomeExportDTO">
+        select his.id,his.park_id,his.access_time,his.port_id,his.plate_number,his.type,his.record_type,ext.img,ext.remark,his.car_type,ext.sync_time
+        from t_pay_carcome_history his left join t_pay_carcome_ext ext on his.id = ext.id
+        where his.id = #{id}
+    </select>
+    <select id="conuntCarcome" parameterType="map" resultType="long">
+        select count(id)
+        from t_pay_carcome_history
+        <where>
+            <if test="parkId != null">
+                and park_id = #{parkId}
+            </if>
+            <if test="portId != null  and portId != ''">
+                and port_id = #{portId}
+            </if>
+            <if test="plateNumber != null  and plateNumber != ''">
+                and plate_number like concat('%', #{plateNumber}, '%')
+            </if>
+            <if test="accessTimeMin != null  and accessTimeMin != ''">
+                and access_time <![CDATA[>=]]> #{accessTimeMin}
+            </if>
+            <if test="accessTimeMax != null  and accessTimeMax != ''">
+                and access_time <![CDATA[<=]]> #{accessTimeMax}
+            </if>
+            <if test="isValid != null  and isValid != ''">
+                and is_valid = #{isValid}
+            </if>
+            <if test="groupCode != null  and groupCode != ''">
+                and group_code = #{groupCode}
+            </if>
+        </where>
+    </select>
+    <select id="findListData" parameterType="java.util.Map" resultType="com.xhb.pay.dto.PayCarcomeExportDTO">
+        SELECT his.car_type,his.type,his.access_time,ext.sync_time,ext.update_time,his.plate_number,his.status,his.is_sync,ext.remark,his.record_type,his.park_id,his.port_id,
+               ext.img,ext.img_path,his.id
+        FROM t_pay_carcome_history his left join t_pay_carcome_ext ext on his.id = ext.id
+        <where>
+            <if test="groupCode != null and groupCode != ''">
+                AND his.group_code = #{groupCode}
+            </if>
+            <if test="parkId != null and parkId != ''">
+                AND his.park_id = #{parkId}
+            </if>
+            <if test="isValid != null and isValid != ''">
+                AND his.is_valid = #{isValid}
+            </if>
+            <if test="portId != null and portId != ''">
+                AND his.port_id = #{portId}
+            </if>
+            <if test="accessTimeMin != null  and accessTimeMin != ''">
+                AND his.access_time <![CDATA[>=]]> #{accessTimeMin}
+            </if>
+            <if test="accessTimeMax != null  and accessTimeMax != ''">
+                AND his.access_time <![CDATA[<=]]> #{accessTimeMax}
+            </if>
+            <if test="plateNumber != null  and plateNumber != ''">
+                AND his.plate_number LIKE CONCAT('%',#{plateNumber},'%')
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND his.park_id IN (${parkIds})
+            </if>
+        </where>
+        <choose>
+            <when test="sortTzwName != null and sortTzwName != ''">
+                ORDER BY ${sortTzwName}
+            </when>
+            <otherwise>
+                ORDER BY his.access_time DESC
+            </otherwise>
+        </choose>
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+        <if test="pageNo !=null">
+            limit ${pageNo},${rows}
+        </if>
+    </select>
+    <delete id="delData2PayCarcomeHistory" parameterType="long">
+        delete from t_pay_carcome_history where id = #{id}
+    </delete>
+    <update id="updateData2PayCarcomeHistory" parameterType="com.xhb.pay.form.PayCarcomeForm">
+        update t_pay_carcome_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parkId != null">
+                park_id = #{parkId},
+            </if>
+            <if test="accessTime != null and accessTime != ''">
+                access_time = #{accessTime},
+            </if>
+            <if test="portId != null">
+                port_id = #{portId},
+            </if>
+            <if test="carType != null">
+                car_type = #{carType},
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">
+                plate_number = #{plateNumber},
+            </if>
+            <if test="carType != null">
+                type = #{type},
+            </if>
+            <if test="recordType != null">
+                record_type = #{recordType},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+    <insert id="addData2PayCarcomeHistory" parameterType="com.xhb.pay.form.PayCarcomeForm">
+        insert into t_pay_carcome_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="groupCode != null and groupCode != ''">group_code,
+            </if>
+            <if test="accessTime != null and accessTime != ''">access_time,
+            </if>
+            <if test="parkId != null">park_id,
+            </if>
+            <if test="portId != null">port_id,
+            </if>
+            <if test="carType != null">car_type,
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">plate_number,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="recordType != null">record_type,
+            </if>
+            <if test="isSync != null">is_sync,
+            </if>
+            <if test="updateTime != null and updateTime != ''">update_time,
+            </if>
+            <if test="updateTime != null and updateTime != ''">create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="groupCode != null and groupCode != ''">#{groupCode},
+            </if>
+            <if test="accessTime != null and accessTime != ''">#{accessTime},
+            </if>
+            <if test="parkId != null">#{parkId},
+            </if>
+            <if test="portId != null">#{portId},
+            </if>
+            <if test="carType != null">#{carType},
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">#{plateNumber},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="recordType != null">#{recordType},
+            </if>
+            <if test="isSync != null">#{isSync},
+            </if>
+            <if test="updateTime != null and updateTime != ''">#{updateTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">#{updateTime},
+            </if>
+        </trim>
+    </insert>
+    <insert id="batchReplace" parameterType="com.xhb.pay.bean.PayCarcomeHistory" >
+        replace into t_pay_carcome_history
+                (access_Time,  car_Type, id, is_Sync,park_Id,plate_Number,record_Type,group_Code,status,
+                    type,port_Id,access_Time_Hour,access_Time_Day,access_Time_Month,access_Time_Year,
+                    access_time_dt,access_time_date)
+        value
+        <foreach collection="list" item="vo" separator="," close=";">
+            (#{vo.accessTime},  #{vo.carType}, #{vo.id}, #{vo.isSync},#{vo.parkId}
+            ,#{vo.plateNumber},#{vo.recordType},#{vo.groupCode},#{vo.status}
+            ,#{vo.type},#{vo.portId},#{vo.accessTimeHour},#{vo.accessTimeDay}
+            ,#{vo.accessTimeMonth},#{vo.accessTimeYear},#{vo.accessTimeDt},#{vo.accessTimeDate})
+        </foreach>
+    </insert>
+</mapper>

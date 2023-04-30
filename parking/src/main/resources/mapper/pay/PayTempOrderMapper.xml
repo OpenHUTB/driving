@@ -1,0 +1,635 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayTempOrderDao">
+
+    <sql id="base_cloumn">
+        `id`
+        ,
+        `order_no`
+        orderNo,
+        `park_id`
+        parkId,
+        `port_id`
+        portId,
+        `plate_number`
+        plateNumber,
+        `enter_time`
+        enterTime,
+        `out_time`
+        outTime,
+        `enter_id`
+        enterId,
+        `out_id`
+        outId,
+        `order_status`
+        orderStatus,
+        `total_amount`
+        totalAmount,
+        `pay_type`
+        payType,
+        `pay_order_no`
+        payOrderNo,
+        `pay_time`
+        payTime,
+        `create_time`
+        createTime,
+        `update_time`
+        updateTime,
+        `detail`,
+        `syn_status`
+        synStatus,
+        `is_online`
+        isOnline,
+        `user_id`
+        userId,
+        `actual_amount`
+        actualAmount,
+        `discount_amount`
+        discountAmount,
+        `update_user`
+        updateUser,
+        `create_user`
+        createUser,
+        lifting_rod_time,
+        is_advance_pay,
+        relief_type,
+        car_type carType,
+        parking_time parkingTime,
+        cash_coupon_pay cashCouponPayAmount,
+        collector_id collectorId
+    </sql>
+
+    <select id="findLastOrder" parameterType="com.xhb.pay.bean.PayTempOrder" resultType="com.xhb.pay.bean.PayTempOrder">
+        SELECT
+        <include refid="base_cloumn"></include>
+        FROM
+        `t_pay_temp_order`
+        WHERE  plate_number=#{plateNumber}
+
+        <if test="parkId !=null and parkId!='' ">
+            AND  park_id=#{parkId}
+        </if>
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+        AND (order_status=1 OR order_status=2)
+        AND create_time> (SELECT  IFNULL(max(access_time),NOW()) as access_time FROM t_pay_carcome where plate_number=#{plateNumber}
+        <if test="parkId !=null and parkId!='' ">
+        AND  park_id=#{parkId}
+        </if> AND type=0)
+        ORDER BY create_time DESC LIMIT 0,1
+    </select>
+
+    <select id="findTempOrderCount" parameterType="map" resultType="int">
+        SELECT COUNT(id) FROM t_pay_temp_order where order_status IN(1,2)
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+    </select>
+
+    <select id="findTodayTempOrderCount" parameterType="map" resultType="int">
+        SELECT COUNT(id)
+        FROM t_pay_temp_order
+        WHERE TO_DAYS(create_time) = TO_DAYS(NOW()) AND order_status IN(1,2)
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+    </select>
+
+    <select id="findSupplementByTime" parameterType="com.xhb.pay.bean.CollectorChangeShifts" resultType="map">
+        SELECT COUNT(pto.`id`) AS `count`,
+               IFNULL(SUM(pto.`actual_amount`), 0) AS amount
+        FROM `t_pay_temp_order` pto
+        WHERE pto.`collector_id` = #{collectorId}
+        AND DATE_FORMAT(pto.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+        <if test="endTime != null and endTime != ''">
+            AND DATE_FORMAT(pto.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>  #{endTime}
+        </if>
+        AND pto.`is_online` = 0
+        AND pto.`order_status` = 1
+        AND pto.id NOT IN(
+            SELECT pa.`temp_order_id` FROM `t_pay_arrears` pa
+            WHERE pa.`collector_id` = #{collectorId}
+            AND DATE_FORMAT(pa.create_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+            <if test="endTime != null and endTime != ''">
+                AND DATE_FORMAT(pa.create_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>  #{endTime}
+            </if>
+        )
+    </select>
+
+    <select id="findSupplementList" parameterType="map" resultType="com.xhb.road.dto.RoadDownChargeDto">
+        SELECT pto.id,
+               pto.plate_number,
+               DATE_FORMAT(pto.pay_time,'%Y-%m-%d %H:%i:%s') AS payTime,
+               pto.`actual_amount` as amount
+        FROM `t_pay_temp_order` pto
+        WHERE pto.collector_id = #{collectorId}
+        AND pto.is_online = 0
+        AND pto.`order_status` = 1
+        AND DATE_FORMAT(pto.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+        <if test="endTime != null and endTime != ''">
+            AND DATE_FORMAT(pto.pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>  #{endTime}
+        </if>
+        AND pto.id NOT IN(
+            SELECT pa.`temp_order_id`
+            FROM `t_pay_arrears` pa
+            WHERE pa.`collector_id` = #{collectorId}
+            AND DATE_FORMAT(pa.create_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+            <if test="endTime != null and endTime != ''">
+                AND DATE_FORMAT(pa.create_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]>  #{endTime}
+            </if>
+        )
+        ORDER BY pto.create_time DESC
+        <if test="start!= null">
+            limit ${start},${end}
+        </if>
+    </select>
+
+    <select id="getActualAmountSum" resultType="java.lang.Double">
+        SELECT IFNULL(SUM(actual_amount),0)  FROM `t_pay_temp_order`
+        WHERE collector_id = #{collectorId}
+        AND is_online = 0
+        AND order_status = 1
+        and DATE_FORMAT(pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ >= ]]> #{startTime}
+        and DATE_FORMAT(pay_time,'%Y-%m-%d %H:%i:%s') <![CDATA[ <= ]]> #{endTime}
+    </select>
+
+    <select id="getMonthRevenueByOnline" resultType="map">
+        SELECT
+            COUNT(*) count ,
+            IFNULL(SUM(actual_amount), 0) amount
+        FROM t_pay_temp_order
+        WHERE park_id = #{parkId}
+        AND DATE_FORMAT(pay_time,'%Y-%m') = #{dateTime}
+        AND order_status = 1
+        AND car_record_type = 0
+        and is_online = #{isOnline}
+    </select>
+
+    <select id="findEverydayIncome" resultType="map">
+        SELECT
+            DATE_FORMAT(pay_time,'%Y-%m-%d') as date,
+            IFNULL(SUM(actual_amount), 0) as actualAmount,
+            IFNULL(SUM(total_amount),0) as totalAmount
+        FROM t_pay_temp_order
+        WHERE park_id = #{parkId}
+        AND DATE_FORMAT(pay_time, '%Y-%m') = #{dateTime}
+        <if test="carType != null">
+            AND car_record_type = #{carType}
+        </if>
+        GROUP BY DATE_FORMAT(pay_time,'%Y-%m-%d')
+    </select>
+
+    <select id="findParkingTimeCount" resultType="map">
+        SELECT
+        sum(case when pto.parking_time <![CDATA[>=]]> 0 and pto.parking_time <![CDATA[<=]]> 60 then 1 else 0 end)  '1',
+        sum(case when pto.parking_time > 60 and pto.parking_time <![CDATA[<=]]>  60 * 2 then 1 else 0 end)  '2',
+        sum(case when pto.parking_time > 60 * 2 and pto.parking_time <![CDATA[<=]]>  60 * 3 then 1 else 0 end)  '3',
+        sum(case when pto.parking_time > 60 * 3 and pto.parking_time <![CDATA[<=]]>  60 * 4 then 1 else 0 end)  '4',
+        sum(case when pto.parking_time > 60 * 4 and pto.parking_time <![CDATA[<=]]>  60 * 5 then 1 else 0 end)  '5',
+        sum(case when pto.parking_time > 60 * 5 and pto.parking_time <![CDATA[<=]]>  60 * 6 then 1 else 0 end)  '6',
+        sum(case when pto.parking_time > 60 * 6 and pto.parking_time <![CDATA[<=]]>  60 * 7 then 1 else 0 end)  '7',
+        sum(case when pto.parking_time > 60 * 7 and pto.parking_time <![CDATA[<=]]>  60 * 8 then 1 else 0 end)  '8',
+        sum(case when pto.parking_time > 60 * 8 and pto.parking_time <![CDATA[<=]]>  60 * 9 then 1 else 0 end)  '9',
+        sum(case when pto.parking_time > 60 * 9 and pto.parking_time <![CDATA[<=]]>  60 * 10 then 1 else 0 end)  '10',
+        sum(case when pto.parking_time > 60 * 10 and pto.parking_time <![CDATA[<=]]>  60 * 11 then 1 else 0 end)  '11',
+        sum(case when pto.parking_time > 60 * 11 and pto.parking_time <![CDATA[<=]]>  60 * 12 then 1 else 0 end)  '12',
+        sum(case when pto.parking_time > 60 * 12 and pto.parking_time <![CDATA[<=]]>  60 * 13 then 1 else 0 end)  '13',
+        sum(case when pto.parking_time > 60 * 13 and pto.parking_time <![CDATA[<=]]>  60 * 14 then 1 else 0 end)  '14',
+        sum(case when pto.parking_time > 60 * 14 and pto.parking_time <![CDATA[<=]]>  60 * 15 then 1 else 0 end)  '15',
+        sum(case when pto.parking_time > 60 * 15 and pto.parking_time <![CDATA[<=]]>  60 * 16 then 1 else 0 end)  '16',
+        sum(case when pto.parking_time > 60 * 16 and pto.parking_time <![CDATA[<=]]>  60 * 17 then 1 else 0 end)  '17',
+        sum(case when pto.parking_time > 60 * 17 and pto.parking_time <![CDATA[<=]]>  60 * 18 then 1 else 0 end)  '18',
+        sum(case when pto.parking_time > 60 * 18 and pto.parking_time <![CDATA[<=]]>  60 * 19 then 1 else 0 end)  '19',
+        sum(case when pto.parking_time > 60 * 19 and pto.parking_time <![CDATA[<=]]>  60 * 20 then 1 else 0 end)  '20',
+        sum(case when pto.parking_time > 60 * 20 and pto.parking_time <![CDATA[<=]]>  60 * 21 then 1 else 0 end)  '21',
+        sum(case when pto.parking_time > 60 * 21 and pto.parking_time <![CDATA[<=]]>  60 * 22 then 1 else 0 end)  '22',
+        sum(case when pto.parking_time > 60 * 22 and pto.parking_time <![CDATA[<=]]>  60 * 23 then 1 else 0 end)  '23',
+        sum(case when pto.parking_time > 60 * 23 and pto.parking_time <![CDATA[<=]]>  60 * 24 then 1 else 0 end)  '24',
+        sum(case when pto.parking_time > 60 * 24 then 1 else 0 end) '25',
+        COUNT(*) totalNumber
+        FROM t_pay_temp_order pto
+        WHERE pto.park_id = #{parkId}
+        AND DATE_FORMAT(pto.create_time,'%Y-%m') = #{dateTime}
+    </select>
+
+    <select id="findTempOrderPayType" resultType="map">
+        SELECT
+	        pay_type payType,
+	        COUNT(*) number
+        FROM t_pay_temp_order
+        WHERE order_status = 1
+        <if test="parkId != null">
+            AND park_id = #{parkId}
+        </if>
+        <if test="dateTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m') = #{dateTime}
+        </if>
+        <if test="dayTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m-%d') = #{dayTime}
+        </if>
+        GROUP BY pay_type
+    </select>
+
+    <select id="findTempOrderPayCashCount" resultType="java.lang.Integer">
+        SELECT
+        	count(*)
+        FROM t_pay_temp_order
+        WHERE pay_type = 10
+        AND order_status = 1
+        <if test="parkId != null">
+            AND park_id = #{parkId}
+        </if>
+        <if test="dateTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m') = #{dateTime}
+        </if>
+        <if test="dayTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m-%d') = #{dayTime}
+        </if>
+    </select>
+
+    <select id="findTempOrderPayAdvanceCode" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM t_pay_temp_order
+        WHERE order_status = 1
+        AND is_advance_pay = 1
+        <if test="parkId != null">
+            AND park_id = #{parkId}
+        </if>
+        <if test="dateTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m') = #{dateTime}
+        </if>
+        <if test="dayTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m-%d') = #{dayTime}
+        </if>
+    </select>
+
+    <select id="findTempOrderPayCode" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM t_pay_temp_order
+        WHERE is_online = 1
+        AND order_status = 1
+        AND is_advance_pay = 0
+        AND advance_pay IS NULL
+        <if test="parkId != null">
+            AND park_id = #{parkId}
+        </if>
+        <if test="dateTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m') = #{dateTime}
+        </if>
+        <if test="dayTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m-%d') = #{dayTime}
+        </if>
+    </select>
+
+    <select id="findTempOrderPayAdvance" resultType="java.lang.Integer">
+        SELECT
+            count(*)
+        FROM t_pay_temp_order
+        WHERE order_status = 1
+        AND advance_pay IS NOT NULL
+        <if test="parkId != null">
+            AND park_id = #{parkId}
+        </if>
+        <if test="dateTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m') = #{dateTime}
+        </if>
+        <if test="dayTime != null">
+            AND DATE_FORMAT(pay_time,'%Y-%m-%d') = #{dayTime}
+        </if>
+    </select>
+
+    <select id="findTempOrderPayActualAmountSum" resultType="java.lang.Double">
+        SELECT
+            IFNULL(sum(actual_amount),0)
+        FROM t_pay_temp_order
+        WHERE park_id = #{parkId}
+        AND DATE_FORMAT(pay_time,'%Y-%m') = #{dateTime}
+        AND order_status = 1
+    </select>
+
+    <select id="findTempOrderPayDiscountAmount" resultType="map">
+        SELECT
+            sum(pto.discount_amount) amount,
+            concat(prt.name,"-",prt.amount) name
+        FROM t_pay_temp_order pto
+        LEFT JOIN t_park_relief_type prt on prt.id = pto.relief_type
+        WHERE pto.park_id = #{parkId}
+        AND DATE_FORMAT(pto.pay_time,'%Y-%m') = #{dateTime}
+        AND pto.relief_type IS NOT NULL
+        AND order_status = 1
+        GROUP BY pto.relief_type
+    </select>
+
+    <select id="findTempStopData" resultType="com.xhb.pay.dto.TempStopAvgHourDTO">
+        SELECT
+            pp.park_type parkType,
+            IFNULL(sum( parking_time ),0) parkingTime,
+            count(*) number
+        FROM
+            t_pay_temp_order pto
+            JOIN t_park_parking pp ON pp.id = pto.park_id
+        WHERE
+            DATE_FORMAT( pay_time, "%Y-%m-%d" ) = #{dateTime}
+            AND pto.order_status = 1
+            AND car_record_type = 0
+            AND park_id = #{parkId}
+    </select>
+
+    <select id="findTempOrderNumberAndAmount" resultType="com.xhb.pay.dto.TempOrderNumberAndAmountDTO">
+        SELECT
+            pp.park_type parkType,
+            DATE_FORMAT(pay_time,"%Y-%m-%d") date,
+            COUNT(*) number,
+            SUM(actual_amount) amount
+        FROM t_pay_temp_order pto
+        JOIN t_park_parking pp ON pp.id = pto.park_id
+        WHERE pto.order_status = 1
+        AND pto.car_record_type = 0
+        AND DATE_FORMAT( pto.pay_time, "%Y-%m-%d" ) <![CDATA[>=]]> #{startTime}
+        AND DATE_FORMAT( pto.pay_time, "%Y-%m-%d" ) <![CDATA[<=]]> #{endTime}
+        <if test="parkId != null">
+            AND park_id = #{parkId}
+        </if>
+        GROUP BY pp.park_type, DATE_FORMAT(pto.pay_time,"%Y-%m-%d")
+    </select>
+
+    <select id="findYesterdayActualSum" resultType="com.xhb.pay.dto.ParkProvinceidDTO">
+        SELECT
+            pp.provinceid,
+            IFNULL(sum(actual_amount),0) amount
+        FROM t_pay_temp_order pto
+        JOIN t_park_parking pp ON pp.id = pto.park_id
+        WHERE DATE_FORMAT(pto.pay_time,"%Y-%m-%d") = #{dateTime}
+        AND pto.order_status = 1
+        AND pto.car_record_type = 0
+        AND pto.park_id = #{parkId}
+    </select>
+
+    <select id="findPayUserCount" resultType="java.lang.Integer">
+        SELECT
+            count( * )
+        FROM
+            ( SELECT id FROM t_pay_temp_order
+              WHERE order_status = 1
+              <if test="dateTime != null">
+                  AND DATE_FORMAT( pay_time, "%Y-%m-%d" ) = #{dateTime}
+              </if>
+                <if test="dateTime == null">
+                    AND DATE_FORMAT( pay_time, "%Y-%m-%d" ) <![CDATA[<=]]> DATE_SUB(curdate(),INTERVAL 1 DAY)
+                </if>
+        <if test="parkId != null">
+                  AND park_id = #{parkId}
+              </if>
+              GROUP BY user_id
+            ) a
+    </select>
+
+
+    <update id="updateSyncStatusForClient" parameterType="map">
+        update t_pay_temp_order set is_sync=1 where id=#{id}
+        and order_status=#{orderStatus}
+    </update>
+
+    <select id="totalAmountDay" parameterType="map" resultType="com.xhb.report.dto.StatementOfAccountsReceivableDTO">
+    SELECT
+    park_id,
+    count(*) as total_car,
+    DATE_FORMAT( out_time, "%d" ) as out_time,
+    sum( total_amount ) as total_amount,
+    (ifnull(sum( actual_amount),0)+
+    ifnull(sum( advance_pay ),0)) as actual_amount
+    FROM
+    t_pay_temp_order
+    WHERE
+    park_id in (${parkIds})
+    AND out_time <![CDATA[>=]]> #{startTime}
+    AND out_time <![CDATA[<=]]> #{endTime}
+    GROUP BY
+    park_id,DATE_FORMAT( out_time, "%d" )
+    <!--        <if test="end != null and end != ''">-->
+    <!--            limit ${start},${end}-->
+    <!--        </if>-->
+</select>
+    <select id="totalAmountMonth" parameterType="map" resultType="com.xhb.report.dto.StatementOfAccountsReceivableDTO">
+        SELECT
+        park_id,
+        count(*) as total_car,
+        DATE_FORMAT( out_time, "%m" ) as out_time,
+        sum( total_amount ) as total_amount,
+        (ifnull(sum( actual_amount),0)+
+        ifnull(sum( advance_pay ),0)) as actual_amount
+        FROM
+        t_pay_temp_order
+        WHERE
+        park_id in (${parkIds})
+        AND out_time <![CDATA[>=]]> #{startTime}
+        AND out_time <![CDATA[<=]]> #{endTime}
+        GROUP BY
+        park_id,DATE_FORMAT( out_time, "%m" )
+    </select>
+
+    <select id="findAllParentParks" resultType="com.xhb.park.bean.ParkParking">
+        select * from t_park_parking
+        where parent_park_id=0
+        and id in (${parkIds})
+    </select>
+
+
+    <select id="getPayTemoOrderVoData" resultType="java.util.Map">
+
+        select x.* from (SELECT
+
+        s.data_center_parkid parkId,
+        p.port_name portName,
+        t.plate_number objectId,
+        t.id eventId,
+        t.pay_time payTime,
+        t.create_time,
+        t.order_status status,
+        t.enter_time enterTime,
+        t.out_time outTime,
+        t.parking_time parkTime,
+        u.name collectorName,
+        t.pay_order_no gatewayOrderId,
+        t.enter_id enterRecordId,
+        t.out_id outRecordId,
+        t.total_amount totalAmount,
+        t.actual_amount payAmount,
+        t.car_record_type carRecordType,
+        t.pay_type payType,
+        t.cash_pay cashPayAmount,
+        t.gate_pay gatePayAmount,
+        t.cash_coupon_id cashCouponId,
+        t.cash_coupon_pay cashCouponPayAmount,
+        t.balance_pay balancePayAmount,
+        t.integral_pay integralPayAmount,
+        t.special_pay specialLossPayAmount,
+        t.special_pass_id specialPassRecordId,
+        t.cash_coupon_hours cashCouponHours,
+        t.cash_coupon_radio cashCouponRadio,
+        o.port_name enterName,
+        t.lifting_rod_time liftingRodTime,
+        t.is_advance_pay isAdvancePay,
+        t.car_type carType,
+        t.detail detail,
+        c.owner_mobile mobile,
+        c.id insideId,
+
+        (case when t.car_record_type =1 and c.monthly_type = 0  then  0
+        when t.car_record_type =1 and c.monthly_type = 1 then 1
+        when t.car_record_type =1 and c.monthly_type = 2  then  2
+        when t.car_record_type =1 and c.monthly_type = 3  then  3
+        when t.car_record_type =1 and c.monthly_type = 4  then  4
+        else '' end) monthlyType,
+        cou.amount,
+        m.merchant_name,
+        park.free_time free_time,
+        t.discount_amount discount_amount
+        FROM t_pay_temp_order t
+        left JOIN t_park_parking_port p On p.id = t.port_id
+        left JOIN t_park_parking_port o On o.id = t.enter_port
+        left JOIN t_ucenter_toll_collector u On u.collector_id = t.collector_id
+        left JOIN t_pay_inside_car c ON c.plate_nums LIKE CONCAT('%',t.plate_number,'%')
+        left JOIN t_sync_park_sett s ON s.park_id  = t.park_id
+        left JOIN t_business_cash_coupon cou ON cou.id  = t.cash_coupon_id
+        left JOIN t_business_merchant m ON m.id = cou.merchant_id
+        left JOIN t_park_parking park ON park.id = t.park_id
+        WHERE
+        t.update_time <![CDATA[ >= ]]> #{staTime}
+        AND t.update_time <![CDATA[ < ]]> #{endTime}
+        AND t.park_id = #{parkId}
+        order by c.update_time desc) x GROUP BY eventId
+
+    </select>
+
+    <delete id="delPayTempOrder" parameterType="java.lang.String">
+        delete from t_pay_temp_order where create_time <![CDATA[ < ]]> '${value}' and order_status <![CDATA[ <> ]]> 0
+    </delete>
+
+
+    <insert id="doInsert" parameterType="com.xhb.pay.bean.PayTempOrder">
+        insert into t_pay_temp_order(
+            id,
+            order_no,
+            park_id,
+            port_id,
+            plate_number,
+            enter_time,
+            out_time,
+            enter_id,
+            out_id,
+            order_status,
+            total_amount,
+            pay_type,
+            pay_order_no,
+            pay_time,
+            create_time,
+            update_time,
+            detail,
+            syn_status,
+            is_online,
+            user_id,
+            actual_amount,
+            discount_amount,
+            update_user,
+            create_user,
+            parking_time,
+            is_sync,
+            collector_id,
+            offline_pay_type,
+            group_code,
+            cash_pay,
+            gate_pay,
+            cash_coupon_id,
+            cash_coupon_pay,
+            balance_pay,
+            integral_pay,
+            special_pay,
+            special_pass_id,
+            cash_coupon_hours,
+            cash_coupon_radio,
+            enter_port,
+            lifting_rod_time,
+            is_advance_pay,
+            relief_type,
+            receiving_park_id,
+            car_record_type,
+            car_type,
+            advance_pay
+        )
+        values
+               <foreach collection="list" item="item" separator=",">
+                   (
+                   #{item.id},
+                   #{item.orderNo},
+                   #{item.parkId},
+                   #{item.portId},
+                   #{item.plateNumber},
+                   #{item.enterTime},
+                   #{item.outTime},
+                   #{item.enterId},
+                   #{item.outId},
+                   #{item.orderStatus},
+                   #{item.totalAmount},
+                   #{item.payType},
+                   #{item.payOrderNo},
+                   #{item.payTime},
+                   #{item.createTime},
+                   #{item.updateTime},
+                   #{item.detail},
+                   #{item.synStatus},
+                   #{item.isOnline},
+                   #{item.userId},
+                   #{item.actualAmount},
+                   #{item.discountAmount},
+                   #{item.updateUser},
+                   #{item.createUser},
+                   #{item.parkingTime},
+                   #{item.isSync},
+                   #{item.collectorId},
+                   #{item.offlinePayType},
+                   #{item.groupCode},
+                   #{item.cashPay},
+                   #{item.gatePay},
+                   #{item.cashCouponId},
+                   #{item.cashCouponPay},
+                   #{item.balancePay},
+                   #{item.integralPay},
+                   #{item.specialPay},
+                   #{item.specialPassId},
+                   #{item.cashCouponHours},
+                   #{item.cashCouponRadio},
+                   #{item.enterPort},
+                   #{item.liftingRodTime},
+                   #{item.isAdvancePay},
+                   #{item.reliefType},
+                   #{item.receivingParkId},
+                   #{item.carRecordType},
+                   #{item.carType},
+                   #{item.advancePay})
+               </foreach>
+    </insert>
+
+
+    <select id="findLastOrderUnPayByEnterId" resultType="com.xhb.pay.bean.PayTempOrder">
+        SELECT
+        <include refid="base_cloumn"></include>
+        FROM `t_pay_temp_order`
+        WHERE enter_id = #{enterId}
+        AND order_status = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <select id="findOrderByPlateNumber" resultType="com.xhb.pay.bean.PayTempOrder">
+        SELECT
+            user_id AS userId
+        FROM
+        `t_pay_temp_order`
+        WHERE plate_number=#{plateNumber}
+        AND user_id is not null
+        LIMIT 0, 1
+    </select>
+</mapper>

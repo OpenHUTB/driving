@@ -1,0 +1,28 @@
+ul {
+	overflow: hidden;
+}
+
+#provinceKeyboard li {
+	width: 10%;
+	padding: 2.5px;
+	float: left;
+}
+
+#alphabetKeyboard li,
+#wjKeyboardDel li,
+#alphabetKeyboardDel li {
+	width: 10%;
+	padding: 2.5px;
+	float: left;
+}
+
+#wjKeyboard li {
+	width: 9.090909%;
+	padding: 2.5px;
+	float: left;
+}
+
+li>div {
+	height: 50px;
+	line-height: 30px;
+}

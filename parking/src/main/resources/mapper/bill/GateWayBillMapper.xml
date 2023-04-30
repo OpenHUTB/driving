@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.GateWayBillDao">
+
+    <insert id="copyGateWayOrder2Temp"  parameterType="map">
+        INSERT INTO `t_pay_gateway_bill_order_temp` (
+          `id`,
+          `order_no`,
+          `total_amount`,
+          `is_reconciliation`,
+          `settlement_amount`,
+          `service_charge`,
+          `create_user`,
+          `create_time`,
+          `update_user`,
+          `update_time`,
+          `mch_id`,
+          `swiftpass_amount`
+        )
+
+        SELECT
+           REPLACE(UUID(),'-',''),
+          `order_no`,
+          `total_amount`,
+           0,
+           0,
+           0,
+           NULL,
+           NULL,
+           NULL,
+           NULL,
+           mch_id,
+           0
+        FROM `t_pay_gateway_order`  WHERE pay_time LIKE '${payDate}%' AND swiftpass_mch_id=#{swiftpassMchId}
+    </insert>
+
+
+    <update id="updateGateWayTempOrder">
+     UPDATE t_pay_gateway_bill_order_temp got
+     INNER JOIN t_pay_gateway_bill_swiftpass_temp sbt
+        ON got.order_no=sbt.order_no
+     SET got.is_reconciliation=1,got.settlement_amount=sbt.settlement_amount,got.service_charge=sbt.service_charge,got.swiftpass_amount=sbt.total_amount*100,
+     got.swiftpass_order_no=sbt.swiftpass_order_no, got.pay_order_no=sbt.pay_order_no
+    </update>
+
+    <update id="updateGateWayOrder">
+    UPDATE t_pay_gateway_order go
+     INNER JOIN t_pay_gateway_bill_swiftpass_temp sbt
+    ON go.order_no=sbt.order_no
+   SET go.is_reconciliation=1,go.settlement_amount=sbt.settlement_amount,go.service_charge=sbt.service_charge
+   ,go.reconciliation_date = DATE_FORMAT(NOW(),'%Y-%m-%d')
+
+    </update>
+    <update id="updateLogHandle" parameterType="map">
+        update t_pay_gateway_bill_log set is_handle=1 where order_no=#{orderNo}
+    </update>
+
+
+    <delete id="tracatTable" parameterType="map">
+        TRUNCATE TABLE ${tableName}
+    </delete>
+
+    <select id="getParkMissOrderNos" resultType="string" parameterType="map">
+        SELECT order_no FROM t_pay_gateway_bill_log WHERE
+        task_id=#{taskId}
+        AND type=3
+    </select>
+
+    <select id="getSquareInfo" resultType="map">
+    SELECT COUNT(1) AS squareNum,SUM(settlement_amount) AS squareAmont,SUM(service_charge) AS squareServiceCharge
+    FROM t_pay_gateway_bill_swiftpass_temp
+    <where>
+       <if test="payType != null and payType !=''">
+           pay_type LIKE '%${payType}%'
+       </if>
+    </where>
+    </select>
+
+    <sql id="addBillLog">
+        INSERT INTO `t_pay_gateway_bill_log` (
+          `id`,
+          `order_no`,
+          `pay_order_no`,
+          `remark`,
+          `type`,
+          `is_handle`,
+          `create_user`,
+          `update_user`,
+          `create_time`,
+          `update_time`,
+          `swiftpass_order_no`,
+          task_id
+        )
+    </sql>
+
+    <insert id="addInconsistentAmountLog" parameterType="map">
+        <include refid="addBillLog"></include>
+        SELECT   REPLACE(UUID(),'-',''),`order_no`,pay_order_no,CONCAT('金额不一致，威富通金额为:',swiftpass_amount,'分，停车场系统金额为:',total_amount,'分'),
+        2,0,NULL,NULL,DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S'),swiftpass_order_no,'${taskId}'
+        FROM
+        `t_pay_gateway_bill_order_temp`  WHERE swiftpass_amount !=total_amount AND swiftpass_amount IS NOT NULL
+    </insert>
+
+    <insert id="addSwiftPassMissLog" parameterType="map">
+        <include refid="addBillLog"></include>
+        SELECT   REPLACE(UUID(),'-',''),`order_no`,pay_order_no,CONCAT('威富通丢单，商户订单号:',order_no),
+        1,0,NULL,NULL,DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S'),NULL,'${taskId}'
+        FROM
+        `t_pay_gateway_bill_order_temp`  WHERE  is_reconciliation!=1
+    </insert>
+
+    <insert id="addParkMissLog" parameterType="map">
+        <include refid="addBillLog"></include>
+        SELECT   REPLACE(UUID(),'-',''),`order_no`,pay_order_no,CONCAT('停车系统丢单，商户订单号:',order_no),
+        3,0,NULL,NULL,DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S'),DATE_FORMAT(NOW(),'%Y-%m-%d %H:%i:%S'),swiftpass_order_no,'${taskId}'
+        FROM
+        `t_pay_gateway_bill_swiftpass_temp`  WHERE  order_no NOT IN (
+        SELECT order_no FROM t_pay_gateway_bill_order_temp
+        )
+    </insert>
+
+    <delete id="delOldTaskLog" parameterType="map">
+        delete from t_pay_gateway_bill_log where task_id=#{taskId}
+    </delete>
+
+</mapper>

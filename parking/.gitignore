@@ -1,0 +1,36 @@
+*.iml
+# Compiled class file
+*.class
+# Log file
+*.log
+# BlueJ files
+*.ctxt
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+/*/target
+/.idea
+/business_client/target
+/park_api/target
+/park_business/target
+/park_client/target
+/park_pub/target
+/park_report/target
+
+/log_dir_IS_UNDEFINED
+/park_task/park_task_client/target
+/park_task/park_task_pub/target
+/park_task/park_task_server/target
+/park_task/.settings
+/*/*.project
+/*/*.classpath
+/*/.settings
+/*/*/*.project
+/*/*/*.classpath
+/*/*/*.settings
+/target/classes/

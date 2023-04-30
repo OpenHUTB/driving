@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+    <title>选择入口</title>
+    <% include("/page/tags/jss_css_include.html"){} %>
+    <script type="text/javascript" src="${basePath}/js/hui/hui-picker.js" charset="utf-8"></script>
+</head>
+<body>
+<header class="hui-header">
+    <h1 id="showParkName">${parameter.plateNum}</h1>
+</header>
+<div class="hui-wrap">
+    <div class="hui-center-title" style="margin-top:15px;"><h1>选择入口</h1></div>
+    <div style="padding:28px;">
+        <button type="button" class="hui-button hui-button-large" id="btn1">请选择</button>
+    </div>
+</div>
+
+<div style="float: bottom;padding-top: 5rem;">
+    <button type="button" class="hui-button hui-button-large hui-primary" id="creatOrderBtn"
+            onclick="carCome()">确定入场
+    </button>
+</div>
+<script type="text/javascript">
+    var portId="";
+    $(function () {
+        var parkId=localStorage.getItem("parkId");
+        $.get('${basePath}/parking_front/xport/list',{parkId:parkId ,portFunType:1},function (res) {
+            var picker1 = new huiPicker('#btn1', function () {
+                var val = picker1.getVal(0);
+                var txt = picker1.getText(0);
+                hui('#btn1').html(txt);
+                portId=val;
+            });
+            var array=[];
+            for (var i = 0; i < res.data.length; i++) {
+                array.push({value:res.data[i].id,text:res.data[i].portName})
+            }
+            picker1.bindData(0, array);
+        })
+    })
+
+    function carCome() {
+       if (portId == "" || portId == null){
+           hui.toast("请选择入口")
+       }
+        var plateNumber = "${parameter.plateNum}";
+        $.post("${basePath}/collector/carCome",{portId:portId,plateNumber:plateNumber},function (res) {
+            if (res.code == 200) {
+                window.location="${basePath}/b/page-collector/index";
+                hui.toast("操作成功");
+            }else {
+                 hui.toast(res.message);
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

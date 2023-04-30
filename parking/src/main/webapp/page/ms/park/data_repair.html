@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>数据修复</title>
+    <%
+    layout("/page/tags/header.html",{date:true}){}
+    %>
+    <script type="text/javascript" src="${staticPath}/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="${staticPath}/js/easyui/jquery.easyui.min.js"></script>
+</head>
+<div class="fitem">
+    <div class='fitemDiv'>
+        <p><input type='text' prompt="请选择停车场" autocomplete='off' dataType='*' nullmsg='停车场名称不能为空'
+                  errormsg='停车场名称输入了错误的格式'
+                  class='easyui-combobox '
+                  id='parkId' name='id' valuefield='id' textfield='parkName'
+                  url='${basePath}/ms/x/parking/findListData'>
+            <a class="easyui-linkbutton" plain="true" onclick="syncAllData()">全量同步</a>
+            <a class="easyui-linkbutton" plain="true" onclick="syncData()">同步选中</a></p>
+    </div>
+</div>
+
+<table id="listGrid" class="easyui-datagrid" title="" style="width:95%;height:70%"
+       data-options="rownumbers:true,singleSelect:false,method:'get',selectOnCheck:true,checkOnSelect:true"  >
+    <thead>
+    <tr>
+        <th data-options="field:'ck',checkbox:true"></th>
+
+    </tr>
+    </thead>
+</table>
+
+
+</body>
+<script>
+
+    var editRow=null;
+    var lastIndex;
+    $('#listGrid').datagrid({
+        url:"${basePath}/ms/data_repair/getTableList",
+        fitColumns:true,//宽度自适应
+        rownumbers:true,
+        nowrap:true,
+        onClickRow: function (rowIndex, rowData) {
+
+            if (rowIndex != lastIndex){
+                $("#listGrid").datagrid('endEdit', lastIndex);
+            }
+            if (rowData.staData){
+                $("#listGrid").datagrid('beginEdit', rowIndex);//设置可编辑状态
+            }
+        },
+
+        onBeforeEdit:function(index,row){
+            editRow=row;
+            row.editing = true;
+            lastIndex = index;
+        },
+        onAfterEdit:function(index, row, changes){
+            $('#listGrid').datagrid('updateRow',{
+                index: index,
+                row: {
+                    occupation: parseInt(row.occupation),
+                    cause: row.cause
+                }
+            });
+
+            row.editing = false;
+
+        },
+        onCancelEdit:function(index,row){
+            debugger
+            row.editing = false;
+
+        },
+        columns:[[
+            {field: 'ck', checkbox:true,width:60,align :'center'},
+            {field:'tableName',title:'表名',width:150,align :'center'},
+            {field:'title',title:'title',width:150,align :'center'},
+
+            {field:'staData',title:'开始时间',width:150,align :'center',
+                editor : {
+                    type : 'datebox',
+
+                }
+            },
+            {field:'endData',title:'结束时间',width:150,align :'center',
+
+                editor : {
+                    type : 'datebox',
+
+                }
+            }
+
+        ]],
+        toolbar: '#grid-toolbar'
+    });
+
+
+    /**
+     * 默认选择全部
+     */
+    function syncAllData() {
+        var parkId = $("#parkId").combobox('getValue');
+        if (parkId == null || parkId == "") {
+            EalertE('请选择停车场');
+            return;
+        }
+
+        var _rows = $('#listGrid').datagrid('getData');
+
+
+        submit(parkId,_rows.rows);
+    }
+
+
+    /**
+     * 同步选中
+     */
+    function syncData() {
+        var parkId = $("#parkId").combobox('getValue');
+        if (parkId == null || parkId == "") {
+            EalertE('请选择停车场!');
+            return;
+        }
+        var _rows = $('#listGrid').datagrid('getSelections');
+        debugger
+        submit(parkId,_rows);
+    }
+
+    function submit(parkId,data) {
+        $.ajax({
+            url: '${basePath}ms/data_repair/repairDataByCondition?parkId='+parkId,
+            type: "POST",
+            async: false,
+            contentType:"application/json;charset=utf-8",
+            data: JSON.stringify(data),
+            success :function (res) {
+                if (res.code == 200){
+                    Ealert('操作成功!');
+                }
+            }
+        });
+    }
+
+    function formatDatebox(value) {
+        if (value == null || value == '') {
+            return '';
+        }
+        var dt = parseToDate(value);//关键代码，将那个长字符串的日期值转换成正常的JS日期格式
+        return dt.format("yyyy-MM-dd"); //这里用到一个javascript的Date类型的拓展方法，这个是自己添加的拓展方法，在后面的步骤3定义
+    }
+
+   $.fn.datebox.defaults.formatter = function(date){
+       debugger
+        var y = date.getFullYear();
+        var m = date.getMonth()+1;
+        var d = date.getDate();
+        return y+'-'+m+'-'+d;
+    }
+    $.fn.datebox.defaults.parser = function(s){
+        var t = Date.parse(s);
+        if (!isNaN(t)){
+            return new Date(t);
+        } else {
+            return new Date();
+        }
+    }
+
+</script>
+</html>
+

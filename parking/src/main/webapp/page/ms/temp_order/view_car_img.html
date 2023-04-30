@@ -1,0 +1,23 @@
+<%
+    include("/page/tags/form_include.html"){}
+%>
+<div>
+    <img class="imgbac" style="width:100%;height:100%"/>
+</div>
+<script>
+    $(function() {
+        $("#subBtn").hide();
+        var id = "${parameter.id}"
+        if(id){
+            $.ajax({
+              type : 'get',
+              url : "${basePath}/ms/x/pay_carcome/info/"+id,
+              success : function(data) {
+                if(data.img){
+                    $(".imgbac").attr("src", downForId+'?fileId=' + data.img);
+                }
+              }
+            });
+        }
+    });
+</script>

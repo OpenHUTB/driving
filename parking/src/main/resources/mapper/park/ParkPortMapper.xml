@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.park.dao.ParkParkingPortDao">
+
+
+    <select id="getEnterPortIdsForCZC" resultType="string" parameterType="map">
+        SELECT id FROM t_park_parking_port WHERE park_id IN (
+		 SELECT  id FROM t_park_parking WHERE parent_park_id=#{parkId}
+		 )
+		 AND port_fun_type=1
+    </select>
+</mapper>

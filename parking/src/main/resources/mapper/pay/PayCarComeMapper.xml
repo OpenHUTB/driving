@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.pay.dao.PayCarcomeDao">
+
+    <sql id="base_column">
+        `id`,
+        `park_id` parkId,
+        `access_time` accessTime,
+        `port_id` portId,
+        `img_path` imgPath,
+        `img`,
+        `car_color` carColor,
+        `car_type` carType,
+        `sync_time` syncTime,
+        `update_time` updateTime,
+        `plate_number` plateNumber,
+        `status`,
+        `remark`,
+        `is_sync` isSync,
+        `type`,
+        `record_type` recordType,
+        `create_user` createUser,
+        `update_user` updateUser,
+        `create_time` createTime,
+        `region_id` regionId,
+        `road_lot_id` roadLotId,
+        `group_code` groupCode
+    </sql>
+
+    <select id="findLastRecfindLastRecord" parameterType="payCarcome" resultType="payCarcome">
+        SELECT
+        <include refid="base_column"></include>
+        FROM
+        `t_pay_carcome`
+        <where>
+            1=1
+            <if test="parkId != null">
+                AND park_id=#{parkId}
+            </if>
+            <if test="portId != null">
+                AND port_id=#{portId}
+            </if>
+            <if test="portIds != null">
+                AND port_id IN (${portIds})
+            </if>
+            <if test="plateNumber != null">
+                AND plate_number=#{plateNumber}
+            </if>
+            <if test="accessTime != null">
+                AND access_time>#{accessTime}
+            </if>
+            <if test="type != null">
+                AND type=#{type}
+            </if>
+            <if test="roadLotId != null">
+                AND road_lot_id = #{roadLotId}
+            </if>
+            AND status != 2
+        </where>
+        ORDER BY create_time DESC
+        limit 0,1
+    </select>
+
+    <!--查询临牌车-->
+    <select id="findTempPlateNumberRecord" parameterType="payCarcome" resultType="payCarcome">
+        SELECT
+        <include refid="base_column"></include>
+        FROM
+        `t_pay_carcome`
+        WHERE
+        STATUS !=2
+        AND plate_number LIKE '临%'
+        AND type = 0
+        <if test="parkId != null">
+            AND park_id=#{parkId}
+        </if>
+        ORDER BY id
+    </select>
+
+    <!--模糊查询车牌号-->
+    <select id="findCarComeListByPlatNumberLike" parameterType="map" resultType="com.xhb.pay.bean.PayCarcome">
+        <foreach collection="toLikeList" item="platNumberForLike" separator="UNION ">
+            <include refid="findCarComeListByPlatNumberLike_sql"/>
+            plate_number LIKE CONCAT('%',#{platNumberForLike},'%')
+        </foreach>
+    </select>
+
+    <sql id="findCarComeListByPlatNumberLike_sql">
+        SELECT
+        tpc.*,tpp.port_name
+        FROM
+        `t_pay_carcome` tpc inner join t_park_parking_port tpp on tpc.port_id = tpp.id
+        WHERE
+        tpc.STATUS !=2 AND tpc.type=0
+        <if test="parkId !=null and parkId!='' ">
+            AND tpc.park_id=#{parkId}
+        </if>
+        AND
+    </sql>
+
+    <select id="findByTypeCount" parameterType="map" resultType="int">
+        SELECT COUNT(id)
+        FROM t_pay_carcome
+        WHERE TYPE = #{type}
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+    </select>
+
+    <select id="findByTypeAndTimeCount" parameterType="map" resultType="int">
+        SELECT COUNT(id)
+        FROM t_pay_carcome
+        WHERE TO_DAYS(create_time) = TO_DAYS(NOW())
+        AND TYPE = #{type}
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+    </select>
+
+    <select id="findCollectorDayChargeReport" parameterType="map" resultType="map">
+      select
+          sum(todayCharge.actualAmount) as actualAmount,
+          sum(todayCharge.chargeCount) as chargeCount
+          from
+        ((select sum(actual_amount) actualAmount,count(1) as chargeCount
+        from t_pay_temp_order
+        where to_days(STR_TO_DATE(pay_time, '%Y%m%d%H%i%s')) = to_days(now())
+          and is_online = 0
+          and order_status = 1
+          and collector_id = #{collectorId}
+          )
+          union all
+         (select sum(cash_pay) actualAmount,count(1) as chargeCount
+         from t_pay_hand_lift_rod
+         where to_days(STR_TO_DATE(create_time, '%Y-%m-%d %H:%i:%S')) = to_days(now())
+         and collector_id = #{collectorId}
+         and cash_pay != 0
+          )) as todayCharge
+    </select>
+
+    <update id="updateNoPayCarStatus">
+        update t_pay_carcome set status = 2,is_sync = 0 where status != 2
+        <if test="plateNumber != null and plateNumber != ''">
+            AND plate_number = #{plateNumber}
+        </if>
+        <if test="parkId != null and parkId != ''">
+            AND park_id = #{parkId}
+        </if>
+    </update>
+
+    <select id="findInParkComeRecord" resultType="payCarcome">
+        SELECT c.*
+        FROM t_pay_carcome c
+        WHERE c.type = 0 AND c.status != 2 AND c.park_id = #{parkId} AND c.plate_number IN (${plateNumbers})
+        ORDER BY c.create_time ASC
+    </select>
+
+    <update id="updateHasPayedRecord" parameterType="map">
+        update t_pay_carcome set `status` = 2,is_sync=0
+        WHERE access_time <![CDATA[ <= ]]> #{payTime}
+          AND park_id=#{parkId} and plate_number=#{plateNum} AND `status` != 2
+    </update>
+
+    <select id="findByTypeAndDay" parameterType="map" resultType="map">
+        SELECT SUM(IF(TYPE=0,1,0)) `enter`,
+        SUM(IF(TYPE=1,1,0)) `out`,
+        SUBSTRING(create_time, 12,2)
+        FROM t_pay_carcome
+        WHERE park_id=#{parkId}
+        AND LEFT(create_time,10) <![CDATA[>=]]> #{startTime}
+        AND LEFT(create_time,10) <![CDATA[<=]]> #{endTime}
+        AND group_code = #{groupCode}
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+        GROUP BY SUBSTRING(create_time, 12,2)
+    </select>
+
+    <select id="findByTypeAndDate" parameterType="map" resultType="map">
+        SELECT SUM(IF(TYPE=0,1,0)) `enter`,
+        SUM(IF(TYPE=1,1,0)) `out`,
+        LEFT(create_time,10)
+        FROM t_pay_carcome_history
+        WHERE park_id=#{parkId}
+        AND LEFT(create_time,10) <![CDATA[>=]]> #{startDate}
+        AND LEFT(create_time,10) <![CDATA[<=]]> #{endDate}
+        AND group_code = #{groupCode}
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+        GROUP BY LEFT(create_time,10)
+    </select>
+
+    <select id="findOutEnterCount" parameterType="java.util.Map" resultType="map">
+        SELECT SUM(IF(TYPE=0,1,0)) `enter`,
+        SUM(IF(TYPE=1,1,0)) `out`
+        FROM `t_pay_carcome_history`
+        WHERE park_id=#{parkId}
+        AND LEFT(create_time,10) <![CDATA[>=]]> #{startTime}
+        AND LEFT(create_time,10) <![CDATA[<=]]> #{endTime}
+        AND group_code = #{groupCode}
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+    </select>
+
+    <sql id="select_where">
+        <where>
+            <if test="type != null">
+                AND tpc.type = #{type}
+            </if>
+            <if test="portId != null and portId != ''">
+                AND tpc.port_id = #{portId}
+            </if>
+            <if test="parkId != null and parkId != ''">
+                AND tpc.park_id = #{parkId}
+            </if>
+            <if test="plateNumber != null and plateNumber !=''">
+                AND tpc.plate_number = #{plateNumber}
+            </if>
+            <if test="likePlateNumber != null and likePlateNumber !=''">
+                AND tpc.plate_number like CONCAT('%',#{likePlateNumber},'%')
+            </if>
+            <if test="status != null">
+                AND tpc.status = #{status}
+            </if>
+            <if test="carColor != null and carColor != ''">
+                AND tpc.car_color = #{carColor}
+            </if>
+            <if test="accessTimeMin != null and accessTimeMin != ''">
+                AND tpc.access_time <![CDATA[>=]]> '${accessTimeMin}'
+            </if>
+            <if test="accessTimeMax != null and accessTimeMax != ''">
+                AND tpc.access_time <![CDATA[<=]]> '${accessTimeMax}'
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="selectCarInfo" parameterType="java.util.Map" resultType="payCarcome">
+        select tpc.* from t_pay_carcome tpc
+        <include refid="select_where"/>
+        ORDER by tpc.access_time desc
+        LIMIT #{pageStart},#{pageSize}
+    </select>
+
+    <select id="selectCarCount" parameterType="java.util.Map" resultType="int">
+        select count(1) from t_pay_carcome tpc
+        <include refid="select_where"/>
+    </select>
+
+    <sql id="pub_where">
+        <where>
+            <if test="groupCode != null and groupCode != ''">
+                AND c.`group_code` = #{groupCode}
+            </if>
+            <if test="parkId != null and parkId != ''">
+                AND c.park_id = #{parkId}
+            </if>
+            <if test="isValid != null and isValid != ''">
+                AND c.is_valid = #{isValid}
+            </if>
+            <if test="portId != null and portId != ''">
+                AND c.port_id = #{portId}
+            </if>
+            <if test="accessTimeMin != null  and accessTimeMin != ''">
+                AND c.`access_time` <![CDATA[>=]]> #{accessTimeMin}
+            </if>
+            <if test="accessTimeMax != null  and accessTimeMax != ''">
+                AND c.`access_time` <![CDATA[<=]]> #{accessTimeMax}
+            </if>
+            <if test="plateNumber != null  and plateNumber != ''">
+                AND c.plate_number LIKE CONCAT('%',#{plateNumber},'%')
+            </if>
+            <if test="parkIds !=null and parkIds!='' ">
+                AND c.park_id IN (${parkIds})
+            </if>
+        </where>
+    </sql>
+
+
+    <select id="findListData" parameterType="java.util.Map" resultType="com.xhb.pay.dto.PayCarcomeExportDTO">
+        SELECT
+        c.`car_color` ,
+        c.`car_type`,
+        c.`type`,
+        c.`access_time`,
+        c.`sync_time`,
+        c.`update_time`,
+        c.`plate_number`,
+        c.`status`,
+        c.`is_sync`,
+        c.`remark`,
+        c.`record_type`,
+        c.`park_id`,
+        c.`port_id`,
+        c.`img`,
+        c.`img_path`,
+        c.`id`
+        FROM `t_pay_carcome` c
+        <include refid="pub_where"/>
+        <choose>
+            <when test="sortTzwName != null and sortTzwName != ''">
+                ORDER BY ${sortTzwName}
+            </when>
+            <otherwise>
+                ORDER BY access_time DESC
+            </otherwise>
+        </choose>
+        <if test="end != null and end != ''">
+            limit ${start},${end}
+        </if>
+        <if test="pageNo !=null">
+            limit ${pageNo},${rows}
+        </if>
+    </select>
+
+    <select id="findCount" parameterType="java.util.Map" resultType="java.lang.Long">
+        SELECT COUNT(c.`id`) FROM `t_pay_carcome` c
+        <include refid="pub_where"/>
+    </select>
+
+    <select id="selectInsideInParkPlateNum" resultType="java.lang.Integer">
+    	select count(1) from		(select plate_number FROM  t_pay_carcome WHERE plate_number IN (
+        SELECT plate_number FROM t_pay_inside_plate_bind WHERE inside_id=#{insideCarId}
+        ) AND park_id = #{parkId} AND `status`!=2 AND plate_number!=#{plateNumber}  GROUP BY plate_number) tbl
+    </select>
+
+
+    <select id="getCarcomeCount" resultType="java.lang.Integer">
+        SELECT COUNT(1) FROM `t_pay_carcome` pc
+        WHERE pc.`type` = #{type}
+        AND pc.`access_time` <![CDATA[>=]]> #{startTime}
+        AND pc.`access_time` <![CDATA[<=]]> #{endTime}
+        AND pc.`park_id` IN (${parkId})
+    </select>
+
+    <select id="findCarcomeCount" resultType="com.xhb.pay.dto.CarcomeCountDTO">
+        SELECT
+            pp.port_name,
+            pp.port_fun_type type,
+            count(*) number
+        FROM t_pay_carcome pc
+        LEFT JOIN t_park_parking_port pp ON pp.id=pc.port_id
+        WHERE pc.park_id = #{parkId}
+        AND DATE_FORMAT(pc.access_time,'%Y-%m') = #{dateTime}
+        GROUP BY pp.port_name
+    </select>
+
+    <select id="findHourCarcomeCountByType" resultType="map">
+        select
+            DATE_FORMAT(pc.access_time,'%H') date,
+            count(*) number
+        from t_pay_carcome pc
+        WHERE pc.park_id = #{parkId}
+        and DATE_FORMAT(pc.access_time,'%Y-%m') = #{dateTime}
+        and type = #{type}
+        GROUP BY DATE_FORMAT(pc.access_time,'%H')
+    </select>
+
+    <select id="findFlowAnalyse" resultType="com.xhb.pay.dto.FlowAnalyseDTO">
+        SELECT
+            DATE_FORMAT(access_time,'%Y-%m-%d') DATE,
+            SUM(IF(record_type = 0, 1, 0)) tempCarNum,
+            SUM(IF(record_type <![CDATA[ > ]]> 0, 1, 0)) monthCarNum
+        FROM t_pay_carcome
+        WHERE park_id = #{parkId}
+        AND DATE_FORMAT(access_time, '%Y-%m') = #{dateTime}
+        AND TYPE = 1
+        GROUP BY DATE_FORMAT(access_time, '%Y-%m-%d')
+    </select>
+
+    <select id="findWorkAndWeekendFlowAnalyse" resultType="java.util.Map">
+        SELECT
+            (WEEKOFYEAR(pc.access_time) - WEEKOFYEAR(pc.access_time - INTERVAL DAY (pc.access_time) - 1 DAY) + 1) week,
+            SUM(IF ((DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY) )= 6 OR DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY)) = 7) AND pc.record_type=0,1,0)) tempCarNumWeekend,
+            SUM(IF ((DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY) )= 6 OR DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY)) = 7) AND pc.record_type !=0,1,0)) monthCarNumWeekend,
+            SUM(IF (DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY) ) != 6 AND DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY)) != 7 AND pc.record_type=0,1,0)) tempCarNumWork,
+            SUM(IF (DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY) ) != 6 AND DAYOFWEEK(DATE_SUB(pc.access_time,INTERVAL 1 DAY)) != 7 AND pc.record_type !=0,1,0)) monthCarNumWork
+        FROM `t_pay_carcome` pc
+        WHERE pc.park_id = #{parkId}
+        AND DATE_FORMAT(pc.access_time,'%Y-%m') = #{dateTime}
+        AND TYPE = 1
+        GROUP BY week
+    </select>
+
+    <select id="findCarcomeFlow" resultType="com.xhb.pay.dto.CarcomeCountDTO">
+        SELECT
+        pp.park_type parkType,
+        DATE_FORMAT( access_time, "%H" ) hour,
+        COUNT(*) number
+        FROM t_pay_carcome pc
+        JOIN t_park_parking pp ON pp.id = pc.park_id
+        WHERE DATE_FORMAT( pc.access_time, "%Y-%m-%d" ) = #{dateTime}
+        AND pc.type = #{type}
+        <if test="parkId != null">
+            AND park_id = #{parkId}
+        </if>
+        GROUP BY pp.park_type, DATE_FORMAT( access_time, "%H" )
+    </select>
+
+
+    <select id="getPayCarcomeVos" resultType="java.util.Map">
+        SELECT
+            t.type 'type',
+            t.id eventId,
+            t.plate_number objectId,
+            t.create_time time,
+            s.data_center_parkid parkId,
+            p.port_name portName,
+            t.img imgId,
+            t.car_color carColor,
+            t.car_type carType,
+            t.record_type recordType
+             FROM t_pay_carcome t
+             LEFT JOIN t_park_parking_port p On p.id = t.port_id
+               LEFT JOIN t_sync_park_sett s ON s.park_id  = t.park_id
+             WHERE
+                t.create_time <![CDATA[ >= ]]> #{staTime}
+            AND t.create_time <![CDATA[ < ]]> #{endTime}
+            AND t.park_id = #{parkId}
+    </select>
+
+
+    <select id="getImgList" resultType="java.lang.String">
+        SELECT
+            t.img imgId
+             FROM t_pay_carcome t
+             WHERE
+                t.create_time <![CDATA[ >= ]]> #{staTime}
+            AND t.create_time <![CDATA[ < ]]> #{endTime}
+            AND t.park_id = #{parkId}
+
+    </select>
+
+    <select id="getCountVehicle" resultType="java.util.Map">
+        select
+                    t.record_type
+                                from t_pay_carcome t
+                            where t.park_id = #{parkId}
+                    AND sync_time >= date_sub(NOW(), interval 1 MONTH)
+                    AND status != 2
+                    AND type = 0
+                    GROUP BY plate_number
+
+    </select>
+
+
+    <update id="batchUpdateStatus">
+        update t_pay_carcome set status = '2' where id in ${ids}
+    </update>
+
+    <select id="findCarComeByPlatNumberLike" parameterType="map" resultType="com.xhb.pay.bean.PayCarcome">
+        <foreach collection="toLikeList" item="platNumberForLike" separator="UNION ">
+            SELECT tpc.* FROM `t_pay_carcome` tpc
+            WHERE 1=1
+            <if test="parkId !=null and parkId!='' ">
+                AND tpc.park_id=#{parkId}
+            </if>
+            and tpc.type = 0
+            AND plate_number LIKE CONCAT('%',#{platNumberForLike},'%')
+        </foreach>
+        ORDER BY create_time desc LIMIT 1
+    </select>
+
+    <select id="findCarComeListBy" resultType="com.xhb.pay.bean.PayCarcome">
+        SELECT
+            *
+        FROM t_pay_carcome
+        WHERE park_id = #{parkId}
+        AND type = #{type}
+        AND status != 2
+        AND DATE_FORMAT(access_time,'%Y-%m-%d') = #{nowData}
+    </select>
+
+    <insert id="insertCarcomeHistory" parameterType="map">
+        INSERT INTO t_pay_carcome_history (
+          id,
+          park_id,
+          access_time,
+          port_id,
+          img_path,
+          img,
+          car_color,
+          car_type,
+          update_time,
+          plate_number,
+          STATUS,
+          remark,
+          is_sync,
+          TYPE,
+          record_type,
+          create_user,
+          update_user,
+          create_time,
+          sync_time,
+          update_collector_id,
+          group_code,
+          VERSION,
+          region_id,
+          road_lot_id,
+          temp_time,
+          update_month,
+          big_park_id,
+          access_time_int,
+          access_is_not
+        )
+        SELECT
+          id,
+          park_id,
+          access_time,
+          port_id,
+          img_path,
+          img,
+          car_color,
+          car_type,
+          update_time,
+          plate_number,
+          STATUS,
+          remark,
+          is_sync,
+          TYPE,
+          record_type,
+          create_user,
+          update_user,
+          create_time,
+          sync_time,
+          update_collector_id,
+          group_code,
+          VERSION,
+          region_id,
+          road_lot_id,
+          temp_time,
+          update_month,
+          big_park_id,
+          access_time_int,
+          access_is_not
+        FROM
+          t_pay_carcome
+        WHERE STATUS = 2
+          AND is_sync = 1
+          AND DATEDIFF(NOW(), access_time) > 30
+    </insert>
+    <delete id="deleteCarcomeData" parameterType="map">
+        DELETE FROM
+          t_pay_carcome
+        WHERE STATUS = 2
+          AND is_sync = 1
+          AND DATEDIFF(NOW(), access_time) > 30
+    </delete>
+
+    <delete id="delPayCarCome" parameterType="java.lang.String">
+        delete from t_pay_carcome where create_time <![CDATA[ < ]]> '${value}' and status = 2
+    </delete>
+
+
+    <insert id="doInsert" parameterType="com.xhb.pay.bean.PayCarcomeHistory">
+        insert into t_pay_carcome(
+        id,
+        park_id,
+        access_time,
+        port_id,
+        img_path,
+        img,
+        car_color,
+        car_type,
+        update_time,
+        plate_number,
+        status,
+        remark,
+        is_sync,
+        type,
+        record_type,
+        create_user,
+        update_user,
+        create_time,
+        sync_time,
+        group_code,
+        version,
+        region_id,
+        road_lot_id,
+        is_valid
+        )
+        values
+                <foreach collection="list" item="item" separator=",">
+                    (
+                    #{item.id},
+                    #{item.park_id},
+                    #{item.access_time},
+                    #{item.port_id},
+                    #{item.img_path},
+                    #{item.img},
+                    #{item.car_color},
+                    #{item.car_type},
+                    #{item.update_time},
+                    #{item.plate_number},
+                    #{item.status},
+                    #{item.remark},
+                    #{item.is_sync},
+                    #{item.type},
+                    #{item.record_type},
+                    #{item.create_user},
+                    #{item.update_user},
+                    #{item.create_time},
+                    #{item.sync_time},
+                    #{item.group_code},
+                    #{item.version},
+                    #{item.region_id},
+                    #{item.road_lot_id},
+                    #{item.is_valid}
+                </foreach>
+    </insert>
+    <update id="updateData2PayCarcome" parameterType="com.xhb.pay.form.PayCarcomeForm">
+        update t_pay_carcome
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parkId != null">
+                park_id = #{parkId},
+            </if>
+            <if test="accessTime != null and accessTime != ''">
+                access_time = #{accessTime},
+            </if>
+            <if test="portId != null">
+                port_id = #{portId},
+            </if>
+            <if test="carType != null">
+                car_type = #{carType},
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">
+                plate_number = #{plateNumber},
+            </if>
+            <if test="carType != null">
+                type = #{type},
+            </if>
+            <if test="recordType != null">
+                record_type = #{recordType},
+            </if>
+            <if test="updateTime != null and updateTime != ''">
+                update_time = #{updateTime},
+            </if>
+            <if test="isSync != null">
+                is_sync = #{isSync},
+            </if>
+            <if test="syncTime != null and syncTime != ''">
+                sync_time = #{syncTime},
+            </if>
+            <if test="img != null and img != ''">
+                img = #{img},
+            </if>
+            <if test="remark != null and remark != ''">
+                remark = #{remark},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+    <insert id="addData2PayCarcome" parameterType="com.xhb.pay.form.PayCarcomeForm">
+        insert into t_pay_carcome
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,
+            </if>
+            <if test="groupCode != null and groupCode != ''">group_code,
+            </if>
+            <if test="accessTime != null and accessTime != ''">access_time,
+            </if>
+            <if test="parkId != null">park_id,
+            </if>
+            <if test="portId != null">port_id,
+            </if>
+            <if test="carType != null">car_type,
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">plate_number,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="recordType != null">record_type,
+            </if>
+            <if test="isSync != null">is_sync,
+            </if>
+            <if test="updateTime != null and updateTime != ''">update_time,
+            </if>
+            <if test="updateTime != null and updateTime != ''">create_time,
+            </if>
+            <if test="syncTime != null and syncTime != ''">sync_time,
+            </if>
+            <if test="img != null and img != ''">img,
+            </if>
+            <if test="remark != null and remark != ''">remark,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},
+            </if>
+            <if test="groupCode != null and groupCode != ''">#{groupCode},
+            </if>
+            <if test="accessTime != null and accessTime != ''">#{accessTime},
+            </if>
+            <if test="parkId != null">#{parkId},
+            </if>
+            <if test="portId != null">#{portId},
+            </if>
+            <if test="carType != null">#{carType},
+            </if>
+            <if test="plateNumber != null and plateNumber != ''">#{plateNumber},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="recordType != null">#{recordType},
+            </if>
+            <if test="isSync != null">#{isSync},
+            </if>
+            <if test="updateTime != null and updateTime != ''">#{updateTime},
+            </if>
+            <if test="updateTime != null and updateTime != ''">#{updateTime},
+            </if>
+            <if test="syncTime != null and syncTime != ''">#{syncTime},
+            </if>
+            <if test="img != null and img != ''">#{img},
+            </if>
+            <if test="remark != null and remark != ''">#{remark},
+            </if>
+        </trim>
+    </insert>
+
+
+</mapper>

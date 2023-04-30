@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.MessageSmsReportDao">
+
+    <!--查询当前输入的月份的订单详情-->
+    <select id="findSmsListData" parameterType="java.util.Map" resultType="com.xhb.report.dto.MessageSmsDTO">
+        SELECT
+            COUNT(a.id) AS smsCount,
+            p.park_name AS parkName,
+            a.message_type AS messageType,
+            DATE_FORMAT(a.create_time,"%Y年%m月") AS createTime,
+            a.group_code AS groupCode
+            FROM t_message_sms_record a
+            LEFT JOIN t_park_parking p ON p.id = a.park_id
+            <where>
+                <if test="parkId != null and parkId != ''">
+                    AND a.park_id = #{parkId}
+                </if>
+                <if test="createTimeMin != null and createTimeMin != ''">
+                    AND DATE_FORMAT(a.create_time,"%Y-%m") <![CDATA[ >= ]]> DATE_FORMAT(#{createTimeMin},"%Y-%m")
+                </if>
+                <if test="createTimeMax != null and createTimeMax != ''">
+                    AND DATE_FORMAT(a.create_time,"%Y-%m") <![CDATA[ <= ]]> DATE_FORMAT(#{createTimeMax},"%Y-%m")
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND p.group_code = #{ groupCode }
+                </if>
+            </where>
+            GROUP BY a.park_id,createTime,a.message_type
+            ORDER BY createTime DESC
+            <if test="start != null and start != ''">
+                limit ${start},${end}
+            </if>
+    </select>
+
+
+</mapper>

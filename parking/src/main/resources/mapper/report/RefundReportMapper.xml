@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.RefundReportDao">
+
+    <select id="findRefundDataList" resultType="com.xhb.report.dto.RefundReportDTO">
+        SELECT
+            b.owner_name AS ownerName,
+            b.owner_mobile AS ownerMobile,
+            c.lease_name AS leaseName,
+            a.create_time AS createTime,
+            a.refund_amont AS refundAmount,
+            a.service_amount AS serviceAmount,
+            a.deduct_give_amount AS giveAmount,
+            a.monthly_end_date AS endDate,
+            a.create_user AS collectorName,
+            a.refund_cus_name AS refundCusName,
+            a.remark
+            FROM t_pay_inside_refund a
+            LEFT JOIN t_pay_inside_car b ON b.id = a.inside_id
+            LEFT JOIN t_park_lease_type c ON c.id = b.lease_type_id
+            <where>
+                <if test="parkId != null and parkId != ''">
+                    a.park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(a.create_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND a.group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND a.park_id IN (${parkIds})
+                </if>
+            </where>
+            ORDER BY a.create_time DESC
+
+    </select>
+
+
+    <select id="findRefundAmount" resultType="com.xhb.report.vo.DailyReportVo">
+        SELECT
+            SUM(a.refund_amont) AS systemRefund,
+            SUM(CASE WHEN a.service_amount IS NULL THEN 0 ELSE a.service_amount END) AS refundServiceAmount,
+            SUM(CASE WHEN a.deduct_give_amount IS NULL THEN 0 ELSE a.deduct_give_amount END) AS refundGiveAmount
+            FROM t_pay_inside_refund a
+            <where>
+                <if test="parkId != null and parkId != ''">
+                    a.park_id = #{parkId}
+                </if>
+                <if test="payTime != null and payTime != ''">
+                    AND DATE_FORMAT(a.create_time,"%Y-%m") = #{payTime}
+                </if>
+                <if test="groupCode != null and groupCode != ''">
+                    AND a.group_code = #{groupCode}
+                </if>
+                <if test="parkIds != null and parkIds != ''">
+                    AND a.park_id IN (${parkIds})
+                </if>
+            </where>
+    </select>
+</mapper>

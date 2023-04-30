@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <title>登录</title>
+    <script  type="text/javascript" src="${basePath}/js/jquery.min.js" ></script>
+    <script  type="text/javascript" src="${basePath}/js/hui/hui.js" ></script>
+
+</head>
+<style>
+*{
+	margin:0;
+	padding:0;
+}
+    html {
+        height: 100%;
+        background: #fff;
+    }
+    html{
+    font-family: sans-serif;
+}
+html,body,header,section,footer,div,ul,ol,li,img,a,span,em,del,legend,center,strong,var,fieldset,form,label,dl,dt,dd,cite,input,hr,time,mark,code,figcaption,figure,textarea,h1,h2,h3,h4,h5,h6,p{
+    margin:0;
+    border:0;
+    padding:0;
+    font-style:normal;
+}
+html,body {
+    -webkit-touch-callout:none;
+    -webkit-text-size-adjust:none;
+    -webkit-tap-highlight-color:rgba(0, 0, 0, 0);
+    -webkit-user-select:none;
+    background: #fff;
+}
+
+nav,article,aside,details,main,header,footer,section,fieldset,figcaption,figure{
+    display: block;
+}
+img,a,button,em,del,strong,var,label,cite,small,time,mark,code,textarea{
+    display:inline-block;
+}
+header,section,footer {
+    position:relative;
+}
+ol,ul{
+    list-style:none;
+}
+input,button,textarea {
+    border:0;
+    margin:0;
+    padding:0;
+    font-size:1em;
+    line-height:1em;
+    /*-webkit-appearance:none;*/
+    background-color:rgba(0, 0, 0, 0);
+}
+input{
+    outline: none;
+    border: none;
+}
+span{
+    display:inline-block;
+}
+a:active, a:hover {
+  outline: 0;
+}
+a, a:visited{
+    text-decoration:none;
+}
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+td,th {
+  padding: 0;
+}
+
+    .login {
+        height: 100%;
+        <!--overflow: hidden;-->
+        background-size: cover;
+        background-size:100% ;
+        -webkit-background-origin:border-box; /* Safari */
+        background-origin:border-box;
+        background-position: center bottom;
+    }
+
+    .logo {
+        width:100%;
+        height:100%;
+        display:flex;
+        justify-content:center;
+        text-align: center;
+    }
+
+    .logo img {
+        text-align:center;
+        display:block;
+        width: 295px;
+        height: 159px;
+        obj-fit: cover;
+    }
+
+    .login-container {
+        padding-top: 30px;
+        display: flex;
+        flex-flow: column;
+        align-items: center;
+        background-size:100% ;
+        margin-top:0;
+        -webkit-background-origin:border-box; /* Safari */
+        background-origin:border-box;
+        background-position: center top;
+    }
+
+    .loginForm {
+        margin-top: 40px;
+        padding: 0 15px;
+        box-sizing: border-box;
+        width: 100%;
+        background: #fff;
+    }
+
+    .login-form-item {
+        width: 90%;
+        margin:40px auto;
+        height:30px;
+        padding-bottom: 0.1rem;
+        box-sizing: border-box;
+        border-bottom: 1px solid #b0b0b0;
+    }
+
+    .login-form-item input {
+        width: 90%;
+        height:30px;
+    }
+    .login-button {
+        margin:0 auto;
+        width: 90%;
+        height: 50px;
+        background: #ba1114;
+        border-radius: 5px;
+        line-height: 50px;
+        text-align: center;
+        font-size: 16px;
+        color: #ffffff;
+        margin-top:60px;
+
+    }
+</style>
+<body class="login" style="">
+<div class="container login-container">
+    <div class="logo">
+        <img src="/image/month/logo_jdyfy.png" alt="">
+    </div>
+    <div class="loginForm">
+        <form id="loginForm">
+            <div class="login-form-item">
+                <input class="login-form-input" type="text" value="" placeholder="请输入手机号/用户名" id="name" datatype="*"
+                       nullmsg="请输入用户名" errormsg="用户名为汉字,拼音,手机号"/>
+            </div>
+            <div class="login-form-item">
+                <input class="login-form-input" type="password" value="" placeholder="请输入密码" id="password" datatype="*"
+                       nullmsg="请输入密码"/>
+            </div>
+            <div class="login-button" onclick="login()">
+                <span>登录</span>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
+<script type="text/javascript">
+
+    var loginForm = null;
+    apiready = function () {
+        loginForm = $("#loginForm").Validform({
+            tiptype: 5,
+        });
+        if (get_local('login_user_name')) {
+            $('#name').val(get_local('login_user_name'));
+            $('#password').val(get_local('login_user_password'));
+            login()
+        }
+    }
+
+    function login() {
+        var name = $('#name').val();
+        var password = $('#password').val();
+        if(name == "" || password == ""){
+            hui.toast("<p style='font-size: 16px;color: red;text-align: center'>账号或密码不能为空</p>");
+            return;
+        }
+        if(password.length < 6){
+            hui.toast("<p style='font-size: 16px;color: red;text-align: center''>密码长度不能小于6位数</p>");
+            return;
+        }
+        $.post('${basePath}/login_collector/login',{userLoginName:name,password:password},function (res) {
+           if (!res.data){
+               hui.toast("<p style='font-size: 16px;color: red;text-align: center''>账号或密码错误,请重新登录</p>");
+               return;
+           }
+            window.location.href='${basePath}b/page-collector/index';
+        });
+    }
+
+    //rem.js
+    <!--(function (doc, win) {-->
+  <!--var docEl = doc.documentElement,-->
+    <!--resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',-->
+    <!--recalc = function () {-->
+      <!--var clientWidth = docEl.clientWidth-->
+      <!--if (!clientWidth) return-->
+      <!--docEl.style.fontSize = 100 * (clientWidth / 750) + 'px'-->
+    <!--};-->
+  <!--if (!doc.addEventListener) return-->
+  <!--win.addEventListener(resizeEvt, recalc, false)-->
+  <!--doc.addEventListener('DOMContentLoaded', recalc, false)-->
+<!--})(document, window)-->
+
+</script>

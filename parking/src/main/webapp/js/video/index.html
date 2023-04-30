@@ -1,0 +1,210 @@
+<!DOCTYPE HTML>  
+<html>  
+<head>
+<title>H5STREAM VIDEO</title>
+<script src="js/jquery-3.1.1.js"></script>
+<script src="js/bootstrap.js"></script>
+<script src="js/adapter.js"></script>
+<script src="js/platform.js"></script>
+<script src="js/h5splayer.js"></script>
+<script src="js/h5splayerhelper.js"></script>
+
+<link rel = "stylesheet" type = "text/css" href = "css/h5splayer.css" />
+
+</head>
+
+<body> 
+
+<div class="h5videodiv">
+    <video class="h5video" id="h5sVideo1"  autoplay="autoplay"  webkit-playsinline playsinline>
+
+    </video>
+    <div class="playpause" id="playpause1" ></div>
+</div>
+
+<div class="h5videodiv">
+    <video class="h5video" id="h5sVideo2"  autoplay="autoplay"  webkit-playsinline playsinline>
+
+    </video>
+    <div class="playpause" id="playpause2" ></div>
+</div>
+
+<div class="h5videodiv">
+    <video class="h5video" id="h5sVideo3" autoplay="autoplay"  webkit-playsinline playsinline>
+
+    </video>
+    <div class="playpause"></div>
+</div>
+
+<div class="h5videodiv">
+    <video class="h5video" id="h5sVideo4" autoplay="autoplay"  webkit-playsinline playsinline>
+
+    </video>
+    <div class="playpause"></div>
+</div>
+</body>
+
+<script>
+
+if (H5siOS() === true
+	|| H5sSafariBrowser() === true)
+{
+	$('#h5sVideo1').prop("controls", true);
+	$('#h5sVideo2').prop("controls", true);
+	$('#h5sVideo3').prop("controls", true);
+	$('#h5sVideo4').prop("controls", true);
+}
+
+var conf1 = {
+	videoid:'h5sVideo1',
+	protocol: 'http:', //http: or https:
+	host: '192.168.0.240:8080', //localhost:8080
+	rootpath:'/', // '/' or window.location.pathname
+	token:'101010',
+	hlsver:'v1', //v1 is for ts, v2 is for fmp4
+	session:'c1782caf-b670-42d8-ba90-2244d0b0ee83' //session got from login
+};
+
+
+
+var conf2 = {
+	videoid:'h5sVideo2',
+	//videodom: h5svideodom2,
+	protocol: window.location.protocol, //http: or https:
+	host: window.location.host, //localhost:8080
+	rootpath:'/', // '/' or window.location.pathname
+	token:'101010',
+	hlsver:'v1', //v1 is for ts, v2 is for fmp4
+	session:'c1782caf-b670-42d8-ba90-2244d0b0ee83' //session got from login
+};
+
+//If there has no videoid, the videodom can be the videodom. if there has videoid, just use the videoid
+var h5svideodom3 = document.getElementById('h5sVideo3');
+var conf3 = {
+	//videoid:'h5sVideo3',
+	videodom: h5svideodom3,
+	protocol: window.location.protocol, //http: or https:
+	host: window.location.host, //localhost:8080
+	rootpath:'/', // '/' or window.location.pathname
+	token:'token3',
+	hlsver:'v1', //v1 is for ts, v2 is for fmp4
+	session:'c1782caf-b670-42d8-ba90-2244d0b0ee83' //session got from login
+};
+
+var conf4 = {
+	videoid:'h5sVideo4',
+	protocol: window.location.protocol, //http: or https:
+	host: window.location.host, //localhost:8080
+	rootpath:'/', // '/' or window.location.pathname
+	token:'token2',
+	hlsver:'v1', //v1 is for ts, v2 is for fmp4
+	session:'c1782caf-b670-42d8-ba90-2244d0b0ee83' //session got from login
+};
+var v1 = H5sPlayerCreate(conf1);
+//var v2 = new H5sPlayerRTC(conf2);
+//var v3 = H5sPlayerCreate(conf3);
+//var v4 = H5sPlayerCreate(conf4);
+
+
+$('#h5sVideo1').parent().click(function () {
+    if($(this).children(".h5video").get(0).paused){
+		$(this).children(".h5video").get(0).play();
+		if(v1 != null)
+		{
+			v1.disconnect();
+			delete v1;
+			v1 = null;
+		}
+
+		v1 = H5sPlayerCreate(conf1);
+		
+		console.log(v1);
+        v1.connect();
+        
+        $(this).children(".playpause").fadeOut();
+    }else{
+		v1.disconnect();
+		delete v1;
+		v1 = null;
+		$(this).children(".h5video").get(0).pause();
+		$(this).children(".playpause").fadeIn();
+    }
+});
+
+$('#h5sVideo2').parent().click(function () {
+    if($(this).children(".h5video").get(0).paused){
+		$(this).children(".h5video").get(0).play();
+		if(v2 != null)
+		{
+			v2.disconnect();
+			delete v2;
+			v2 = null;
+		}
+
+		v2 = new H5sPlayerRTC(conf2);
+		
+		console.log(v2);
+        v2.connect();
+        $(this).children(".playpause").fadeOut();
+    }else{
+		v2.disconnect();
+		delete v2;
+		v2 = null;
+		$(this).children(".h5video").get(0).pause();
+		$(this).children(".playpause").fadeIn();
+    }
+});
+
+$('#h5sVideo3').parent().click(function () {
+    if($(this).children(".h5video").get(0).paused){
+		$(this).children(".h5video").get(0).play();
+		if(v3 != null)
+		{
+			v3.disconnect();
+			delete v3;
+			v3 = null;
+		}
+
+		v3 = H5sPlayerCreate(conf3);
+		
+		console.log(v1);
+        v3.connect();
+        
+        $(this).children(".playpause").fadeOut();
+    }else{
+		v3.disconnect();
+		delete v3;
+		v3 = null;
+		$(this).children(".h5video").get(0).pause();
+		$(this).children(".playpause").fadeIn();
+    }
+});
+
+$('#h5sVideo4').parent().click(function () {
+    if($(this).children(".h5video").get(0).paused){
+		$(this).children(".h5video").get(0).play();
+		if(v4 != null)
+		{
+			v4.disconnect();
+			delete v4;
+			v4 = null;
+		}
+
+		v4 = H5sPlayerCreate(conf4);
+		
+		console.log(v4);
+        v4.connect();
+        $(this).children(".playpause").fadeOut();
+    }else{
+		v4.disconnect();
+		delete v4;
+		v4 = null;
+		$(this).children(".h5video").get(0).pause();
+		$(this).children(".playpause").fadeIn();
+    }
+});
+
+
+</script>
+
+</html> 

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xhb.report.dao.IndexReportDao">
+
+    <select id="getParkIncomeCountList" parameterType="map" resultType="map">
+        SELECT park_id,days,COUNT(1) AS countNumber FROM( SELECT
+        `park_id`,
+        STR_TO_DATE(`create_time`, '%Y-%m-%d') days
+        FROM
+        `t_pay_carcome`
+        WHERE create_time <![CDATA[>=]]>#{startDate} AND create_time<![CDATA[<=]]>#{endDate}
+        AND type=0
+        <if test="parkIds !=null and parkIds!='' ">
+            AND park_id IN (${parkIds})
+        </if>
+        ) t
+        GROUP BY park_id,days
+    </select>
+
+
+</mapper>
