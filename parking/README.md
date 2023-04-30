@@ -95,6 +95,54 @@ http://park.fhs-opensource.top/
 
 admin  123456
 
+# 配置
+右键单击fhs-framework -> 选择Run Maven -> install。如果出现JDK找不到，则需要下载并安装JDK8。
+![输入图片说明](img/install_jdk.png)
+
+[安装mysql](https://www.lubojian.cn/post/150.html) 。
+端口3333
+
+Navigate连接mysql时报错：2059 - Authentication plugin 'caching sha2 password' cannot be loaded
+```commandline
+ALTER USER root@localhost IDENTIFIED WITH mysql_native_password BY 'donghaiwang.1';
+```
+
+[安装redis]
+端口号：6379
+
+默认端口：6379
+1、下载[链接](https://github.com/MicrosoftArchive/redis/releases)  
+2、解压
+3、双击redis-server.exe启动服务端
+4、双击redis-cli.exe启动客户端连接服务端
+5、在客户端输入 “ping”，出现“PONG”，即证明连接成功
+
+设置密码后服务的启动方式：
+```commandline
+redis-server.exe redis.windows.conf
+```
+
+
+# 问题
+启动服务报错
+https://www.yisu.com/zixun/576669.html
+
+```text
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'enableRedisKeyspaceNotificationsInitializer' defined in class path resource [org/springframework/boot/autoconfigure/session/RedisSessionConfiguration$SpringBootRedisHttpSessionConfiguration.class]: Invocation of init method failed; nested exception is org.springframework.data.redis.RedisConnectionFailureException: Cannot get Jedis connection; nested exception is redis.clients.jedis.exceptions.JedisConnectionException: Could not get a resource from the pool
+```
+
+还有错误：
+```text
+DENIED Redis is running in protected mode because protected mode is enabled
+```
+
+再次从服务器的redis换到本地的redis就连接上了（原因不明）。
+登录界面：
+```text
+http://localhost/b/page/login
+```
+
+
 
 
 
