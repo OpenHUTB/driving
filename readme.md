@@ -1,25 +1,32 @@
 	
 
 构建智慧交通系统，
-包括交通场景数字孪生、区域信控、车流诱导、停车管理等。
+包括交通场景数字孪生、车流诱导、区域信控、停车管理等。
 
 # 效果
 
-
-## 路网仿真
-
-<figure class="half">
-    <img src=fig/multi_car.gif alt="multi_car" width="380"/><img src=fig/street_view.gif alt="street_view" width="380"/>
-</figure>
-
-
-### 真实场景建模
+## 数字孪生
 
 <figure class="half">
     <img src=fig/business_building.png width="380"/><img src=fig/west_gate.jpg width="380"/>
 </figure>
 
 <img src=fig/crossroads.png alt="图片替换文本" width="380" />
+
+## 车流诱导
+
+<figure class="half">
+    <img src=fig/multi_car.gif alt="multi_car" width="380"/><img src=fig/street_view.gif alt="street_view" width="380"/>
+</figure>
+
+
+
+## 区域信控
+
+<figure class="half">
+    <img src=fig/green2red.gif alt="green2red" width="380"/><img src=fig/red2green.gif alt="street_view" width="380"/>
+</figure>
+
 
 
 ## 停车系统
