@@ -8,7 +8,7 @@
 ## 数字孪生
 
 <figure class="half">
-    <img src=fig/business_building.png width="380"/><img src=fig/west_gate.jpg width="380"/>
+    <img src=fig/west_gate.jpg width="380"/><img src=fig/business_building.png width="380"/>
 </figure>
 
 <img src=fig/crossroads.png alt="图片替换文本" width="380" />
