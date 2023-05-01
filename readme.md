@@ -56,11 +56,16 @@ matlab_2022b_win_run.zip 为matlab运行版本。
 parking 文件夹为停车管理系统的相关软件
 ```
 
+Matlab安装连接虚幻引擎的插件：
+```markdown
+uiopen('{REPOSITORY_PATH}\utils\mlpkginstall\adtunrealengine4.mlpkginstall',1)
+```
 
 安装虚幻引擎4.26后，在`matlab`中运行脚本以下脚本：
 ```commandline
 main.mlx
 ```
+运行后等待出现"In Unreal Editor, select 'Play' to view the scene"后再在虚幻编辑器中点击“运行”。
 
 ## 贡献指南
 [提交Pull Request流程](https://zhuanlan.zhihu.com/p/153381521) 。 
