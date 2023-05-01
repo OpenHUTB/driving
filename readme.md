@@ -4,32 +4,34 @@
 包括交通场景数字孪生、区域信控、车流诱导、停车管理等。
 
 # 效果
+
+
 ## 路网仿真
 
-![image](fig/multi_car.gif)
+<figure class="half">
+    <img src=fig/multi_car.gif width="412"/><img src=fig/street_view.gif width="342"/>
+</figure>
 
-## 局部场景仿真
-![image](fig/street_view.gif)
 
 ### 真实场景建模
 
-![image](fig/business_building.png)
-
-![image](fig/west_gate.jpg)
+<figure class="half">
+    <img src=fig/business_building.png width="412"/><img src=fig/west_gate.jpg width="354"/>
+</figure>
 
 ![image](fig/crossroads.png)
 
 
 ## 停车系统
-![输入图片说明](parking/img/imagesindex.jpg)
-![输入图片说明](parking/img/imagesparking.jpg)
 
-# 入门
-[静态场景文档](https://ww2.mathworks.cn/help/roadrunner/index.html)
+<figure class="half">
+    <img src=parking/img/imagesindex.jpg width="412"/><img src=parking/img/imagesparking.jpg width="357"/>
+</figure>
 
-[动态场景文档](https://ww2.mathworks.cn/help/roadrunner-scenario/index.html)
-
-[自动驾驶文档](https://ww2.mathworks.cn/help/driving/index.html)
+# 入门文档
+[静态场景](https://ww2.mathworks.cn/help/roadrunner/index.html) 、
+[动态场景文档](https://ww2.mathworks.cn/help/roadrunner-scenario/index.html) 、
+[自动驾驶文档](https://ww2.mathworks.cn/help/driving/index.html) 。
 
 
 # 环境配置
