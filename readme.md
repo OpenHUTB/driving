@@ -9,23 +9,23 @@
 ## 路网仿真
 
 <figure class="half">
-    <img src=fig/multi_car.gif width="412"/><img src=fig/street_view.gif width="342"/>
+    <img src=fig/multi_car.gif width=50%/><img src=fig/street_view.gif width=42%/>
 </figure>
 
 
 ### 真实场景建模
 
 <figure class="half">
-    <img src=fig/business_building.png width="412"/><img src=fig/west_gate.jpg width="354"/>
+    <img src=fig/business_building.png width=50%/><img src=fig/west_gate.jpg width=43%/>
 </figure>
 
-![image](fig/crossroads.png)
+<img src=fig/crossroads.png alt="图片替换文本" width="600" align="bottom" />
 
 
 ## 停车系统
 
 <figure class="half">
-    <img src=parking/img/imagesindex.jpg width="412"/><img src=parking/img/imagesparking.jpg width="357"/>
+    <img src=parking/img/imagesindex.jpg width=50%/><img src=parking/img/imagesparking.jpg width=50%/>
 </figure>
 
 # 入门文档
