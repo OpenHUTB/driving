@@ -1,24 +1,54 @@
 	
 
-构建智能交通测试系统，
-包括虚幻引擎、计算机视觉、深度学习等。
+构建智慧交通系统，
+包括交通场景数字孪生、区域信控、车流诱导、停车管理等。
+
+# 效果
+## 路网仿真
+
+![image](fig/multi_car.gif)
+
+## 局部场景仿真
+![image](fig/street_view.gif)
+
+### 真实场景建模
+
+![image](fig/business_building.png)
+
+![image](fig/west_gate.jpg)
+
+![image](fig/crossroads.png)
+
+
+## 停车系统
+![输入图片说明](parking/img/imagesindex.jpg)
+![输入图片说明](parking/img/imagesparking.jpg)
 
 # 入门
-[RoadRunner使用文档](https://ww2.mathworks.cn/help/roadrunner/index.html)
+[静态场景文档](https://ww2.mathworks.cn/help/roadrunner/index.html)
 
-[RoadRunner Scenario使用文档](https://ww2.mathworks.cn/help/roadrunner-scenario/index.html)
+[动态场景文档](https://ww2.mathworks.cn/help/roadrunner-scenario/index.html)
+
+[自动驾驶文档](https://ww2.mathworks.cn/help/driving/index.html)
 
 
 # 环境配置
 
 相关软件和数据[下载链接](https://pan.baidu.com/s/1y194-A2m0s9IUwuRWAttYw) ，提取码：dong。
-其中 `RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip` 为RoadRunner的运行版本，
-`RoadRunner.zip`为RoadRunner工程，`AutoVrtlEnv.zip`为虚幻引擎工程（需要从matlab中打开），
-`matlab_2022b_win_run.zip` 为matlab运行版本。
+```text
+RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip 为RoadRunner的运行版本，
 
-安装虚幻引擎4.26。
+RoadRunner.zip 为RoadRunner工程，
 
-在`matlab`中运行脚本
+AutoVrtlEnv.zip 为虚幻引擎工程（需要从matlab中打开）
+
+matlab_2022b_win_run.zip 为matlab运行版本。
+
+parking 文件夹为停车管理系统的相关软件
+```
+
+
+安装虚幻引擎4.26后，在`matlab`中运行脚本以下脚本：
 ```commandline
 main.mlx
 ```
@@ -166,8 +196,6 @@ matlab_2022b\toolbox\shared\sim3d_projects\automotive_project\UE4\WindowsNoEdito
 USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位于AutoVrtlEnv\Content\Maps）
 ```
 
-# 效果
-![image](https://github.com/OpenHUTB/driving/blob/master/demo/multi_car.gif)
 
 # 贡献者
 杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 
