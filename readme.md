@@ -29,7 +29,7 @@
 
 
 
-## 停车系统
+## 停车管理
 
 <figure class="half">
     <img src=parking/img/imagesindex.jpg width="380"/><img src=parking/img/imagesparking.jpg width="380"/>
