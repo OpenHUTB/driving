@@ -123,6 +123,11 @@ redis-server.exe redis.windows.conf
 ```
 
 
+# 仿真
+[使用虚幻引擎模拟可视化自动泊车代客](https://ww2.mathworks.cn/help/driving/ug/visualize-automated-parking-valet-using-3d-simulation.html)
+
+
+
 # 问题
 启动服务报错
 https://www.yisu.com/zixun/576669.html
