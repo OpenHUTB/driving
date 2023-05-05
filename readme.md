@@ -91,13 +91,23 @@ main.mlx
 5. 加入更多的车辆进行交通拥堵的模拟
 6. 统计优化前和优化后的结果。
 
-## 全局路网建模
 基于RoadRunner Scenario和Carla进行城市级的场景建模，任务包括：
-1. 参考[例子](https://ww2.mathworks.cn/help/driving/ug/autonomous-emergency-braking-with-high-fidelity-vehicle-dynamics.html) 进行Simulink、RoadRunner、Unreal的联合仿真。
+1. 参考 [RoadRunner 场景的公路车道跟踪](https://ww2.mathworks.cn/help/driving/ug/highway-lane-following-with-roadrunner-scenario.html) 进行Simulink、RoadRunner、Unreal的联合仿真。
 ```commandline
-Examples\R2022b\autonomous_control\AutonomousEmergencyBrakingWithRoadRunnerScenarioExample
-Examples\R2022b\autonomous_control\AEBWithHighFidelityDynamicsExample_2023a
+openExample('autonomous_control/HighwayLaneFollowingWithRRScenarioExample')
+openExample('autonomous_control/AutonomousEmergencyBrakingWithRoadRunnerScenarioExample')
+openExample('autonomous_control/AEBWithHighFidelityDynamicsExample')
 ```
+
+2. [使用 Simulink 将传感器添加到 RoadRunner 场景](https://ww2.mathworks.cn/help/driving/ug/add-sensors-to-roadrunner-scenario-using-simulink.html) 
+```markdown
+openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
+```
+
+## 全局路网建模
+参考[自动场景生成](https://ww2.mathworks.cn/help/driving/ug/automatic-scenario-generation.html) 、[从车道检测和 OpenStreetMap生成高精度场景](https://ww2.mathworks.cn/help/driving/ug/build-high-definition-road-scene-from-lane-detections-and-openstreetmap.html) ，构建长沙高新区路网仿真模型。
+
+
 
 
 ## 需求管理
@@ -175,7 +185,12 @@ fileName— 数据集中图像的文件名。
 [自动测试](demo\AutomateTestingForHighwayLaneFollowingExample\AutomateTestingForHighwayLaneFollowingExample.m)
 
 
-
+# 参考
+向场景中添加车辆
+```markdown
+openExample('driving_lidar/BuildMapWithLidarOdometryAndMappingLOAMUsingUnrealEngineExample')
+edit helperAddParkedVehicles.m
+```
 
 
 # 问题
