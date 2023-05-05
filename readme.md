@@ -192,6 +192,9 @@ openExample('driving_lidar/BuildMapWithLidarOdometryAndMappingLOAMUsingUnrealEng
 edit helperAddParkedVehicles.m
 ```
 
+[车联网的交叉路口辅助](https://ww2.mathworks.cn/help/driving/ug/intersection-movement-assist-using-v2v.html) 
+
+
 
 # 问题
 ## 编译器
