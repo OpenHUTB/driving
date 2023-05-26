@@ -40,6 +40,10 @@
 [动态场景文档](https://ww2.mathworks.cn/help/roadrunner-scenario/index.html) 、
 [自动驾驶文档](https://ww2.mathworks.cn/help/driving/index.html) 。
 
+## 经典示例
+
+[使用openstreetmap数据构建道路](https://ww2.mathworks.cn/help/roadrunner/ug/build-roads-using-openstreetmap-data.html)
+
 
 # 环境配置
 
@@ -79,8 +83,6 @@ main.mlx
 2. 建模湖南工商大学及周围的道路；
 3. 使用虚幻引擎建模桐梓坡路和西二环交叉的十字路口；
 
-操作指南：
-1. [导入底图](https://ww2.mathworks.cn/help/roadrunner/ug/build-roads-using-openstreetmap-data.html) 
 
 ## 局部路网建模
 基于虚幻引擎和RoadRunner进行场景的建模，任务包括：
