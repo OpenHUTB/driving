@@ -44,6 +44,8 @@
 
 [使用openstreetmap数据构建道路](https://ww2.mathworks.cn/help/roadrunner/ug/build-roads-using-openstreetmap-data.html)
 
+[从记录的车辆数据生成场景](https://ww2.mathworks.cn/help/driving/ug/scenario-generation-from-recorded-vehicle-data.html)
+
 
 # 环境配置
 
