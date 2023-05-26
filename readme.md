@@ -230,12 +230,32 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 
 
 # 贡献者
-杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 
 
+## 局部场景仿真
 张卫 [champion123456](https://github.com/champion123456)
 
 李诗帆 [q894749380](https://github.com/q894749380) 
 
 李豪军 [q894749380](https://github.com/q894749380)
+
+刘子涵
+
+李权龙
+
+蒋平平
+
+## 路网和车流仿真
+杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 
+
+王磊
+
+张未来
+
+邹岱
+
+刘璐
+
+冯颖
+
 
 
