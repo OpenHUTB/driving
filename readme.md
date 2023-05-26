@@ -76,6 +76,9 @@ main.mlx
 ## 贡献指南
 [提交Pull Request流程](https://zhuanlan.zhihu.com/p/153381521) 。 
 
+## 虚幻引擎配置
+1. [为自定义场景安装支持包](https://ww2.mathworks.cn/help/releases/R2022a/driving/ug/install-and-configure-support-package-for-customizing-scenes.html) 。
+
 
 # 内容
 
