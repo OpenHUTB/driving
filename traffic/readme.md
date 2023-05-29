@@ -5,8 +5,13 @@
 ## 数据
 [手动导出道路数据链接](https://www.openstreetmap.org/) 
 
-[最新亚洲道路数据](https://download.geofabrik.de/asia-latest.osm.bz2)
+[最新中国道路数据](https://download.geofabrik.de/asia/china-latest.osm.bz2)
 
+[根据城市名获取城市ID](https://nominatim.openstreetmap.org/ui/search.html) 
+
+长沙市：3202711
+
+湖南省：913073
 
 
 # 教程
