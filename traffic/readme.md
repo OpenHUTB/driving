@@ -6,12 +6,23 @@
 [手动导出道路数据链接](https://www.openstreetmap.org/) 
 
 [最新中国道路数据](https://download.geofabrik.de/asia/china-latest.osm.bz2)
+[.osm.pdf](http://download.geofabrik.de/asia/china-latest.osm.pbf)
 
 [根据城市名获取城市ID](https://nominatim.openstreetmap.org/ui/search.html) 
+
+岳麓区：7985081165
 
 长沙市：3202711
 
 湖南省：913073
+
+[通过ID获得边界](http://polygons.openstreetmap.fr/)
+
+
+[从一个更大的区域获得osm文件](https://github.com/JamesChevalier/cities) 
+```commandline
+osmosis --read-pbf-fast file="china-latest.osm.pbf" --bounding-polygon file="changsha_poly.txt" --write-xml file="changsha.osm"
+```
 
 
 # 教程
@@ -21,8 +32,6 @@
 
 
 # 示例
-
-
 
 [智能交通灯控制](https://github.com/MuhammedMegz/Smart-Traffic-light-control)
 
