@@ -261,7 +261,7 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 
 张未来 [randomforest1111](https://github.com/randomforest1111)
 
-邹岱
+邹岱[zoudai](https://github.com/zoudai) 
 
 刘璐 [liulu](https://github.com/Aal-izzwell)
 
