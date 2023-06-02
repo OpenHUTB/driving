@@ -1,0 +1,2 @@
+
+drivingScenarioDesigner(hutb_scenario);
