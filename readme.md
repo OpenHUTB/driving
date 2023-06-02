@@ -251,6 +251,8 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 蒋平平
 
 ## 路网和车流仿真
+王海东 [donghaiwang](https://github.com/donghaiwang) 
+
 杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 
 
 刘子涵 [liuzihan888](https://github.com/liuzihan888) 
