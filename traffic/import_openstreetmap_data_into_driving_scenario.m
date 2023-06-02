@@ -12,5 +12,9 @@
 %% 选择OpenStreetMap文件
 % 要导入道路网络，您必须首先选择一个包含该网络道路几何图形的 OpenStreetMap 文件。要从 导出这些文件openstreetmap.org，请指定地图位置，手动调整此位置周围的区域，然后将该区域的道路几何图形导出到扩展名为 的 OpenStreetMap .osm。仅导出全长在此指定区域内的道路。在此示例中，您选择了之前从该网站导出的 OpenStreetMap 文件。
 % 
-% 打开Driving Scenario Designer 应用程序。
+% 1. 打开Driving Scenario Designer 应用程序。
 drivingScenarioDesigner
+% 2. 在应用程序工具条上，选择导入，然后选择 OpenStreetMap。
+% 
+% 3. 在OpenStreetMap Import 对话框中，浏览此文件， 您的 MATLAB ®matlabroot文件夹的根目录位于：
+

@@ -24,11 +24,23 @@
 osmosis --read-pbf-fast file="china-latest.osm.pbf" --bounding-polygon file="changsha_poly.txt" --write-xml file="changsha.osm"
 ```
 
+```commandline
+osmosis --read-pbf-fast file="china-latest.osm.pbf" --bounding-polygon file="yuelu_poly.txt" --write-xml file="yuelu.osm"
+```
+
+```commandline
+osmosis --read-pbf-fast file="china-latest.osm.pbf" --bounding-polygon file="data/street_poly.txt" --write-xml file="data/street_yuelu.osm"
+```
+
 
 # 教程
 [在 OpenStreetMap 底图上显示数据](https://ww2.mathworks.cn/help/driving/ug/display-data-on-openstreetmap-basemap.html)
 
+[驾驶场景设计器](https://ww2.mathworks.cn/help/driving/ref/drivingscenariodesigner-app.html)
+
 [将 OpenStreetMap 数据导入驾驶场景](https://ww2.mathworks.cn/help/driving/ug/import-openstreetmap-data-into-driving-scenario.html) 
+
+[使用 OpenStreetMap 数据构建 RoadRunner 道路](https://ww2.mathworks.cn/help/releases/R2022a/roadrunner/ug/build-roads-using-openstreetmap-data.html)
 
 
 # 示例
