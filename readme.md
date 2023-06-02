@@ -1,4 +1,4 @@
-	
+​	
 
 构建智慧交通系统，
 包括交通场景数字孪生、车流诱导、区域信控、停车管理等。
@@ -245,24 +245,25 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 
 李豪军 [q894749380](https://github.com/q894749380)
 
-刘子涵
 
 李权龙
 
-蒋平平
+蒋平平 [haiping-jpp](https://github.com/haiping-jpp)
 
 ## 路网和车流仿真
 王海东 [donghaiwang](https://github.com/donghaiwang) 
 
 杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 
 
+刘子涵 [liuzihan888](https://github.com/liuzihan888) 
+
 王磊
 
-张未来
+张未来 [randomforest1111](https://github.com/randomforest1111)
 
-邹岱
+邹岱[zoudai](https://github.com/zoudai) 
 
-刘璐
+刘璐 [liulu](https://github.com/Aal-izzwell)
 
 冯颖
 
