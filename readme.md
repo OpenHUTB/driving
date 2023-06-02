@@ -239,7 +239,7 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 # 贡献者
 
 ## 局部场景仿真
-张卫   [champion123456](https://github.com/champion123456)
+张卫[champion123456](https://github.com/champion123456)
 
 李诗帆 [q894749380](https://github.com/q894749380) 
 
