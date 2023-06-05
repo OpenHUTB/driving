@@ -56,8 +56,14 @@ https://github.com/Baazigar007/Smart-Traffic-Light
 
 [matlab交通信号灯比赛](https://github.com/mathworks/MathWorks-Excellence-in-Innovation/tree/main/projects/Traffic%20Light%20Negotiation%20and%20Perception-Based%20Detection)
 
+
+# 开发
 ## OpenStreetMap
+[资源列表](https://github.com/osmlab/awesome-openstreetmap)
+
 [将OpenStreetMap导入虚幻引擎](https://github.com/ue4plugins/StreetMap) 
+
+[从OpenStreetMap数据渲染3D场景](https://github.com/RodZill4/godot-openstreetmap)
 
 [将OpenStreetMap导入mysql数据库](https://wiyi.org/importing-osm-into-mysql.html)
 
@@ -65,9 +71,31 @@ https://github.com/Baazigar007/Smart-Traffic-Light
 
 [基于OpenStreetMap的安卓应用](https://github.com/osmdroid/osmdroid)
 
+[离线苹果和安卓应用](https://github.com/mapsme/omim) 
+
 [基于OpenStreetMap的搜索](https://github.com/osm-search/Nominatim) 
 
 [基于OpenStreetMap的路由引擎](https://github.com/valhalla/valhalla) 
+
+[基于docker的OpenStreetMap瓦片服务器](https://github.com/geo-data/openstreetmap-tiles-docker)
+
+[基于matlab的最短路径](https://github.com/johnyf/openstreetmap)
+
+[街道网络的分析](https://github.com/gboeing/osmnx)
+
+[交通规划与模拟](https://github.com/a-b-street/abstreet)
+
+[用Python绘制好看的地图](https://github.com/marceloprates/prettymaps)
+
+[数据清洗](https://github.com/iPhiliph/Data-Wrangling-OpenStreetMap)
+
+[Python API](https://github.com/metaodi/osmapi)
+
+[使用OpenStreetMap特征和卫星影像训练深度网络](https://github.com/trailbehind/DeepOSM) 
+
+
+## 地图
+[百度街景地图爬虫](https://blog.csdn.net/ZMT1849101245/article/details/88242232) 
 
 
 
