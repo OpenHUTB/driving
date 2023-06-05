@@ -49,7 +49,7 @@
 
 # 环境配置
 
-相关软件和数据[下载链接](https://pan.baidu.com/s/1y194-A2m0s9IUwuRWAttYw) ，提取码：dong。
+相关软件和数据位于[下载链接](https://pan.baidu.com/s/1pEYvvzAL9Sip3Ii3hbB4Wg?pwd=dong) 的`driving`目录下。
 ```text
 RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip 为RoadRunner的运行版本，
 
