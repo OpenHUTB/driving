@@ -239,33 +239,32 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 # 贡献者
 
 ## 局部场景仿真
-张卫  [champion123456](https://github.com/champion123456)
+张卫  [champion123456](https://github.com/champion123456) 局部高保真场景联动仿真
 
-李诗帆 [q894749380](https://github.com/q894749380) 
+李诗帆 [q894749380](https://github.com/q894749380) 多目标跟踪和场景感知
 
-李豪军 [q894749380](https://github.com/q894749380)  
+李豪军 [q894749380](https://github.com/q894749380) 虚幻引擎局部交通仿真场景的精细化
+
+李权龙 进行场景元素建模
+
+蒋平平 [haiping-jpp](https://github.com/haiping-jpp) 目标检测跟踪和车辆的定位与场景注入
 
 
-李权龙
+## 路网和车流仿真 
 
-蒋平平 [haiping-jpp](https://github.com/haiping-jpp)
+杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 岳麓区OpenStreetMap数据清洗和路网仿真
 
-## 路网和车流仿真
-王海东 [donghaiwang](https://github.com/donghaiwang) 
+刘子涵 [liuzihan888](https://github.com/liuzihan888) 爬取百度地图全景图片和采集车对应的经纬度（静态路网建模） 
 
-杨子仪 [yangziyi](https://github.com/Gloria-ziyiyang) 
+王磊 [wanglei](https://github.com/WLei1212115) 车道线检测并合并到路网场景中（静态路网建模） 
 
-刘子涵 [liuzihan888](https://github.com/liuzihan888) 
+张未来 [randomforest1111](https://github.com/randomforest1111) OpenStreetMap路网数据清洗和静态路网建模和仿真
 
-王磊 [wanglei](https://github.com/WLei1212115) 
+邹岱[zoudai](https://github.com/zoudai)  静态路网建模和与真实路网差异的校正
 
-张未来 [randomforest1111](https://github.com/randomforest1111)
+刘璐 [liulu](https://github.com/Aal-izzwell) 车辆加入路网场景的车流量建模
 
-邹岱[zoudai](https://github.com/zoudai) 
-
-刘璐 [liulu](https://github.com/Aal-izzwell)
-
-冯颖[fengying](https://github.com/fengying5201107) 
+冯颖[fengying](https://github.com/fengying5201107) 实时路网数据采集和动态车流量校正和态势感知
 
 
 
