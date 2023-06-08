@@ -274,7 +274,7 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 
 ## 系统开发 
 
-陈昌理：交通系统微观、中观、宏观的后端开发
+程昌理：交通系统微观、中观、宏观的后端开发
 
 王海东 [donghaiwang](https://github.com/donghaiwang) ：局部场景和路网的建模的部分开发和对接
 
