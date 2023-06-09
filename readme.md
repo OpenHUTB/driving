@@ -78,18 +78,20 @@ crossrods 交叉路口视频
 osm OpenStreetMap相关数据
 ```
 
-Matlab安装连接虚幻引擎的插件：
+1. 安装虚幻引擎4.26。
+
+2. Matlab安装连接虚幻引擎的插件：
 ```markdown
 uiopen('{REPOSITORY_PATH}\utils\mlpkginstall\adtunrealengine4.mlpkginstall',1)
 ```
 
-下载百度网盘中的文件`虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip`并解压到目录`C:/Buffer`。
+3. 下载百度网盘中的文件`虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip`并解压到目录`C:/Buffer`。
 
-安装虚幻引擎4.26后，在`matlab`中运行脚本以下脚本：
+4. 安装虚幻引擎4.26后，在`matlab`中运行脚本以下脚本：
 ```commandline
 main.mlx
 ```
-运行后等待出现"In Unreal Editor, select 'Play' to view the scene"后再在虚幻编辑器中点击“运行”。
+5. 运行后等待出现"In Unreal Editor, select 'Play' to view the scene"后再在虚幻编辑器中点击“运行”。
 
 ## 贡献指南
 [提交Pull Request流程](https://zhuanlan.zhihu.com/p/153381521) 。 
