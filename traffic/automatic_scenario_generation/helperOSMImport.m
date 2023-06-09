@@ -1,68 +1,64 @@
 function scenario = helperOSMImport(bbox)
-% helperOSMImport imports road network of MCity test facility from
-%   OpenStreetMap.
-%   Using the specified bounding box coordinates, the function downloads
-%   data from OpenStreetMap and returns a drivingScenario object, which
-%   contains the road network of MCity test facility.
-%
-% Copyright 2022 The MathWorks, Inc.
+% helperOSMImport 从OpenStreetMap导入MCity测试工具的道路网络 
+%   使用指定的边界框坐标，该函数从OpenStreetMap下载数据，
+%   并返回一个 drivingScenario 对象，该对象包含Mcity测试工具的路网。
+%   matlab\examples\driving\main\helperOSMImport.m
 
-% Sync the geometric bounding box coordinates origin with Mcity map origin
+% 将几何边界框坐标原点与 Mcity 地图原点同步
 originLat = 42.299847;
 originLon = -83.698854;
 
-% Bounding box latitude and longitude limits
-minLat =  bbox(1,1);
-maxLat =  bbox(1,2);
-minLon = bbox(2,1);
-maxLon = bbox(2,2);
+% 边界框经纬度限制
+minLat =  bbox(1,1);  % 最小经度
+maxLat =  bbox(1,2);  % 最大经度
+minLon = bbox(2,1);   % 最小纬度
+maxLon = bbox(2,2);   % 最大纬度
 
-% Fetch the OpenStreetMap XML
+% 获取OpenStreetMap XML
 url = ['https://api.openstreetmap.org/api/0.6/map?bbox=' ...
     num2str(minLon, '%.10f') ',' num2str(minLat, '%.10f') ',' ...
     num2str(maxLon, '%.10f') ',' num2str(maxLat, '%.10f')];
-fileName = websave("drive_map.osm", url,weboptions("ContentType", "xml"));
+fileName = websave("drive_map.osm", url,weboptions("ContentType", "xml"));  % 下载
 
-% Create a driving scenario
+% 创建一个驾驶场景
 importedScenario = drivingScenario;
-% Import the OpenStreetMap Roadnetwork
+% 导入 OpenStreetMap 路网
 roadNetwork(importedScenario, "OpenStreetMap", fileName);
 
-% Transform centroid of Bounding box into local Cartesian Coordinates
+% 将边界框的形心转换到局部笛卡尔坐标
 [tX,tY,tZ] = latlon2local(originLat, originLon,...
-    0, importedScenario.GeoReference);
-% Transformatation matrix
+    0, importedScenario.GeoReference);  % 将地理坐标转换为局部笛卡尔坐标
+% 变换矩阵
 tf = [tX,tY,tZ];
 
-% Map the fetched scenario into a new scenario with Shifted RoadCenters as
-% per the Bounding Box Centroid
+% 根据边界框质心，使用 Shifted RoadCenters 将获取的场景映射到新场景中
 scenario = drivingScenario;
 roadInfo = variantgenerator.internal.getRoadInfoFromScenario(importedScenario);
 
-% Preprocessing for MCity specific scenario
+% 特定场景MCity的预处理
 if(minLon < originLon || maxLon > originLon || ...
         minLon < originLat || maxLat > originLat)
 
     for index = 1 : size(roadInfo, 2)
         rn = roadInfo(index).RoadName;
 
-        % Translateing Road Centers or map to desired origin
+        % 将道路中心或地图转换成所需的原点
         roadCenters = roadInfo(index).RoadCenters - tf;
 
-        % Changing Roundabout to single lane
+        % 将 Roundabout 更改为单车道
         if(rn == "453870095" || rn == "453870101")
-            ls = lanespec(1); % Single Lane
+            ls = lanespec(1); % 单车道
         else
 
-            % Skipping "Access drive" road from Mcity map
+            % 从 Mcity 地图跳过“Access drive”道路
             if(rn == "Access Drive")
                 continue
             end
-            % Same lane specificatation for OSM
+            % OSM 的相同车道规范
             ls = roadInfo(index).LaneSpecification;
         end
 
-        % Create roads with the Name and the Lane Specification
+        % 使用 Name 和 Lane Specification 创建道路
         road(scenario, roadCenters, "Lanes", ls , "Name", rn);
     end
 end
