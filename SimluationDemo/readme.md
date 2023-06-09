@@ -8,9 +8,12 @@
 
 
 
-3.再将额外补充的资产加入，也就是这里的XXXXXXX文件，防止到你的Assets
+3.再将额外补充的资产加入，也就是这里的XXXXXXX文件，放置到你的Assets
 
 
 
-4.再使用RoadRunner打开即可（可查看使用图）
+4.再使用RoadRunner打开即可（可查看使用图），并重新加载一下你的资产，在主界面的Assets--》点击Upgrade Asset Library即可。
 
+
+
+![使用图](D:\RoadProject\driving\SimluationDemo\使用图.png)
