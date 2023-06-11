@@ -18,6 +18,8 @@
 
 
 
-![使用图](D:\RoadProject\driving\SimluationDemo\使用图.png)
+
+![使用图](https://github.com/OpenHUTB/driving/blob/master/SimluationDemo/使用图.png)
+
 
 对于**HUTB-仅路网.rrecene**，**直接放置到你的Scenes中。再在RoadRunner打开即可，没有额外的材质补充**
