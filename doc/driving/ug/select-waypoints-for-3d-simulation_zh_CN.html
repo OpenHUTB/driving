@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" itemscope="" itemtype="http://www.mathworks.com/help/schema/MathWorksDocPage">
+<head>
+<meta xmlns="http://www.w3.org/1999/xhtml" charset="utf-8">
+<meta xmlns="http://www.w3.org/1999/xhtml" name="viewport" content="width=device-width, initial-scale=1.0">
+<meta xmlns="http://www.w3.org/1999/xhtml" http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Select Waypoints for Unreal Engine Simulation</title>
+<script xmlns="http://www.w3.org/1999/xhtml" type="application/ld+json">
+      {
+      "@context": "http://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement":
+      [{
+          "@type": "ListItem",
+          "position": 1,
+
+          "item": {
+          "@id": "../index.html",
+          "name": "Automated Driving Toolbox"
+}
+
+          } 
+        ,
+        {
+          "@type": "ListItem",
+          "position": 2,
+
+          "item": {
+          "@id": "../scenario-simulation.html",
+          "name": "Scenario Simulation"
+}
+
+          }
+        ,
+        {
+          "@type": "ListItem",
+          "position": 3,
+
+          "item": {
+          "@id": "../unreal-engine-scenario-simulation.html",
+          "name": "Unreal Engine Scenario Simulation"
+}
+
+          }]
+      }</script><script xmlns="http://www.w3.org/1999/xhtml" type="application/ld+json">
+        {
+        "@context": "http://schema.org",
+        "@type": "ItemList",
+          "name": "VisibleBreadcrumbs",
+
+        "itemListElement":
+        [
+        "unreal-engine-scenario-simulation"
+        ],
+        "itemListOrder": "http://schema.org/ItemListOrderAscending"
+        }
+        </script><script xmlns="http://www.w3.org/1999/xhtml" type="application/ld+json">
+        {
+        "@context": "http://schema.org",
+        "@type": "DigitalDocument",
+          "headline": "Select Waypoints for Unreal Engine Simulation",
+          "description": "Select waypoints from a scene and visualize the path of a vehicle following these waypoints in the Unreal Engine simulation environment.",
+          "thumbnailURL": "../../examples/shared_vision_driving/win64/SelectWaypointsFor3DSimulationExample_04.png",
+          "genre": "Live Script",
+          "isBasedOn": {
+          "@type": "Product",
+          "name": "Simulink"
+
+        },
+          "identifier": "shared_vision_driving.SelectWaypointsFor3DSimulationExample",
+          "name": "SelectWaypointsFor3DSimulationExample",
+          "url": "select-waypoints-for-3d-simulation.html"
+
+        }</script><script xmlns="http://www.w3.org/1999/xhtml" type="application/ld+json">
+        {
+        "@context": "http://schema.org",
+        "@type": "PropertyValue",
+          "name": "open_command",
+          "value": "matlab:openExample('shared_vision_driving/SelectWaypointsFor3DSimulationExample')"
+
+        }</script><script xmlns="http://www.w3.org/1999/xhtml" type="application/ld+json">
+        {
+        "@context": "http://schema.org",
+        "@type": "ItemList",
+          "name": "ExampleSourceFiles",
+
+        "itemListElement":
+        [
+        "SelectWaypointsFor3DSimulationExample.mlx",
+        "VisualizationEngineSnapshot.PNG",
+        "VisualizeVehiclePathIn3DSimulation.slx",
+        "helperGetCurrentScene.m",
+        "helperShowSceneImage.m",
+        "waypointsLargeParkingLot.mat",
+        "helperUpdatePolyline.m"
+        ],
+        "itemListOrder": "http://schema.org/ItemListOrderAscending"
+        }
+        </script><link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+
+
+  <meta xmlns="http://www.w3.org/1999/xhtml" http-equiv="Content-Script-Type" content="text/javascript">
+<meta xmlns="http://www.w3.org/1999/xhtml" name="toctype" itemprop="pagetype" content="ug">
+<meta xmlns="http://www.w3.org/1999/xhtml" name="infotype" itemprop="infotype" content="other">
+
+<meta xmlns="http://www.w3.org/1999/xhtml" name="description" itemprop="description" content="Select waypoints from a scene and visualize the path of a vehicle following these waypoints in the Unreal Engine simulation environment."><meta xmlns="http://www.w3.org/1999/xhtml" content="../../examples/shared_vision_driving/win64/SelectWaypointsFor3DSimulationExample_04.png" itemprop="thumbnailUrl">
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/jquery/jquery-latest.js"></script>
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/site6.css" rel="stylesheet" type="text/css">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/site6_lg.css" rel="stylesheet" media="screen and (min-width: 1200px)">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/site6_md.css" rel="stylesheet" media="screen and (min-width: 992px) and (max-width: 1199px)">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/site6_sm+xs.css" rel="stylesheet" media="screen and (max-width: 991px)">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/site6_sm.css" rel="stylesheet" media="screen and (min-width: 768px) and (max-width: 991px)">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/site6_xs.css" rel="stylesheet" media="screen and (max-width: 767px)">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/site6_offcanvas_v2.css" rel="stylesheet" type="text/css">
+
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/l10n.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/docscripts.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/f1help.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/docscripts.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/mw.imageanimation.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/jquery.highlight.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/underscore-min.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/use_platform_screenshots.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/suggest.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/overload.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/helpservices.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/productfilter.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/product_group.js"></script><script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/scripts/saxonjs/SaxonJS2.rt.js"></script><script xmlns="http://www.w3.org/1999/xhtml">
+            window.history.replaceState(window.location.href, null, ""); // Initialize
+            window.onload = function() {    
+            mystylesheetLocation = "../../includes/shared/scripts/product_group-sef.json";
+            mysourceLocation = "../../docset.xml";
+            product_help_location = "driving";
+            pagetype = "section";
+            doccentertype = "product";
+            langcode = "";
+            getProductFilteredList(mystylesheetLocation, mysourceLocation, product_help_location, pagetype, doccentertype, langcode);  
+            }
+          </script>
+
+
+
+
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/jquery/jquery.mobile.custom.min.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/bootstrap.min.js"></script>
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/product/scripts/global.js"></script>
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/doc_center_base.css" rel="stylesheet" type="text/css">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/doc_center_installed.css" rel="stylesheet" type="text/css">
+<link xmlns="http://www.w3.org/1999/xhtml" href="../../includes/product/css/doc_center_print.css" rel="stylesheet" type="text/css" media="print">
+<script xmlns="http://www.w3.org/1999/xhtml" src="../../includes/shared/equationrenderer/release/MathRenderer.js"></script>
+</head>
+<body id="responsive_offcanvas">
+<div xmlns="http://www.w3.org/1999/xhtml" id="doc_header_spacer" class="header"></div>
+<div xmlns="http://www.w3.org/1999/xhtml" class="section_header level_3"><div class="container-fluid"><div class="row" id="mobile_search_row"><div class="col-sm-6 col-md-7 has_horizontal_local_nav" id="section_header_title"><div class="section_header_content"><div class="section_header_title"><h1><a href="../../documentation-center.html">Help Center</a></h1></div></div></div><div class="col-xs-12 col-sm-6 col-md-5" id="mobile_search"><div class="search_nested_content_container"><form id="docsearch_form" name="docsearch_form" method="get" data-release="R2022b" data-language="en" action="../../templates/searchresults.html"><div class="input-group tokenized_search_field"><label class="sr-only">Search Help</label><input type="text" class="form-control conjoined_search" autocomplete="off" name="qdoc" placeholder="Search Help" id="docsearch"> <div class="input-group-btn"><button type="submit" name="submitsearch" id="submitsearch" class="btn icon-search btn_search_adjacent btn_search icon_16" tabindex="-1"></button></div></div></form></div><button class="btn icon-remove btn_search pull-right icon_32 visible-xs" data-toggle="collapse" href="#mobile_search" aria-expanded="false" aria-controls="mobile_search"></button></div><div class="visible-xs" id="search_actuator"><button class="btn icon-search btn_search pull-right icon_16" data-toggle="collapse" href="#mobile_search" aria-expanded="false" aria-controls="mobile_search"></button></div></div></div></div><div class="row-offcanvas row-offcanvas-left">
+<div xmlns="http://www.w3.org/1999/xhtml" class="sidebar-offcanvas" id="sidebar">
+<nav class="offcanvas_nav" role="navigation">
+<div class="offcanvas_actuator" data-toggle="offcanvas" data-target="#sidebar" id="nav_toggle"><button type="button" class="btn"><span class="sr-only">Off-Canvas Navigation Menu Toggle
+                  Off-Canvas Navigation Menu Toggle</span><span class="icon-menu"></span></button><span class="offcanvas_actuator_label" id="translation_icon-menu" tabindex="-1" aria-hidden="true"></span></div><div class="nav_list_wrapper" id="nav_list_wrapper"><nav class="offcanvas_nav" role="navigation"><ul class="nav_breadcrumb" id="ul_left_nav_ancestors"><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="../../documentation-center.html?s_tid=CRUX_lftnav" itemprop="url"><span itemprop="title">Documentation Home</span></a></li></ul><ul class="nav_breadcrumb" id="ul_left_nav_productgroups"><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="../../overview/robotics-and-autonomous-systems.html" itemprop="url"><span itemprop="title">Robotics and Autonomous Systems</span></a></li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="../../overview/automotive.html" itemprop="url"><span itemprop="title">Automotive</span></a></li></ul>
+<ul class="nav_disambiguation"><li><a href="../index.html?s_tid=CRUX_lftnav">Automated Driving Toolbox</a>
+</li>
+<li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="../scenario-simulation.html?s_tid=CRUX_lftnav" itemprop="url"><span itemprop="title">Scenario Simulation</span></a></li><li itemscope="" itemtype="http://www.data-vocabulary.org/Breadcrumb" itemprop="breadcrumb"><a href="../unreal-engine-scenario-simulation.html?s_tid=CRUX_lftnav" itemprop="url"><span itemprop="title">Unreal Engine Scenario Simulation</span></a></li></ul><ul class="nav_scrollspy nav">
+<li class="nav_scrollspy_function"><a href="#responsive_offcanvas">Select Waypoints for Unreal Engine Simulation</a></li>
+<li class="nav_scrollspy_title" id="SSPY810-section">On this page</li>
+<!--ADD_REFENTRY_TITLE_HERE 11--><li><a href="#SelectWaypointsFor3DSimulationExample-1" class="intrnllnk">Introduction</a></li><li><a href="#SelectWaypointsFor3DSimulationExample-2" class="intrnllnk">Visualize Scene</a></li><li><a href="#SelectWaypointsFor3DSimulationExample-3" class="intrnllnk">Interactively Select Waypoints</a></li><li><a href="#SelectWaypointsFor3DSimulationExample-4" class="intrnllnk">Set Up Model and Simulation Environment</a></li><li><a href="#SelectWaypointsFor3DSimulationExample-5" class="intrnllnk">Move Vehicle Along Path</a></li><li><a href="#d124e47005" class="intrnllnk">See Also</a></li><li><a href="#d124e47023" class="intrnllnk">Related Topics</a></li></ul>
+</nav></div></nav>
+<script src="../../includes/product/scripts/offcanvas_v2.js"></script></div><!--END.CLASS sidebar-offcanvas-->
+<div class="offcanvas_content_container">
+<div xmlns="http://www.w3.org/1999/xhtml" class="sticky_header_container"><div class="horizontal_nav"><div class="horizontal_nav_container"><div class="offcanvas_horizontal_nav"><div class="container-fluid"><div class="row"><div class="col-sm-12 hidden-xs"><nav class="navbar navbar-default" role="navigation" id="subnav"><div><ul class="nav navbar-nav crux_browse"><li id="crux_nav_documentation" class="crux_resource active"><a>Documentation</a></li><li id="crux_nav_example" class="crux_resource"><a href="../examples.html?category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Examples</a></li><li id="crux_nav_function" class="crux_resource"><a href="../referencelist.html?type=function&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Functions</a></li><li id="crux_nav_block" class="crux_resource"><a href="../referencelist.html?type=block&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Blocks</a></li><li id="crux_nav_app" class="crux_resource"><a href="../referencelist.html?type=app&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Apps</a></li><li id="crux_nav_scene" class="crux_resource"><a href="../referencelist.html?type=scene&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Scenes</a></li></ul></div></nav></div><div class="visible-xs"><div class="container-fluid"><div class="row"><div class="col-xs-9"><div class="mobile_crux_nav_trigger"><div class="btn-group"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Resources<span class="icon-arrow-down icon_16"></span></button><ul class="dropdown-menu"><li id="crux_nav_mobile_documentation" class="crux_resource active"><a>Documentation</a></li><li id="crux_nav_mobile_example" class="crux_resource"><a href="../examples.html?category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Examples</a></li><li id="crux_nav_mobile_function" class="crux_resource"><a href="../referencelist.html?type=function&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Functions</a></li><li id="crux_nav_mobile_block" class="crux_resource"><a href="../referencelist.html?type=block&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Blocks</a></li><li id="crux_nav_mobile_app" class="crux_resource"><a href="../referencelist.html?type=app&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Apps</a></li><li id="crux_nav_mobile_scene" class="crux_resource"><a href="../referencelist.html?type=scene&amp;category=unreal-engine-scenario-simulation&amp;s_tid=CRUX_topnav">Scenes</a></li></ul></div></div></div><div class="col-xs-3"><div class="translate_placeholder"></div></div></div></div></div></div></div></div></div></div></div><div class="content_container" id="content_container" itemprop="content">
+<div class="container-fluid">
+<div class="row">
+<div class="col-xs-12">
+
+<div xmlns="http://www.w3.org/1999/xhtml" id="product_info_alert"></div><section xmlns="http://www.w3.org/1999/xhtml" id="doc_center_content" lang="en" data-language="en"><div id="pgtype-topic">
+<section itemprop="content"><h1 class="r2022b" itemprop="title content" id="mw_f780d508-aca7-46bb-b440-40ec9e6ff0af">Select Waypoints for Unreal Engine Simulation</h1><div class="examples_short_list hidden_ios_android"><div data-pane="metadata" class="panel metadata_container panel-default"><div class="panel-body metadata_content"><p class="add_margin_5">This example uses:</p><ul class="list-unstyled add_border_bottom example_product_list" itemprop="requiredprods"><li><a href="matlab:matlab.internal.language.introspective.showAddon('DR')">Automated Driving Toolbox</a></li><li><a href="matlab:matlab.internal.language.introspective.showAddon('SL')">Simulink</a></li><li><a href="matlab:matlab.internal.language.introspective.showAddon('IP')">Image Processing Toolbox</a></li></ul><a class="btn btn_secondary btn-block" href="matlab:openExample('shared_vision_driving/SelectWaypointsFor3DSimulationExample')" data-ex-genre="Live Script">Open Live Script</a></div></div></div><div itemscope="" itemtype="http://www.mathworks.com/help/schema/MathWorksDocPage/Example" itemprop="example" class="em_example"><meta itemprop="exampleid" content="shared_vision_driving-SelectWaypointsFor3DSimulationExample"><meta itemprop="exampletitle" content="Select Waypoints for Unreal Engine Simulation"></div><span id="SelectWaypointsFor3DSimulationExample" class="anchor_target"></span><p class="shortdesc">此示例说明如何从场景中选择一系列航路点，并在 3D 模拟环境中可视化车辆遵循这些航路点的路径。 此环境使用Epic Games&#174;的虚幻引擎&#174;. </p><div class="procedure"><h3 class="title" id="SelectWaypointsFor3DSimulationExample-1">Introduction</h3><p>Automated Driving Toolbox&#8482; integrates an Unreal Engine simulation environment in Simulink&#174;. Simulink blocks related to the simulation environment can be found in the <code class="literal">drivingsim3d</code> library. These blocks provide the ability to:</p><div class="itemizedlist"><ul><li><p>Select different scenes in the simulation environment.</p></li><li><p>Place and move vehicles in the scene.</p></li><li><p>Attach and configure sensors on the vehicles.</p></li><li><p>Simulate sensor data based on the environment around the vehicle. </p></li></ul></div><p>This powerful simulation tool can be used to supplement real data when developing, testing, and verifying the performance of automated driving algorithms. In conjunction with a vehicle model, you can use this environment to perform realistic closed-loop simulations that encompass the entire automated driving stack, from perception to control.</p><p>The first step in using this environment is understanding the scene and selecting waypoints along a desired vehicle path. This step is useful especially in scenarios where the localization algorithm is not under test. This example focuses on this first step.</p><p>In this example, you will:</p><div class="itemizedlist"><ul><li><p>Visualize the scene in MATLAB&#174;.</p></li><li><p>Interactively select waypoints along a path in the scene.</p></li><li><p>Set up the simulation environment.</p></li><li><p>Move the vehicle along the path.</p></li></ul></div><h3 class="title" id="SelectWaypointsFor3DSimulationExample-2">Visualize Scene</h3><p>First, visualize the scene in MATLAB. Each scene can be visualized using a 2D top-view projection of the scene onto an image. Each scene image has a corresponding 2D spatial referencing object of class <code class="literal"></code><a href="../../images/ref/imref2d.html" data-docid="images_ref#ref_q21n8hna8" class="a"><code class="olink">imref2d</code></a> describing the relationship between the pixels in the image and the world coordinates of the scene. Use the <code class="literal">helperGetSceneImage</code> function to retrieve the scene image and associated spatial reference. This example uses a prebuilt scene of a large parking lot. To generate a scene image and spatial reference for a custom scene, follow the process described in <a href="create-top-down-map-of-unreal-engine-scene.html" data-docid="driving_ug#mw_f62fb345-d746-4250-aab8-c85a67b50fc5" class="a">Create Top-Down Map of Unreal Engine Scene</a> instead.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>sceneName = <span style="color:#A020F0">'LargeParkingLot'</span>;
+[sceneImage, sceneRef] = helperGetSceneImage(sceneName);</pre></div></div></div><p>To better understand the physical dimensions of the scene, inspect the <code class="literal">sceneRef</code> variable. The <code class="literal">XWorldLimits</code> and <code class="literal">YWorldLimits</code> properties specify the limits of the world in the X and Y directions.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>sceneRef.XWorldLimits   <span style="color:#228B22">% (in meters)</span></pre></div></div></div><div class="code_responsive"><div class="programlisting"><div class="codeoutput"><pre>ans = <span class="emphasis"><em>1×2</em></span>
+
+  -78.6000   72.6000
+
+</pre></div></div></div><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>sceneRef.YWorldLimits   <span style="color:#228B22">% (in meters)</span></pre></div></div></div><div class="code_responsive"><div class="programlisting"><div class="codeoutput"><pre>ans = <span class="emphasis"><em>1×2</em></span>
+
+  -77.7000   73.5000
+
+</pre></div></div></div><p>Visualize the scene image by using the <code class="literal">helperShowSceneImage</code> function. This helper function displays the scene image in a figure window. Use the pan and zoom tools to explore the scene.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>hScene = figure;
+helperShowSceneImage(sceneImage, sceneRef)
+title(sceneName)</pre></div></div></div><div class="informalfigure"><div id="d124e46833" class="mediaobject"><p><img src="../../examples/shared_vision_driving/win64/SelectWaypointsFor3DSimulationExample_01.png" alt="Figure contains an axes object. The axes object with title LargeParkingLot contains an object of type image." width="467"></p></div></div><h3 class="title" id="SelectWaypointsFor3DSimulationExample-3">Interactively Select Waypoints</h3><p>After exploring the scene, select a set of waypoints to define a path for a vehicle to follow. This path can be used to move the vehicle in the scene. Use the helper function <code class="literal">helperSelectSceneWaypoints</code> to interactively select waypoints in the scene.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>hFig = helperSelectSceneWaypoints(sceneImage, sceneRef);</pre></div></div></div><div class="informalfigure"><div id="d124e46846" class="mediaobject"><p><img src="../../examples/shared_vision_driving/win64/SelectWaypointsFor3DSimulationExample_02.png" alt="{&#34;String&#34;:&#34;Figure Draw Scene Waypoints contains an axes object and other objects of type uicontrol. The axes object contains an object of type image.&#34;,&#34;Tex&#34;:[],&#34;LaTex&#34;:[]}" width="871"></p></div></div><p>This helper function opens a figure window with the selected scene. </p><div class="itemizedlist"><ul><li><p>Explore the scene by zooming and panning through the scene image. Use the mouse scrollwheel or the axes toolbar to zoom. Hover over the edge of the axes to pan in that direction.</p></li><li><p>Begin drawing a path by clicking on the scene. A path is created as a polyline consisting of multiple points. Finish drawing the path by double-clicking or right-clicking.</p></li><li><p>Once you are done drawing a path, click <strong class="emphasis bold">Export to Workspace</strong> to export the variables to the MATLAB workspace. In the dialog box that opens, click <strong class="emphasis bold">OK</strong> to export a set of variables to the workspace.</p></li></ul></div><p>The following data is exported to the workspace as MATLAB variables:</p><div class="itemizedlist"><ul><li><p><strong class="emphasis bold">Waypoints:</strong> A cell array with each element containing an <span class="emphasis"><em>M</em></span>-by-2 matrix of <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow></math></span> waypoints in world coordinates. Each element of the cell array corresponds to the waypoints from a different path.</p></li><li><p><strong class="emphasis bold">Path Poses:</strong> A cell array with each element containing <span class="emphasis"><em>M</em></span>-by-3 matrices of <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>,</mo><mi>y</mi><mo>,</mo><mi>θ</mi><mo stretchy="false">)</mo></mrow></math></span> poses containing the pose of each waypoint. <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mi>x</mi></mrow></math></span> and <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mi>y</mi></mrow></math></span> are specified in meters. <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mi>θ</mi></mrow></math></span> is specified in degrees.</p></li></ul></div><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre><span style="color:#228B22">% Load variables to workspace if they do not exist</span>
+<span style="color:#0000FF">if</span> exist(<span style="color:#A020F0">'refPoses'</span>, <span style="color:#A020F0">'var'</span>)==0 || exist(<span style="color:#A020F0">'wayPoints'</span>, <span style="color:#A020F0">'var'</span>)==0
+    
+    <span style="color:#228B22">% Load MAT-file containing preselected waypoints</span>
+    data = load(<span style="color:#A020F0">'waypointsLargeParkingLot'</span>);
+    data = data.waypointsLargeParkingLot;
+    
+    <span style="color:#228B22">% Assign to caller workspace</span>
+    assignin(<span style="color:#A020F0">'caller'</span>, <span style="color:#A020F0">'wayPoints'</span>, {data.waypoints});
+    assignin(<span style="color:#A020F0">'caller'</span>, <span style="color:#A020F0">'refPoses'</span>, {data.refPoses});
+<span style="color:#0000FF">end</span></pre></div></div></div><p>The exported variables now contain a sequence of waypoints (<code class="literal">wayPoints</code>) and a sequence of poses (<code class="literal">refPoses</code>). Use the <a href="../ref/smoothpathspline.html" data-docid="driving_ref#mw_46e609fd-e71c-408f-80e6-3ef228a24cd2" class="a"><code class="olink">smoothPathSpline</code></a> function to transform the sequence of poses to a <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><msup><mrow><mi>C</mi></mrow><mrow><mn>2</mn></mrow></msup></mrow></math></span> continuous path.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>numPoses = size(refPoses{1}, 1);
+
+refDirections  = ones(numPoses,1);   <span style="color:#228B22">% Forward-only motion</span>
+numSmoothPoses = 20 * numPoses;      <span style="color:#228B22">% Increase this to increase the number of returned poses</span>
+
+[smoothRefPoses,~,cumLengths] = smoothPathSpline(refPoses{1}, refDirections, numSmoothPoses);</pre></div></div></div><h3 class="title" id="SelectWaypointsFor3DSimulationExample-4">Set Up Model and Simulation Environment</h3><p>Open the <code class="literal">VisualizeVehiclePathIn3DSimulation</code> Simulink model. This model uses the <a href="../ref/simulation3dsceneconfiguration.html" data-docid="driving_ref#mw_96a521fd-316f-497b-bc01-b2c5f4083563" class="a">Simulation 3D Scene Configuration</a> block to select a desired scene. This example uses the <a href="../ref/largeparkinglot.html" data-docid="driving_ref#mw_8ecb60fe-eb82-4f45-9629-a581750c6b69" class="a">Large Parking Lot</a> scene. The Simulation 3D Scene Configuration block sets up the environment and establishes communication between Simulink and the simulation environment.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre><span style="color:#0000FF">if</span> ~ispc
+    error([<span style="color:#A020F0">'3D Simulation is only supported on Microsoft'</span>, char(174), <span style="color:#A020F0">' Windows'</span>, char(174), <span style="color:#A020F0">'.'</span>]);
+<span style="color:#0000FF">end</span>
+
+modelName = <span style="color:#A020F0">'VisualizeVehiclePathIn3DSimulation'</span>;
+open_system(modelName);
+snapnow;</pre></div></div></div><h3 class="title" id="SelectWaypointsFor3DSimulationExample-5">Move Vehicle Along Path</h3><p>Use the <a href="../ref/simulation3dvehiclewithgroundfollowing.html" data-docid="driving_ref#mw_32cd8e72-2d69-4c3e-98b0-5b918db383a4" class="a">Simulation 3D Vehicle with Ground Following</a> block to place and move vehicles in the scene. The model is set up to accept variables <code class="literal">refPosesX</code>, <code class="literal">refPosesY</code>, and <code class="literal">refPosesT</code> from the workspace using the <a href="../../simulink/slref/fromworkspace.html" data-docid="simulink_ref#f7-890184" class="a">From Workspace</a><span role="cross_prod"> (Simulink)</span> block. Separate <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mi>x</mi></mrow></math></span>, <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mi>y</mi></mrow></math></span> and <span class="inlineequation"><math xmlns="http://www.w3.org/1998/Math/MathML" xmlns:mwmmlx="https://www.mathworks.com/namespace/MathMLextensions" mwmmlx:extension="true" display="block"><mrow><mi>θ</mi></mrow></math></span> from <code class="literal">newRefPoses</code> into separate time series. The model reads these workspace variables to update the position of the vehicle.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre><span style="color:#228B22">% Configure the model to stop simulation at 5 seconds.</span>
+simStopTime = 5;
+set_param(gcs, <span style="color:#A020F0">'StopTime'</span>, num2str(simStopTime));
+
+<span style="color:#228B22">% Create a constant velocity profile by generating a time vector</span>
+<span style="color:#228B22">% proportional to the cumulative path length.</span>
+timeVector = normalize(cumLengths, <span style="color:#A020F0">'range'</span>, [0, simStopTime]);
+
+<span style="color:#228B22">% Create variables required by the Simulink model.</span>
+refPosesX = [timeVector, smoothRefPoses(:,1)];
+refPosesY = [timeVector, smoothRefPoses(:,2)];
+refPosesT = [timeVector, smoothRefPoses(:,3)];</pre></div></div></div><p>When you simulate the model, a few seconds are needed to initialize the simulation environment. Once this initialization is complete, a separate window opens for the simulation environment visualization. The image below is a snapshot of the simulation environment window.</p><div class="informalfigure"><div id="d124e46989" class="mediaobject"><p><img src="../../examples/shared_vision_driving/win64/SelectWaypointsFor3DSimulationExample_03.png" height="753" width="1280"></p></div></div><p>Run the simulation. The figure window plot shows the path that the vehicle traverses through the simulation environment.</p><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre>sim(modelName);</pre></div></div></div><div class="informalfigure"><div id="d124e46996" class="mediaobject"><p><img src="../../examples/shared_vision_driving/win64/SelectWaypointsFor3DSimulationExample_04.png" alt="Figure Scene Display contains an axes object. The axes object with title Largeparkinglot contains 2 objects of type image, images.roi.polyline." width="467"></p></div></div><div class="code_responsive"><div class="programlisting"><div class="codeinput"><pre><span style="color:#228B22">% Close the model and figure windows.</span>
+close(hFig)
+close_system(modelName)   
+close(hScene)</pre></div></div></div></div>
+      <h2 id="d124e47005">See Also</h2><h3>Blocks</h3><ul class="list-unstyled margined_10"><li><span itemscope="" itemtype="http://www.mathworks.com/help/schema/MathWorksDocPage/SeeAlso" itemprop="seealso"><a itemprop="url" href="../ref/simulation3dsceneconfiguration.html"><span itemprop="name"><span class="block">Simulation 3D Scene
+            Configuration</span></span></a></span> | <span itemscope="" itemtype="http://www.mathworks.com/help/schema/MathWorksDocPage/SeeAlso" itemprop="seealso"><a itemprop="url" href="../ref/simulation3dvehiclewithgroundfollowing.html"><span itemprop="name"><span class="block">Simulation 3D Vehicle
+            with Ground Following</span></span></a></span></li></ul><h3>Functions</h3><ul class="list-unstyled margined_10"><li><span itemscope="" itemtype="http://www.mathworks.com/help/schema/MathWorksDocPage/SeeAlso" itemprop="seealso"><a itemprop="url" href="../../images/ref/imref2d.html"><span itemprop="name"><code class="function">imref2d</code></span></a></span></li></ul>
+      <h2 id="d124e47023">Related Topics</h2><ul><li><a href="create-top-down-map-of-unreal-engine-scene.html" class="a">Create Top-Down Map of Unreal Engine Scene</a></li><li><a href="design-of-lane-marker-detector-in-3d-simulation-environment.html" class="a">Design Lane Marker Detector Using Unreal Engine Simulation Environment</a></li><li><a href="visualize-automated-parking-valet-using-3d-simulation.html" class="a">Visualize Automated Parking Valet Using Unreal Engine Simulation</a></li><li><a href="simulate-radar-sensors-in-3d-environment.html" class="a">Simulate Vision and Radar Sensors in Unreal Engine Environment</a></li><li><a href="3d-simulation-for-automated-driving.html" class="a">Unreal Engine Simulation for Automated Driving</a></li><li><a href="coordinate-systems-for-3d-simulation-in-automated-driving-toolbox.html" class="a">Coordinate Systems for Unreal Engine Simulation in Automated Driving Toolbox</a></li></ul>
+      
+    </section>
+    </div>
+<div class="modal fade" id="open-example-dialog" tabindex="-1" role="dialog" aria-labelledby="openExampleDialogLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h2 class="h3 modal-title">Open Example</h2></div><div class="modal-body" id="dialog-body"><p>You have a modified version of this example. Do you want to open this example with your edits?</p></div><div class="modal-footer"><a id="open-example-dialog-replace" class="btn btn_color_blue companion_btn" data-dismiss="modal">No, open this example and discard my edits</a><a id="open-example-dialog-continue" class="btn btn_color_blue" data-dismiss="modal">Yes</a></div></div></div></div>
+<div class="clearfix"></div>
+<div align="center" class="feedbackblock" id="mw_docsurvey"><script src="https://www.mathworks.com/help/docsurvey/docfeedback.js"></script>
+<script>loadSurveyHidden();</script>
+<link rel="stylesheet" href="https://www.mathworks.com/help/docsurvey/release/index-css.css" type="text/css">
+<script src="https://www.mathworks.com/help/docsurvey/release/bundle.index.js"></script>
+
+<script>initDocSurvey();</script></div></section>
+
+
+</div>
+</div>
+</div>
+</div><!--close_0960-->
+<footer xmlns="http://www.w3.org/1999/xhtml" id="footer" class="bs-footer">
+<div class="container-fluid">
+<div class="footer">
+<div class="row">
+<div class="col-xs-12">
+<p class="copyright">© 1994-2022 The MathWorks, Inc.</p>
+<ul class="footernav"><li class="footernav_help"><a href="matlab:web(matlab.internal.licenseAgreement)">Terms of Use</a></li><li class="footernav_patents"><a href="matlab:web([matlabroot '/patents.txt'])">Patents</a></li><li class="footernav_trademarks"><a href="matlab:web([matlabroot '/trademarks.txt'])">Trademarks</a></li><li class="footernav_piracy"><a href="matlab:web([docroot '/acknowledgments.html'])">Acknowledgments</a></li></ul></div>
+</div>
+</div>
+</div>
+</footer>
+</div><!--close row-offcanvas-->
+</div><!--close_0970-->
+</body>
+</html>
