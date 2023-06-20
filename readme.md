@@ -287,6 +287,7 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 冯颖[fengying](https://github.com/fengying5201107) ：实时路网数据采集和动态车流量校正和态势感知
 
 邓梓睿[dengzirui](https://github.com/D-kistch)：车道线检测并合并到路网场景中（静态路网建模）  
+蒋芳雪[jfangx123](https://github.com/jfangx123)：车道线检测并合并到路网场景中（静态路网建模） 
 
 ## 系统开发 
 
