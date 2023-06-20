@@ -269,7 +269,7 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 
 蒋平平 [haiping-jpp](https://github.com/haiping-jpp) ：目标检测跟踪和车辆的定位与场景注入
 
-
+蒋芳雪 [jfangx123](https://github.com/jfangx123) ：局部高仿真场景联动
 
 ## 路网和车流仿真 
 
