@@ -61,7 +61,7 @@
 
 # 环境配置
 
-相关软件和数据位于[链接](https://pan.baidu.com/s/1UhmJU32GASXambyTuQtlUw?pwd=dong) 下。
+相关软件和数据位于[链接](https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb) 下。
 ```text
 matlab_2022b_win_run.zip 为matlab运行版本。
 
