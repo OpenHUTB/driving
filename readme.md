@@ -8,11 +8,11 @@
 ## 页面设计
 三个前端页面：宏观（地图）、中观（路网）、微观（场景）。
 
-[宏观](https://ibb.co/XFdXmY8) ：1. 嵌入在线百度地图；2. 离线数据搭建；
+[宏观](https://ibb.co/XFdXmY8) ：1. 嵌入在线地图；2. 离线地图服务搭建；3. 宏观流量仿真，前端展示流量数据；
 
-[中观](https://ibb.co/bByHR0N) ：岳麓区路网建模的可视化：虚幻引擎、RoadRunner、drivingScenarioDesigner、直接数据给前端展示；选一个
+[中观](https://ibb.co/bByHR0N) ：岳麓区路网建模的可视化：RoadRunner、虚幻引擎；
 
-[微观](https://ibb.co/RCpXrcj) ：局部路网仿真，前端对接虚幻引擎和视频流。
+[微观](https://ibb.co/RCpXrcj) ：局部路网仿真，前端对接虚幻引擎像素流。
 
 
 
