@@ -288,6 +288,8 @@ USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位�
 
 邓梓睿[dengzirui](https://github.com/D-kistch)：车道线检测并合并到路网场景中（静态路网建模）  
 
+陈凤英[xiaolaihuohu](https://github.com/xiaolaihuohuo)：
+
 ## 系统开发 
 
 程昌理：交通系统微观、中观、宏观的后端开发
