@@ -44,6 +44,7 @@ rrApp = roadrunner(rrProj, InstallationFolder=fullfile(matlabroot, 'software', '
 copyfile(fullfile(fileparts(mfilename("fullpath")), 'HUTB_roadnetwork.rrscene'), fullfile(rrProj, "RRScene"), 'f');
 copyfile(fullfile(fileparts(mfilename("fullpath")), 'HUTB_roadnetwork.rrscenario'), fullfile(rrProj, "Scenarios"), 'f');
 
+
 %% 
 % |openScenario| 在 RoadRunner Scenario 中使用函数打开已有场景，指定要打开的 |rrApp| 对象和具体场景。|filename| 
 % 比如打开 |TrajectoryCutIn| 场景文件，这是 RoadRunner 工程中默认包含的场景。此函数通过 MATLAB 在 RoadRunner 
@@ -55,22 +56,29 @@ openScenario(rrApp, "HUTB_roadnetwork.rrscenario"); % 位于工程路径下的Sc
 % 将场景加载到 RoadRunner Scenario 后，通过使用 |createSimulation| 函数创建模拟对象来自动执行模拟任务。模拟对象使您能够以编程方式与场景模拟进行交互。
 % 
 % 将对象为函数|createSimulation| 指定输入参数输入参数|rrApp|。该函数创建一个模拟对象，|rrSim|。
-
 rrSim = createSimulation(rrApp);
-%% 
-% 将最长模拟时间设置为 10 秒。使用 |set| 函数并指定 |rrSim| 对象、要设置的变量的名称以及该变量的值作为输入参数。
 
-maxSimulationTimeSec = 10;
+%% 设置最长模拟时间
+% 使用 |set| 函数并指定 |rrSim| 对象、要设置的变量的名称以及该变量的值作为输入参数。
+maxSimulationTimeSec = 20;
 set(rrSim, 'MaxSimulationTime',maxSimulationTimeSec);
 
 
 %% 
 % 启用模拟结果记录，以便您稍后可以绘制结果。
-set(rrSim,"Logging","on");
+set(rrSim, "Logging","on");
+
+%% 获得并设置小轿车的速度
+name = "Sedan_InitialSpeed";
+initial_sedan_speed = getScenarioVariable(rrApp,name);
+disp(fprintf("Original sedan speed: %f", initial_sedan_speed));
+
+later_sedan_speed = "30";
+setScenarioVariable(rrApp, name, later_sedan_speed);
 
 
-%% 
-% 开始模拟。使用 |while| 循环监视仿真的状态，并等待仿真完成。
+%% 开始模拟
+% 使用 |while| 循环监视仿真的状态，并等待仿真完成。
 set(rrSim,"SimulationCommand","Start");
 while strcmp(get(rrSim,"SimulationStatus"),"Running")
     pause(1);
@@ -79,24 +87,32 @@ end
 %% *绘制代理速度*
 % 在本节中，您将从模拟中检索记录的参与者速度，并根据模拟时间绘制它们的大小。
 % 
-% 从场景中获取记录的结果。使用该 |get| 函数并将 |rrSim| 对象和"指定|SimulationLog"|为输入参数。该函数返回模拟日志|rrLog|，其中包含有关场景模拟的信息。
+% 从场景中获取记录的结果。
+% 使用该 |get| 函数并将 |rrSim| 对象和"指定|SimulationLog"|为输入参数。
+% 该函数返回模拟日志|rrLog|，其中包含有关场景模拟的信息。
 rrLog = get(rrSim, "SimulationLog");
 
-%% 
-% |TrajectoryCutIn scenario| 包含两个演员。红色轿车 |Actor ID|设置为 |1,|，白色轿车 |Actor ID| 
-% 设置为|2|。从模拟日志中获取这些参与者的记录速度。另外，从模拟日志中获取相应的模拟时间_。_
 
+%% 
+% |TrajectoryCutIn scenario| 包含两个演员。
+% 红色轿车 |Actor ID|设置为 |1,|，白色轿车 |Actor ID| 设置为|2|。
+% 从模拟日志中获取这些参与者的记录速度。
+% 另外，从模拟日志中获取相应的模拟时间_。_
 velocityAgent1 = get(rrLog,'Velocity','ActorID',1);
 velocityAgent2 = get(rrLog,'Velocity','ActorID',2);
 time = [velocityAgent1.Time];
-%% 
-% 该函数以向量形式返回红色轿车和白色轿车的速度，并将它们分别存储在|velMagAgent1|和|velMagAgent2|变量中。|norm|使用函数计算每个演员的速度大小。
 
+
+%% 
+% 该函数以向量形式返回红色轿车和白色轿车的速度，
+% 并将它们分别存储在|velMagAgent1|和|velMagAgent2|变量中。
+% |norm|使用函数计算每个演员的速度大小。
 velMagAgent1 = arrayfun(@(x) norm(x.Velocity,2),velocityAgent1);
 velMagAgent2 = arrayfun(@(x) norm(x.Velocity,2),velocityAgent2);
+
+
 %% 
 % |plot|使用函数绘制相对于模拟时间的代理速度。标记图表以及_x_和_y_轴。
-
 figure
 hold on
 plot(time,velMagAgent1,"r")
@@ -107,13 +123,14 @@ ylabel("Velocity (m/sec)")
 xlabel("Time (sec)")
 legend("Actor ID = 1","Actor ID = 2")
 
+
 %% 
-% 请注意，演员的速度与他们在RoadRunner 场景的*逻辑编辑器*中的规范相对应*。*
+% 请注意，动作者的速度与他们在RoadRunner 场景的*逻辑编辑器*中的规范相对应*。*
 % *绘制代理速度*
 % 从 RoadRunner 场景中绘制车道并在地图上叠加车辆的位置。
 % 
-% 使用 |getMap| 函数从 RoadRunner 获取高精地图规格。请注意，该函数返回一个结构，其中一个字段包含有关车道的信息。
-
+% 使用 |getMap| 函数从 RoadRunner 获取高精地图规格。
+% 请注意，该函数返回一个结构，其中一个字段包含有关车道的信息。
 hdMap = getMap(rrSim);
 lanes = hdMap.map.lanes;
 
@@ -132,8 +149,7 @@ axis equal
 
 
 %% 
-% 提取车辆的位置并将它们绘制在车道上_。_
-
+% 提取车辆的位置并将它们绘制在车道上。
 poseActor1 = rrLog.get('Pose','ActorID',1);
 positionActor1_x = arrayfun(@(x) x.Pose(1,4),poseActor1);
 positionActor1_y = arrayfun(@(x) x.Pose(2,4),poseActor1);
@@ -157,10 +173,10 @@ close(rrApp)
 
 %% 
 % 关闭打开的图形。
-
 % close all
 %% *进一步探索*
-% 在此示例中，您了解了使用 MATLAB 以编程方式连接到 RoadRunner Scenario 的基本功能。要进一步扩展此脚本，您可以：
-%% 
+% 在此示例中，您了解了使用 MATLAB 以编程方式连接到 RoadRunner Scenario 的基本功能。
+% 要进一步扩展此脚本，您可以： 
 % * 改变场景和场景中的车辆参与者。
-% * 开发 MATLAB 和 Simulink 行为，发布角色行为，在 RoadRunner Scenario 模拟中模拟行为，控制模拟和访问模拟参数。
+% * 开发 MATLAB 和 Simulink 行为，发布角色行为，
+% 在 RoadRunner Scenario 模拟中模拟行为，控制模拟和访问模拟参数。
