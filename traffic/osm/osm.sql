@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `acls` (
   `netmask` varchar(255) NOT NULL,
   `k` varchar(255) NOT NULL,
   `v` varchar(255) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `acls`
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS `changesets` (
   `max_lon` int(11) default NULL,
   `closed_at` timestamp NOT NULL default '0000-00-00 00:00:00',
   `num_changes` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `changesets`
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `changeset_tags` (
   `changeset_id` bigint(20) NOT NULL,
   `k` varchar(255) default '',
   `v` varchar(255) default ''
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `changeset_tags`
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS `client_applications` (
   `allow_write_api` tinyint(1) NOT NULL default '0',
   `allow_read_gpx` tinyint(1) NOT NULL default '0',
   `allow_write_gpx` tinyint(1) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `client_applications`
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `countries` (
   `max_lat` double NOT NULL,
   `min_lon` double NOT NULL,
   `max_lon` double NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `countries`
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS `current_nodes` (
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `tile` bigint(20) NOT NULL,
   `version` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_nodes`
@@ -135,7 +135,7 @@ CREATE TABLE IF NOT EXISTS `current_node_tags` (
   `node_id` bigint(20) NOT NULL,
   `k` varchar(255) default '',
   `v` varchar(255) default ''
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_node_tags`
@@ -154,7 +154,7 @@ CREATE TABLE IF NOT EXISTS `current_relations` (
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `visible` tinyint(1) NOT NULL,
   `version` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_relations`
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `current_relation_members` (
   `member_id` bigint(20) NOT NULL,
   `member_role` varchar(255) NOT NULL,
   `sequence_id` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_relation_members`
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS `current_relation_tags` (
   `relation_id` bigint(20) NOT NULL,
   `k` varchar(255) default '',
   `v` varchar(255) default ''
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_relation_tags`
@@ -209,7 +209,7 @@ CREATE TABLE IF NOT EXISTS `current_ways` (
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `visible` tinyint(1) NOT NULL,
   `version` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_ways`
@@ -226,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `current_way_nodes` (
   `way_id` bigint(20) NOT NULL,
   `node_id` bigint(20) NOT NULL,
   `sequence_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_way_nodes`
@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS `current_way_tags` (
   `way_id` bigint(20) NOT NULL,
   `k` varchar(255) default '',
   `v` varchar(255) default ''
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `current_way_tags`
@@ -263,7 +263,7 @@ CREATE TABLE IF NOT EXISTS `diary_comments` (
   `body` text NOT NULL,
   `created_at` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL default '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `diary_comments`
@@ -286,7 +286,7 @@ CREATE TABLE IF NOT EXISTS `diary_entries` (
   `latitude` double default NULL,
   `longitude` double default NULL,
   `language_code` varchar(255) default 'en'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `diary_entries`
@@ -303,7 +303,7 @@ CREATE TABLE IF NOT EXISTS `friends` (
   `id` bigint(20) NOT NULL,
   `user_id` bigint(20) NOT NULL,
   `friend_user_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `friends`
@@ -324,7 +324,7 @@ CREATE TABLE IF NOT EXISTS `gps_points` (
   `gpx_id` bigint(20) NOT NULL,
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `tile` bigint(20) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `gps_points`
@@ -349,7 +349,7 @@ CREATE TABLE IF NOT EXISTS `gpx_files` (
   `description` varchar(255) default '',
   `inserted` tinyint(1) NOT NULL,
   `visibility` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `gpx_files`
@@ -366,7 +366,7 @@ CREATE TABLE IF NOT EXISTS `gpx_file_tags` (
   `gpx_id` bigint(20) NOT NULL default '0',
   `tag` varchar(255) NOT NULL,
   `id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `gpx_file_tags`
@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS `languages` (
   `code` varchar(255) NOT NULL,
   `english_name` varchar(255) NOT NULL,
   `native_name` varchar(255) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `languages`
@@ -406,7 +406,7 @@ CREATE TABLE IF NOT EXISTS `messages` (
   `to_user_id` bigint(20) NOT NULL,
   `to_user_visible` tinyint(1) NOT NULL default '1',
   `from_user_visible` tinyint(1) NOT NULL default '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `messages`
@@ -428,7 +428,7 @@ CREATE TABLE IF NOT EXISTS `nodes` (
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `tile` bigint(20) NOT NULL,
   `version` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `nodes`
@@ -446,7 +446,7 @@ CREATE TABLE IF NOT EXISTS `node_tags` (
   `version` bigint(20) NOT NULL,
   `k` varchar(255) default '',
   `v` varchar(255) default ''
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `node_tags`
@@ -465,7 +465,7 @@ CREATE TABLE IF NOT EXISTS `oauth_nonces` (
   `timestamp` int(11) default NULL,
   `created_at` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL default '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `oauth_nonces`
@@ -495,7 +495,7 @@ CREATE TABLE IF NOT EXISTS `oauth_tokens` (
   `allow_write_api` tinyint(1) NOT NULL default '0',
   `allow_read_gpx` tinyint(1) NOT NULL default '0',
   `allow_write_gpx` tinyint(1) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `oauth_tokens`
@@ -514,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `relations` (
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `version` bigint(20) NOT NULL,
   `visible` tinyint(1) NOT NULL default '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `relations`
@@ -534,7 +534,7 @@ CREATE TABLE IF NOT EXISTS `relation_members` (
   `member_role` varchar(255) NOT NULL,
   `version` bigint(20) NOT NULL default '0',
   `sequence_id` int(11) NOT NULL default '0'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `relation_members`
@@ -552,7 +552,7 @@ CREATE TABLE IF NOT EXISTS `relation_tags` (
   `k` varchar(255) default '',
   `v` varchar(255) default '',
   `version` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `relation_tags`
@@ -567,7 +567,7 @@ CREATE TABLE IF NOT EXISTS `relation_tags` (
 
 CREATE TABLE IF NOT EXISTS `schema_migrations` (
   `version` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `schema_migrations`
@@ -586,7 +586,7 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   `DATA` text,
   `created_at` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `updated_at` timestamp NOT NULL default '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `sessions`
@@ -619,7 +619,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `visible` tinyint(1) NOT NULL default '1',
   `creation_ip` varchar(255) default NULL,
   `languages` varchar(255) default NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `users`
@@ -642,7 +642,7 @@ CREATE TABLE IF NOT EXISTS `user_blocks` (
   `revoker_id` bigint(20) default NULL,
   `created_at` timestamp NOT NULL default '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL default '0000-00-00 00:00:00'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `user_blocks`
@@ -659,7 +659,7 @@ CREATE TABLE IF NOT EXISTS `user_preferences` (
   `user_id` bigint(20) NOT NULL,
   `k` varchar(255) NOT NULL,
   `v` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `user_preferences`
@@ -679,7 +679,7 @@ CREATE TABLE IF NOT EXISTS `user_roles` (
   `updated_at` timestamp NOT NULL default '0000-00-00 00:00:00',
   `role` int(11) NOT NULL,
   `granter_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `user_roles`
@@ -698,7 +698,7 @@ CREATE TABLE IF NOT EXISTS `user_tokens` (
   `token` varchar(255) NOT NULL,
   `expiry` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `referer` text
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `user_tokens`
@@ -717,7 +717,7 @@ CREATE TABLE IF NOT EXISTS `ways` (
   `timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
   `version` bigint(20) NOT NULL,
   `visible` tinyint(1) NOT NULL default '1'
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `ways`
@@ -735,7 +735,7 @@ CREATE TABLE IF NOT EXISTS `way_nodes` (
   `node_id` bigint(20) NOT NULL,
   `version` bigint(20) NOT NULL,
   `sequence_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `way_nodes`
@@ -753,8 +753,7 @@ CREATE TABLE IF NOT EXISTS `way_tags` (
   `k` varchar(255) NOT NULL,
   `v` varchar(255) NOT NULL,
   `version` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB CHARACTER SET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dump dei dati per la tabella `way_tags`
---
