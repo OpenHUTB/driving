@@ -1,9 +1,9 @@
-
-
-
 # OpenStreetMap
-
 ## [导入OSM(openstreetmap)数据到Mysql](https://wiyi.org/importing-osm-into-mysql.html) 
+
+路网结构如下所示：
+![image](https://github.com/zoudai/driving/assets/100852839/ba561099-61c3-4ded-a325-397be5f48fca)
+
 
 问题1：mysql数据库serverTimezone设置。
 方法：
