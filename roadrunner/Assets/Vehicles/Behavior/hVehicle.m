@@ -1,3 +1,7 @@
+%% 车道跟随动作者行为
+% 这里将创建一个自定义行为，hVehicle.m 作为 MATLAB 系统对象文件。
+% 在此行为中，代码读取动作者的初始姿势和速度并更新它们以使动作者沿着车道行驶。
+% 参考：https://ww2.mathworks.cn/help/releases/R2022b/driving/ug/co-simulate-roadrunner-with-agents-modeled-in-matlab.html
 classdef hVehicle < matlab.System
 
     properties (Access = private)
