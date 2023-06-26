@@ -1,0 +1,3 @@
+[submodule "intelligent_traffic"]
+	path = intelligent_traffic
+	url = git@github.com:OpenHUTB/intelligent_traffic.git
