@@ -94,7 +94,8 @@ main.mlx
 5. 运行后等待出现"In Unreal Editor, select 'Play' to view the scene"后再在虚幻编辑器中点击“运行”。
 
 ## 贡献指南
-[提交Pull Request流程](https://zhuanlan.zhihu.com/p/153381521) 。 
+在进行代码之前，请阅读 [贡献指南](https://github.com/OpenHUTB/bazaar/blob/master/CONTRIBUTING.md) 文档。
+
 
 ## 虚幻引擎配置
 1. [为自定义场景安装支持包](https://ww2.mathworks.cn/help/releases/R2022a/driving/ug/install-and-configure-support-package-for-customizing-scenes.html) 。
