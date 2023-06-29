@@ -1,9 +1,27 @@
 ​	
 
-构建智慧交通系统，
-包括交通场景数字孪生、区域信控、车流诱导、停车管理等。
+湖工商交通数字孪生引擎是在人、车、路、地、物数据底座的基础上，搭建的一套同时支持宏观、中观和微观的仿真引擎，提升交通服务水平，
+包括交通场景数字孪生、区域信控、车流诱导、停车管理等模块。
 
-# 效果
+<img src=fig/hutb.png alt="图片替换文本" width="580" />
+
+# 系统概述
+本平台支持对仿真结果可视化，同时提供分析、快速预测等辅助模块。宏观、中观、微观仿真既支持传统的离线仿真，同时也支持前沿的在线仿真，为城市等场景的预测和交通状况管理提供支持。其中，宏观仿真可仿真城市级交通流量状况，计算性能高，仿真区域面积大；中观仿真可仿真车道级别的的单个交通参与者，能准确、灵活地反映各种道路和交通条件的影响，适合规模适中的场景；微观仿真提供高保真的实时数字孪生场景，达到以假乱真的效果。
+
+## 能力特点
+* 实现交通流数据可视化呈现，形成实时的交通热力图，以寻找控制全局交通流量的最佳方法。
+* 利用路测摄像头获取的实时道路监控影像，通过目标检测、跟踪、再识别技术感知目标并进行状态估计，实现真实路面交通与虚拟环境的融合。可以将感知识别出的动态目标模型化，让实时交通流大数据映射到虚拟环境中，并生成大规模车道级仿真，以此实现城市交通流实时仿真，并进行未来模拟和推演，为全区域交通管理调度和优化提供支持。
+* 提供从数据采集、数据解算、场景制作、性能测试和优化等一整套三维重建综合解决方案，保证局部场景的绝对位置精确，并基于UE4的渲染引擎提供高逼真的渲染效果，实现对场景的高度还原。在数字孪生的世界中，自由模拟各种天气状态，评估其带来的影响，为智慧交通运营管理提供决策依据。
+
+## 功能设计
+* 监控：对城市区域整体的交通状况进行检测，以关键指标及动态车流为展示方式。拥有分钟级的数据更新频次，可帮助用户快速寻找拥堵点，及时分析拥堵成因。
+* 预测：对未来短期的区域交通状况进行预测，为客户提供未来拥堵路口、路段排名，为提前制定交通管理方案提供有力支持。
+* 交通仿真：
+事件推演仿真：推演在某事件（事故、流动施工等占道事件）的影响下，经过道路的车辆轨迹变化。
+* 智能信控：通过对比不同信控方案应用下，经过周边道路的车辆轨迹，分别在不同方案下的车流计算周边道路关键指标，用以协助用户对比优化结果。
+* 管控策略仿真：对于会涉及大量人员或车辆流动的大型事件，如体育赛事、重大会议、疫情防控等，需要采取相应的交通管控措施以避免出现严重拥堵。支持设置的管控措施有限速（设定最高时速）、限流（设定最大通行流量）、封闭道路等。
+* 综合仿真：支持多种仿真应用相结合，以适应多变复杂的线下场景。如结合事件推演和管控策略仿真用以验证所制定方案的合理性，从而更好的降低事件的影响。
+
 
 ## 页面设计
 三个前端页面：宏观（地图）、中观（路网）、微观（场景）。
@@ -13,8 +31,6 @@
 [中观](https://ibb.co/bByHR0N) ：岳麓区路网建模的可视化：RoadRunner、虚幻引擎；
 
 [微观](https://ibb.co/RCpXrcj) ：局部路网仿真，前端对接虚幻引擎像素流。
-
-
 
 
 ## 数字孪生
@@ -46,6 +62,7 @@
 <figure class="half">
     <img src=parking/img/imagesindex.jpg width="380"/><img src=parking/img/imagesparking.jpg width="380"/>
 </figure>
+
 
 # 入门文档
 [静态场景](https://ww2.mathworks.cn/help/roadrunner/index.html) 、
@@ -85,7 +102,7 @@ osm OpenStreetMap相关数据
 uiopen('{REPOSITORY_PATH}\utils\mlpkginstall\adtunrealengine4.mlpkginstall',1)
 ```
 
-3. 下载百度网盘中的文件`虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip`并解压到目录`C:/Buffer`。
+3. 下载百度网盘中的文件`虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip`并解压到目录`C:/buffer`。
 
 4. 安装虚幻引擎4.26后，在`matlab`中运行脚本以下脚本：
 ```commandline
@@ -116,7 +133,7 @@ main.mlx
 2. 配置4个方向的摄像头，进行车辆的检测；
 3. 计算红绿灯的配时方案，并进行红绿灯的设置；
 4. 测试车辆按地图选点进行移动，看到红灯停、绿灯行，以及避让等功能；
-5. 加入更多的车辆进行交通拥堵的模拟
+5. 加入更多的车辆进行交通拥堵的模拟；
 6. 统计优化前和优化后的结果。
 
 基于RoadRunner Scenario和Carla进行城市级的场景建模，任务包括：
@@ -133,128 +150,8 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 ```
 
 ## 全局路网建模
-参考[自动场景生成](https://ww2.mathworks.cn/help/driving/ug/automatic-scenario-generation.html) 、[从车道检测和 OpenStreetMap生成高精度场景](https://ww2.mathworks.cn/help/driving/ug/build-high-definition-road-scene-from-lane-detections-and-openstreetmap.html) ，构建长沙高新区路网仿真模型。
+参考[自动场景生成](https://ww2.mathworks.cn/help/driving/ug/automatic-scenario-generation.html) 、[从车道检测和 OpenStreetMap生成高精度场景](https://ww2.mathworks.cn/help/driving/ug/build-high-definition-road-scene-from-lane-detections-and-openstreetmap.html) ，构建长沙岳麓区路网仿真模型。
 
-
-
-
-## 需求管理
-
-### 数据需求
-包含这些列的表：
-timeStamp— 收集 GPS 数据的时间，以微秒为单位。
-latitude- 自我航路点的纬度坐标值。单位是度。
-longitude— 自我航路点的经度坐标值。单位是度。
-altitude- 自我航路点的高度坐标值。单位为米。
-
-安装在自我车辆上的前向单眼相机记录的相机数据，相机数据是一个包含两列的表格：
-timeStamp— 捕获图像数据的时间，以微秒为单位。
-fileName— 数据集中图像的文件名。
-
-### Requirement Toolbox
-
-* 加入交通灯逻辑、城市场景
-
-
-
-
-## 实现
-各个阶段形成一个闭环。
-
-
-
-### 场景
-基于[城市场景](demo/TLNWithUnrealExample)，利用虚幻引擎来构建学校场景。
-[AirSim](https://github.com/microsoft/AirSim) 
-[Road Runner](https://zhuanlan.zhihu.com/p/165376866) 
-[51VR](https://www.51aes.com/) 
-
-### 感知
-1. [使用虚幻引擎设计车道线检测器](https://ww2.mathworks.cn/help/driving/ug/design-of-lane-marker-detector-in-3d-simulation-environment.html) 
-2. 车辆检测
-3. 行人检测
-4. [前向车辆传感器融合](https://ww2.mathworks.cn/help/driving/ug/forward-vehicle-sensor-fusion.html) 
-5. 可行驶区域
-6. 地图
-全局地图：从云端获得或者本地逐步构建全局地图。
-局部地图：SLAM。
-
-### 规划
-1. 全局路径规划
-
-### 决策
-1. 局部轨迹规划
-2. 决策逻辑
-
-### 控制
-由横向和纵向的决策生成转向角（方向盘）和加速度（油门）控制。
-1. [设计基于模型的控制器](https://ww2.mathworks.cn/help/mpc/ref/mpcdesigner-app.html) ，生成横向和纵向的决策。
-[在Simulink中设计基于模型的控制器](https://ww2.mathworks.cn/help/mpc/gs/designing-a-model-predictive-controller-for-a-simulink-plant.html) 
-[路径跟随控制系统](https://ww2.mathworks.cn/help/mpc/ref/pathfollowingcontrolsystem.html) 
-2. 强化学习，[DDPG路径跟随控制](https://ww2.mathworks.cn/help/deeplearning/ug/train-ddpg-agent-for-path-following-control.html) 
-
-
-### 机械
-车辆动力学仿真
-买一台可以程序控制的电动车。
-[在 Simulink 和 Gazebo 中使用移动机械手设计和模拟仓库取放应用程序](demo/DesignAndSimulateAMobileManipulatorExample/DesignAndSimulateAMobileManipulatorExample.mlx)
-
-### 评估
-性能评估并反馈
-
-
-## 部署
-[车道标记检测器代码生成](https://ww2.mathworks.cn/help/driving/ug/generate-code-for-lane-marker-detector.html) 
-[视觉车辆检测器代码生成](https://ww2.mathworks.cn/help/driving/ug/generate-code-for-vision-vehicle-detector.html) 
-
-
-## 测试
-[高速公路车道跟随的自动测试](https://ww2.mathworks.cn/help/driving/ug/automate-testing-for-highway-lane-following.html) 
-[自动测试](demo\AutomateTestingForHighwayLaneFollowingExample\AutomateTestingForHighwayLaneFollowingExample.m)
-
-
-# 参考
-向场景中添加车辆
-```markdown
-openExample('driving_lidar/BuildMapWithLidarOdometryAndMappingLOAMUsingUnrealEngineExample')
-edit helperAddParkedVehicles.m
-```
-
-[车联网的交叉路口辅助](https://ww2.mathworks.cn/help/driving/ug/intersection-movement-assist-using-v2v.html) 
-
-
-
-# 问题
-## 编译器
-```
-Toolchain 'LCC-win64 v2.4.1 | gmake (64-bit Windows)' does not contain a build tool named 'C++ Compiler'.
-```
-安装 MinGW-w64 编译器：
-主页 > 附加功能 > 获取附加功能，搜索 MinGW 或从功能菜单中选择。
-
-## 不需要另外安装虚幻引擎成功运行是工具箱的原因
-matlab自带的3D仿真引擎（4.26，不包括3D编辑器）位于：
-matlab_2022b\toolbox\shared\sim3d_projects\automotive_project\UE4\WindowsNoEditor
-
-openExample('autonomous_control/TLNWithUnrealExample')
-
-
-## 场景
-```
-函数或变量 'scenario_VVD_01_Curve_FiveVehicles' 无法识别。
-```
-需要在 Matlab 界面打开工程 `VisionVehicleDetector/VisionVehicleDetectorVisionVehicleDetector.prj`
-
-matlab自带虚幻引擎（无编辑器）目录：
-```commandline
-matlab_2022b\toolbox\shared\sim3d_projects\automotive_project\UE4\WindowsNoEditor\VehicleSimulation.exe
-```
-
-
-和Editor进行协同仿真，需要 
-```commandline
-USCityBlock.umap、USCityBlock_BuiltData.uasset、USCityBlockLabel.uasset（位于AutoVrtlEnv\Content\Maps）
-```
 
 
 # 贡献者
