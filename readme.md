@@ -167,6 +167,7 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 
 蒋平平 [haiping-jpp](https://github.com/haiping-jpp) ：目标检测跟踪和车辆的定位与场景注入
 
+蒋芳雪 [jfangx123](https://github.com/jfangx123) ：局部高仿真场景联动
 
 ## 路网和车流仿真 
 
@@ -187,6 +188,7 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 邓梓睿[dengzirui](https://github.com/D-kistch)：车道线检测并合并到路网场景中（静态路网建模）  
 
 陈凤英[xiaolaihuohu](https://github.com/xiaolaihuohuo)：
+
 
 ## 系统开发 
 
