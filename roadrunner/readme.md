@@ -22,6 +22,14 @@
 
 
 
+### 车辆行为
+1. 将`Assets\Vehicles\Behavior`中的脚本拷贝到RoadRunner工程的对应位置。
+
+2. 打开RoadRunner动态场景后，将新添加的行为拖动到车辆`Attributes`的`Behavior`框中。
+
+3. 执行仿真。注意：需要将hVehicle.m所在的目录添加到matlab的path路径下，并savepath，否则启动的matlab命令行页面会出现找不到hVehicle的错误。
+
+
 ## 二、关于Matlab与Unreal Engine（4.26版本）
 
 1.关于环境配置可部分参考（[手把手超详细介绍MATLAB+RoadRunner+Unreal Engine自动驾驶联合仿真 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/335521741)）
