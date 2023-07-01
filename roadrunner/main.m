@@ -46,7 +46,7 @@ copyfile(fullfile(fileparts(mfilename("fullpath")), 'HUTB_roadnetwork.rrscenario
 
 
 %% 
-% |openScenario| 在 RoadRunner Scenario 中使用函数打开已有场景，指定要打开的 |rrApp| 对象和具体场景。|filename| 
+% |openScenario|  在 RoadRunner Scenario 中使用函数打开已有场景，指定要打开的 |rrApp| 对象和具体场景。|filename| 
 % 比如打开 |TrajectoryCutIn| 场景文件，这是 RoadRunner 工程中默认包含的场景。此函数通过 MATLAB 在 RoadRunner 
 % Scenario 应用程序中打开所需的场景。
 openScenario(rrApp, "HUTB_roadnetwork.rrscenario"); % 位于工程路径下的Scenarios目录下
