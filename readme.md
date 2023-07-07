@@ -196,7 +196,7 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 
 王海东 [donghaiwang](https://github.com/donghaiwang) ：局部场景和路网的建模的部分开发和对接
 
-肖鹏飞 [feipengxiao](https://github.com/jiandaoshou-aidehua) :
+肖鹏飞 [feipengxiao](https://github.com/jiandaoshou-aidehua) : 完成matlab控制roadrunner，和roadrunner（包括虚幻引擎）进行协同仿真
 
 
 
