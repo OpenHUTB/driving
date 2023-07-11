@@ -30,6 +30,11 @@
 3. 执行仿真。注意：需要将hVehicle.m所在的目录添加到matlab的path路径下，并savepath，否则启动的matlab命令行页面会出现找不到hVehicle的错误。
 
 
+### RoadRunner 和 Matlab 协同仿真
+
+[从CSV文件中导入车辆轨迹](https://ww2.mathworks.cn/help/releases/R2022b/roadrunner-scenario/ug/import-trajectories-from-csv-files.html) 
+
+
 ## 二、关于Matlab与Unreal Engine（4.26版本）
 
 1.关于环境配置可部分参考（[手把手超详细介绍MATLAB+RoadRunner+Unreal Engine自动驾驶联合仿真 - 知乎 (zhihu.com)](https://zhuanlan.zhihu.com/p/335521741)）
@@ -137,3 +142,4 @@ C:\Local\AutoVrtlEnv目录下的AutoVrtlEnv.uproject
 ​			先学习一下这里的(https://zhuanlan.zhihu.com/p/335521741)后面将本项目的实践再上传
 
 **从3.2新建Unreal工程，安装Unreal的RoadRunner插件开始学起**
+
