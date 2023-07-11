@@ -122,15 +122,17 @@ main.mlx
 
 ## 场景建模
 基于RoadRunner和虚幻引擎进行场景的建模，任务包括：
-1. 建模咸嘉新村及周围的道路；
-2. 建模湖南工商大学及周围的道路；
-3. 使用虚幻引擎建模桐梓坡路和西二环交叉的十字路口；
+1. 建模湖南工商大学和咸嘉新村及周围的道路；
+2. 使用虚幻引擎建模桐梓坡路和西二环交叉的十字路口；
+3. 建模岳麓区的主干道；
+4. [从车道检测和 OpenStreetMap 生成车道级场景](https://ww2.mathworks.cn/help/driving/ug/build-high-definition-road-scene-from-lane-detections-and-openstreetmap.html) ；
+
 
 
 ## 局部路网建模
-基于虚幻引擎和RoadRunner进行场景的建模，任务包括：
+基于RoadRunner和虚幻引擎进行场景的建模，任务包括：
 1. 检测单个摄像头的图像，并显示和返回检测结果；
-2. 配置4个方向的摄像头，进行车辆的检测；
+2. 配置4个方向的摄像头，进行车辆的检测、定位和再识别；
 3. 计算红绿灯的配时方案，并进行红绿灯的设置；
 4. 测试车辆按地图选点进行移动，看到红灯停、绿灯行，以及避让等功能；
 5. 加入更多的车辆进行交通拥堵的模拟；
@@ -150,6 +152,16 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 ```
 
 ## 全局路网建模
+
+1. 生成场景中所有车辆无碰撞的路径规划信息和配速信息（[参考链接](https://github.com/OpenHUTB/driving/tree/master/traffic/automatic_scenario_generation) ）；
+2. 根据百度地图车流量的统计信息生成每个车辆位置和速度信息并实时更新到roadrunner路网；
+3. 态势感知，根据roadrunner路网上每个车辆及统计信息生成交通流量和拥堵的热力图信息；
+4. 根据预测的车流量拥堵信息，重新生成各个车辆的路径规划，降低拥堵情况；
+5. 根据实景图检测车道线位置，并生成到车道级路网信息（[参考链接](https://ww2.mathworks.cn/help/driving/ug/build-high-definition-road-scene-from-lane-detections-and-openstreetmap.html) ）；
+6. 增加一条不存在的路，统计对车流量和拥堵情况的影响；
+7. 多路口绿波通行方案模拟；
+8. 模拟车辆各种驾驶行为特征，比如超速行驶，变道，加塞，闯红绿灯，酒后驾驶，疲劳驾驶，红绿灯停止，礼让行人、礼让车辆，跟车，路径跟随等（[参考链接](https://github.com/OpenHUTB/driving/tree/master/roadrunner/Assets/Vehicles/Behavior) ）；
+
 参考[自动场景生成](https://ww2.mathworks.cn/help/driving/ug/automatic-scenario-generation.html) 、[从车道检测和 OpenStreetMap生成高精度场景](https://ww2.mathworks.cn/help/driving/ug/build-high-definition-road-scene-from-lane-detections-and-openstreetmap.html) ，构建长沙岳麓区路网仿真模型。
 
 
@@ -187,7 +199,7 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 
 邓梓睿[dengzirui](https://github.com/D-kistch)：车道线检测并合并到路网场景中（静态路网建模）  
 
-陈凤英[xiaolaihuohu](https://github.com/xiaolaihuohuo)：
+陈凤英[xiaolaihuohu](https://github.com/xiaolaihuohuo)：静态路网建模
 
 
 ## 系统开发 
