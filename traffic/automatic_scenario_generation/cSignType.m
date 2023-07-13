@@ -1,0 +1,41 @@
+classdef cSignType<uint32
+
+
+
+    enumeration
+        Unknown(0)
+        Unsupported(1)
+        RightHandCurve(2)
+        LeftHandCurve(3)
+        RightHairPinBend(4)
+        LeftHairPinBend(5)
+        RightReverseBend(6)
+        LeftReverseBend(7)
+        SteepAscent(8)
+        SteepDescent(9)
+        NarrowRoadAhead(10)
+        RoadWidenessAhead(11)
+        NarrowBridge(12)
+        SlipperyRoad(13)
+        LooseGravel(14)
+        CycleCrossing(15)
+        PedestrianCrossing(16)
+        SchoolAhead(17)
+        MenAtWork(18)
+        Cattle(19)
+        FallingRocs(20)
+        Stop(21)
+        GiveWay(22)
+        StraightProhibitor(23)
+        PedestrianProhibitor(24)
+        HornProhibitor(25)
+        ParkingProhibitor(26)
+        StoppingStandingProhibitor(27)
+        SpeedLimited(28)
+        RoundAbout(29)
+        RoadBumpAhead(30)
+        NoUturn(31)
+        HeightLimited(32)
+        NoOvertake(33)
+    end
+end
