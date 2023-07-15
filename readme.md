@@ -201,7 +201,7 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 
 陈凤英[xiaolaihuohu](https://github.com/xiaolaihuohuo)：静态路网建模
 
-
+李一骁[YixiaoLee](https://github.com/Requester7):红绿灯静态建模(红绿灯数据爬取)
 ## 系统开发 
 
 程昌理：交通系统微观、中观、宏观的后端开发
