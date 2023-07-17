@@ -169,17 +169,21 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 # 贡献者
 
 ## 局部场景仿真
+
 张卫  [champion123456](https://github.com/champion123456) ：局部高保真场景联动仿真
 
-李诗帆 [q894749380](https://github.com/q894749380) ：多目标跟踪和场景感知
-
 李豪军 [q894749380](https://github.com/q894749380) ：虚幻引擎局部交通仿真场景的精细化
-
-李权龙 ：进行场景元素建模
 
 蒋平平 [haiping-jpp](https://github.com/haiping-jpp) ：目标检测跟踪和车辆的定位与场景注入
 
 蒋芳雪 [jfangx123](https://github.com/jfangx123) ：局部高仿真场景联动
+
+李权龙：进行场景元素建模
+
+肖嘉莉、游鑫岑：宏观、中观仿真中的[车辆](https://ww2.mathworks.cn/help/releases/R2022b/roadrunner-scenario/ref/vehicleassets.html) 、[行人](https://ww2.mathworks.cn/help/releases/R2022b/roadrunner-scenario/ref/characterassets.html) 等资产建模
+
+张胜豪、周语杰、刘俊：微观仿真中的建筑、树木等资产建模（SketchUp等软件）
+
 
 ## 路网和车流仿真 
 
@@ -202,6 +206,8 @@ openExample('driving/AddSensorsToRoadRunnerScenarioUsingSimulinkExample')
 陈凤英[xiaolaihuohu](https://github.com/xiaolaihuohuo)：静态路网建模
 
 李一骁[YixiaoLee](https://github.com/Requester7):红绿灯静态建模(红绿灯数据爬取)
+
+
 ## 系统开发 
 
 程昌理：交通系统微观、中观、宏观的后端开发
