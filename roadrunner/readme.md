@@ -1,5 +1,25 @@
 ## 一、对于RoadRunner仿真使用
 
+**软件下载（注意使用全英文路径）**：
+
+百度网盘连接https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb#list/path=%2F
+
+1.下载RoadRunner_R2022b_win64——install.rar文件夹，解压后执行安装文件。正常安装即可
+
+2.软件安装完成后，替换libmwlmgrimpl.dll（Crack文件夹中）
+
+默认位置【C:\Program Files\RoadRunner R2022b\bin\win64\matlab_startup_plugins\lmgrimpl】找到你所安装的位置，或者鼠标右键，打开文件所在位置，找到 win64\matlab_startup_plugins\lmgrimpl进行替换。
+
+3.运行软件，使用提供的license.lic许可证文件激活即可，在Crack文件夹中
+
+4.下载百度网盘的RoadRunner_工程（**注意下载到你电脑解压后尽量全英文**）
+
+5.打开RoadRunner软件运行即可。启动页面的Scene->就可以去找上述RoadRunner_工程里各项已有德scene进行细节了解，也可以自己New Scene
+
+
+
+**资产导入方式**：
+
 1.找到你的RoadRunner的资源地址存储地址。
 
 
