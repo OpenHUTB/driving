@@ -7,7 +7,7 @@
 
 # 应用场景
 
-![image-20230721162309797](E:\Typora_images_Repository\image-20230721162309797.png)
+[![image-20230721162309797.png](https://img1.imgtp.com/2023/07/21/ELOPcVfp.png)](https://img1.imgtp.com/2023/07/21/ELOPcVfp.png)
 
 - 该场景下目标特征像素点为预测框底边的中点。
 - 目标特征像素点的坐标用于计算该目标在相机视角下的三维坐标。
@@ -92,7 +92,7 @@ disp(XYZ) % Y值需要加符号
 
 # 2 四大坐标系
 
-![image-20230716154631534](E:\Typora_images_Repository\image-20230716154631534.png)
+[![image-20230716154631534.png](https://img1.imgtp.com/2023/07/21/7AHA1uFn.png)](https://img1.imgtp.com/2023/07/21/7AHA1uFn.png)
 
 1. 世界坐标系：真实世界中任意指定的三维坐标系，坐标由$(X_w,Y_w,Z_w)$ 表示，用于描述相机在真实世界中的位置；
 2. 相机坐标系：以相机透镜的几何中心（光心）为原点，坐标系满足右手法则，用$(X_c,Y_c,Z_c)$来表示，相机光轴为坐标系的Z轴，X轴水平，Y轴竖直，单位米m；
@@ -103,7 +103,7 @@ disp(XYZ) % Y值需要加符号
 
 <font color="red" size="6px">本项目不考虑世界坐标系</font>
 
-![image-20230716192648424](E:\Typora_images_Repository\image-20230716192648424.png)
+[![image-20230716192648424.png](https://img1.imgtp.com/2023/07/21/fugFrjkG.png)](https://img1.imgtp.com/2023/07/21/fugFrjkG.png)
 
 参考资料
 
@@ -193,7 +193,7 @@ u=x+\frac{w}{2} \\
 v=y+h
 \end{cases} \tag 4
 $$
-![image-20230711184615037](E:\Typora_images_Repository\image-20230711184615037.png)
+[![image-20230711184615037.png](https://img1.imgtp.com/2023/07/21/CgME8S58.png)](https://img1.imgtp.com/2023/07/21/CgME8S58.png)
 
 # 4 应用场景分析
 
@@ -205,7 +205,7 @@ $$
 
 如下图所示，$X_c Y_c Z_c$表示相机坐标系，$xo_1y$表示平面成像坐标系（图像物理坐标系）
 
-![image-20230705151845451](E:\Typora_images_Repository\image-20230705151845451.png)
+[![image-20230705151845451.png](https://img1.imgtp.com/2023/07/21/EqcVhzc5.png)](https://img1.imgtp.com/2023/07/21/EqcVhzc5.png)
 
 # 5 计算像素点的深度
 
@@ -235,7 +235,7 @@ $$
 
 首先是`像素坐标系UV`和`图像坐标系XY`之间的关系。在拿到一张照片之后，我们应该可以想到，这其实是一张由一个一个像素组成的图像，并且我们可以很简单地拿到像素的坐标，也即$(u,v)$. 但这个坐标只是图像上用来指示像素的位置，并不是物理的成像平面上的坐标，因此不能直接用于三维坐标的恢复。这个时候我们需要先去恢复图像坐标$(x,y)$，也即物理的成像平面上的坐标。
 
-![image-20230705161920556](E:\Typora_images_Repository\image-20230705161920556.png)
+[![image-20230705161920556.png](https://img1.imgtp.com/2023/07/21/HEmEjJhO.png)](https://img1.imgtp.com/2023/07/21/HEmEjJhO.png)
 $$
 \begin{cases}
 u=\frac{x}{dx}+u_0 \\
@@ -330,12 +330,12 @@ $$
     1. 远近
     2. 上下左右以及重点
     3. 标定板平面平整光滑，拍摄时可有一定程度的倾斜（任意方向，但必须能拍出标定板的完整内容）
-3. 打开matlab的相机标定APP![image-20230718102652188](E:\Typora_images_Repository\image-20230718102652188.png)
-4. 现在拍摄的图片![image-20230718103804189](E:\Typora_images_Repository\image-20230718103804189.png)
-5. 选择标定算法并填写标定板的详细信息![image-20230718104209402](E:\Typora_images_Repository\image-20230718104209402.png)
-6. 三个参数的时候由于k3所对应的非线性较为剧烈。估计的不好，容易产生极大的扭曲，所以我们在MATLAB中选择使用两参数，并且选择错切和桶形畸变，然后由matlab计算出相机的参数。 ![image-20230718162438712](E:\Typora_images_Repository\image-20230718162438712.png)
-7. 导出cameraParameters![image-20230721170641891](E:\Typora_images_Repository\image-20230721170641891.png)
-8. 查看cameraParameters![image-20230721170040747](E:\Typora_images_Repository\image-20230721170040747.png)
+3. 打开matlab的相机标定APP[![image-20230718102652188.png](https://img1.imgtp.com/2023/07/21/76SWM0td.png)](https://img1.imgtp.com/2023/07/21/76SWM0td.png)
+4. 现在拍摄的图片[![image-20230718103804189.png](https://img1.imgtp.com/2023/07/21/NaSsPoR2.png)](https://img1.imgtp.com/2023/07/21/NaSsPoR2.png)
+5. 选择标定算法并填写标定板的详细信息[![image-20230718104209402.png](https://img1.imgtp.com/2023/07/21/9VaLEZVk.png)](https://img1.imgtp.com/2023/07/21/9VaLEZVk.png)
+6. 三个参数的时候由于k3所对应的非线性较为剧烈。估计的不好，容易产生极大的扭曲，所以我们在MATLAB中选择使用两参数，并且选择错切和桶形畸变，然后由matlab计算出相机的参数。 [![image-20230718162438712.png](https://img1.imgtp.com/2023/07/21/ATLaarRz.png)](https://img1.imgtp.com/2023/07/21/ATLaarRz.png)
+7. 导出cameraParameters[![image-20230721170641891.png](https://img1.imgtp.com/2023/07/21/ZRuI0zx4.png)](https://img1.imgtp.com/2023/07/21/ZRuI0zx4.png)
+8. 查看cameraParameters[![image-20230721170040747.png](https://img1.imgtp.com/2023/07/21/FpGKW4O1.png)](https://img1.imgtp.com/2023/07/21/FpGKW4O1.png)
 
 ==matlab中获得的内参矩阵需要装置才使用==
 
