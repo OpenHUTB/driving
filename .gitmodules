@@ -7,3 +7,6 @@
 [submodule "gpt"]
 	path = gpt
 	url = https://github.com/OpenHUTB/gpt.git
+[submodule "matlab"]
+	path = matlab
+	url = https://github.com/OpenHUTB/matlab
