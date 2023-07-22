@@ -4,3 +4,6 @@
 [submodule "platform"]
 	path = platform
 	url = git@github.com:OpenHUTB/intelligent_traffic.git
+[submodule "gpt"]
+	path = gpt
+	url = https://github.com/OpenHUTB/gpt.git
