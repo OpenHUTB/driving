@@ -1,7 +1,7 @@
 % 定义一个helperCollisionFreeTrajectory类,继承自matlab.System
 classdef helperCollisionFreeTrajectory<matlab.System
 
-    % 定义公有不可调谐属性Scene,用于存放运动规划相关的场景信息
+    % 定义公有不可调用属性Scene,用于存放运动规划相关的场景信息
     properties(Nontunable,Access=public)
 
         Scene;
