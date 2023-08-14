@@ -10,3 +10,6 @@
 [submodule "matlab"]
 	path = matlab
 	url = https://github.com/OpenHUTB/matlab
+[submodule "doc/roadrunner"]
+	path = doc/roadrunner
+	url = https://github.com/OpenHUTB/roadrunner
