@@ -13,3 +13,6 @@
 [submodule "doc/roadrunner"]
 	path = doc/roadrunner
 	url = https://github.com/OpenHUTB/roadrunner
+[submodule "doc/roadrunner-scenario"]
+	path = doc/roadrunner-scenario
+	url = https://github.com/OpenHUTB/roadrunner-scenario
