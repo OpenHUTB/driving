@@ -16,3 +16,6 @@
 [submodule "doc/roadrunner-scenario"]
 	path = doc/roadrunner-scenario
 	url = https://github.com/OpenHUTB/roadrunner-scenario
+[submodule "utils"]
+	path = utils
+	url = https://github.com/openhutb/utils
