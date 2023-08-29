@@ -163,3 +163,6 @@ C:\Local\AutoVrtlEnv目录下的AutoVrtlEnv.uproject
 
 **从3.2新建Unreal工程，安装Unreal的RoadRunner插件开始学起**
 
+# 和Carla的协同仿真
+
+安装 [Python 3.7](C:\Users\Administrator\AppData\Local\Programs\Python\Python37\python.exe)
