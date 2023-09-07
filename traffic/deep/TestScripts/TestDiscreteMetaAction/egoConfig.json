@@ -1,0 +1,30 @@
+{
+  "NumberEgos": 1,
+  "Ego": {
+    "Name": "ego01",
+    "ModelType": "SUMO",
+    "ActionType": "Discrete-MetaAction",
+    "VehicleType": "DEFAULT_VEHTYPE",
+    "Route": "random",
+    "Color": [
+      0,
+      1,
+      0
+    ],
+    "SpawnOptions": {
+      "departLane": "2",
+      "departPos": "random_free",
+      "departSpeed": "max",
+      "arrivalLane": "random",
+      "arrivalPos": "max",
+      "arrivalSpeed": "random"
+    },
+    "OccupancyGrid": {
+      "xSize": 100,
+      "ySize": 100,
+      "resolution": 1,
+      "plot": true,
+      "LaneDetection": true
+    }
+  }
+}

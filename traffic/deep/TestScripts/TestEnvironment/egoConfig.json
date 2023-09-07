@@ -1,0 +1,45 @@
+{
+  "NumberEgos": 2,
+  "Ego": [
+    {
+      "Name": "ego01",
+      "ModelType": "SUMO",
+      "ActionType": "Discrete-MetaAction",
+      "VehicleType": "DEFAULT_VEHTYPE",
+      "Route": "random",
+      "Color": [
+        0,
+        1,
+        0
+      ],
+      "SpawnOptions": {
+        "departLane": "random",
+        "departPos": "random_free",
+        "departSpeed": "random",
+        "arrivalLane": "random",
+        "arrivalPos": "max",
+        "arrivalSpeed": "random"
+      }
+    },
+    {
+      "Name": "ego02",
+      "ModelType": "SUMO",
+      "ActionType": "Discrete-MetaAction",
+      "VehicleType": "DEFAULT_VEHTYPE",
+      "Route": "random",
+      "Color": [
+        1,
+        0,
+        0
+      ],
+      "SpawnOptions": {
+        "departLane": "random",
+        "departPos": "random_free",
+        "departSpeed": "random",
+        "arrivalLane": "random",
+        "arrivalPos": "max",
+        "arrivalSpeed": "random"
+      }
+    }
+  ]
+}

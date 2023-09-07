@@ -1,0 +1,17 @@
+{
+  "VehicleType": "typedist",
+  "NumberVehicles": 20,
+  "RandomTraffic": true,
+  "BoundsRandomTraffic": [
+    5,
+    25
+  ],
+  "SpawnOptions": {
+    "departLane": "random",
+    "departPos": "random_free",
+    "departSpeed": "random",
+    "arrivalLane": "random",
+    "arrivalPos": "max",
+    "arrivalSpeed": "random"
+  }
+}

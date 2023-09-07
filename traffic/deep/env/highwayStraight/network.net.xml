@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2021-07-23 09:59:25 by Eclipse SUMO netedit Version 1.9.2
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="./env/highwayStraight/network.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="./env/highwayStraight/network.net.xml"/>
+    </output>
+
+    <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+    </processing>
+
+    <junctions>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="true"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
+
+    <report>
+        <aggregate-warnings value="5"/>
+    </report>
+
+</configuration>
+-->
+
+<net version="1.9" junctionCornerDetail="5" rectangularLaneCut="true" limitTurnSpeed="5.50" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="0.00,0.00" convBoundary="0.00,0.00,2000.00,8.00" origBoundary="0.00,0.00,2000.00,0.00" projParameter="!"/>
+
+    <type id="bidirectional" priority="1" speed="1.39" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" width="3.65"/>
+    <type id="border" priority="0" speed="1.39" disallow="all" discard="0" width="0.10"/>
+    <type id="driving" priority="1" speed="13.89" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" width="3.65"/>
+    <type id="entry" priority="1" speed="22.22" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" width="3.65"/>
+    <type id="exit" priority="1" speed="22.22" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" width="3.65"/>
+    <type id="median" priority="0" speed="1.39" disallow="all" discard="0" width="0.10"/>
+    <type id="mwyEntry" priority="1" speed="22.22" allow="private emergency authority army vip passenger hov taxi bus coach delivery truck trailer motorcycle evehicle custom1 custom2" width="3.65"/>
+    <type id="mwyExit" priority="1" speed="22.22" allow="private emergency authority army vip passenger hov taxi bus coach delivery truck trailer motorcycle evehicle custom1 custom2" width="3.65"/>
+    <type id="none" priority="0" speed="1.39" disallow="all" discard="0" width="1.00"/>
+    <type id="offRamp" priority="1" speed="22.22" allow="private emergency authority army vip passenger hov taxi bus coach delivery truck trailer motorcycle evehicle custom1 custom2" width="3.65"/>
+    <type id="onRamp" priority="1" speed="22.22" allow="private emergency authority army vip passenger hov taxi bus coach delivery truck trailer motorcycle evehicle custom1 custom2" width="3.65"/>
+    <type id="parking" priority="1" speed="1.39" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" width="2.50"/>
+    <type id="rail" priority="3" speed="33.33" allow="rail_urban rail rail_electric rail_fast" width="3.65"/>
+    <type id="restricted" priority="0" speed="13.89" disallow="all" width="3.65"/>
+    <type id="roadWorks" priority="0" speed="1.39" allow="authority" width="3.65"/>
+    <type id="shoulder" priority="0" speed="1.39" disallow="all" discard="0" width="1.00"/>
+    <type id="special1" priority="1" speed="22.22" allow="custom1" discard="0" width="3.65"/>
+    <type id="special2" priority="1" speed="22.22" allow="custom2" discard="0" width="3.65"/>
+    <type id="special3" priority="1" speed="22.22" allow="custom1 custom2" discard="0" width="3.65"/>
+    <type id="stop" priority="1" speed="13.89" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" width="3.65"/>
+    <type id="tram" priority="2" speed="13.89" allow="tram" width="3.65"/>
+
+    <edge id=":1.1000.00_0" function="internal">
+        <lane id=":1.1000.00_0_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1000.00,-6.00 1000.00,-6.00"/>
+        <lane id=":1.1000.00_0_1" index="1" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1000.00,-2.00 1000.00,-2.00"/>
+        <lane id=":1.1000.00_0_2" index="2" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1000.00,2.00 1000.00,2.00"/>
+        <lane id=":1.1000.00_0_3" index="3" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1000.00,6.00 1000.00,6.00"/>
+    </edge>
+    <edge id=":1.1500.00_0" function="internal">
+        <lane id=":1.1500.00_0_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1500.00,-6.00 1500.00,-6.00"/>
+        <lane id=":1.1500.00_0_1" index="1" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1500.00,-2.00 1500.00,-2.00"/>
+        <lane id=":1.1500.00_0_2" index="2" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1500.00,2.00 1500.00,2.00"/>
+        <lane id=":1.1500.00_0_3" index="3" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="1500.00,6.00 1500.00,6.00"/>
+    </edge>
+    <edge id=":1.500.00_0" function="internal">
+        <lane id=":1.500.00_0_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="500.00,-6.00 500.00,-6.00"/>
+        <lane id=":1.500.00_0_1" index="1" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="500.00,-2.00 500.00,-2.00"/>
+        <lane id=":1.500.00_0_2" index="2" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="500.00,2.00 500.00,2.00"/>
+        <lane id=":1.500.00_0_3" index="3" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="0.10" width="4.00" shape="500.00,6.00 500.00,6.00"/>
+    </edge>
+
+    <edge id="-1.0.00" from="1.begin" to="1.500.00" priority="1" type="driving" shape="0.00,8.00 500.00,8.00">
+        <lane id="-1.0.00_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="0.00,-6.00 500.00,-6.00" type="driving"/>
+        <lane id="-1.0.00_1" index="1" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="0.00,-2.00 500.00,-2.00" type="driving"/>
+        <lane id="-1.0.00_2" index="2" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="0.00,2.00 500.00,2.00" type="driving"/>
+        <lane id="-1.0.00_3" index="3" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="0.00,6.00 500.00,6.00" type="driving"/>
+    </edge>
+    <edge id="-1.1000.00" from="1.1000.00" to="1.1500.00" priority="1" type="driving">
+        <lane id="-1.1000.00_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1000.00,-6.00 1500.00,-6.00" type="driving"/>
+        <lane id="-1.1000.00_1" index="1" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1000.00,-2.00 1500.00,-2.00" type="driving"/>
+        <lane id="-1.1000.00_2" index="2" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1000.00,2.00 1500.00,2.00" type="driving"/>
+        <lane id="-1.1000.00_3" index="3" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1000.00,6.00 1500.00,6.00" type="driving"/>
+    </edge>
+    <edge id="-1.1500.00" from="1.1500.00" to="1.end" priority="1" type="driving" shape="1500.00,8.00 2000.00,8.00">
+        <lane id="-1.1500.00_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1500.00,-6.00 2000.00,-6.00" type="driving"/>
+        <lane id="-1.1500.00_1" index="1" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1500.00,-2.00 2000.00,-2.00" type="driving"/>
+        <lane id="-1.1500.00_2" index="2" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1500.00,2.00 2000.00,2.00" type="driving"/>
+        <lane id="-1.1500.00_3" index="3" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="1500.00,6.00 2000.00,6.00" type="driving"/>
+    </edge>
+    <edge id="-1.500.00" from="1.500.00" to="1.1000.00" priority="1" type="driving">
+        <lane id="-1.500.00_0" index="0" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="500.00,-6.00 1000.00,-6.00" type="driving"/>
+        <lane id="-1.500.00_1" index="1" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="500.00,-2.00 1000.00,-2.00" type="driving"/>
+        <lane id="-1.500.00_2" index="2" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="500.00,2.00 1000.00,2.00" type="driving"/>
+        <lane id="-1.500.00_3" index="3" disallow="pedestrian tram rail_urban rail rail_electric rail_fast ship" speed="33.00" length="500.00" width="4.00" shape="500.00,6.00 1000.00,6.00" type="driving"/>
+    </edge>
+
+    <junction id="1.1000.00" type="priority" x="1000.00" y="8.00" incLanes="-1.500.00_0 -1.500.00_1 -1.500.00_2 -1.500.00_3" intLanes=":1.1000.00_0_0 :1.1000.00_0_1 :1.1000.00_0_2 :1.1000.00_0_3" shape="1000.00,8.00 1000.00,-8.00 1000.00,8.00">
+        <request index="0" response="0000" foes="0000" cont="0"/>
+        <request index="1" response="0000" foes="0000" cont="0"/>
+        <request index="2" response="0000" foes="0000" cont="0"/>
+        <request index="3" response="0000" foes="0000" cont="0"/>
+    </junction>
+    <junction id="1.1500.00" type="priority" x="1500.00" y="8.00" incLanes="-1.1000.00_0 -1.1000.00_1 -1.1000.00_2 -1.1000.00_3" intLanes=":1.1500.00_0_0 :1.1500.00_0_1 :1.1500.00_0_2 :1.1500.00_0_3" shape="1500.00,8.00 1500.00,-8.00 1500.00,8.00">
+        <request index="0" response="0000" foes="0000" cont="0"/>
+        <request index="1" response="0000" foes="0000" cont="0"/>
+        <request index="2" response="0000" foes="0000" cont="0"/>
+        <request index="3" response="0000" foes="0000" cont="0"/>
+    </junction>
+    <junction id="1.500.00" type="priority" x="500.00" y="8.00" incLanes="-1.0.00_0 -1.0.00_1 -1.0.00_2 -1.0.00_3" intLanes=":1.500.00_0_0 :1.500.00_0_1 :1.500.00_0_2 :1.500.00_0_3" shape="500.00,8.00 500.00,-8.00 500.00,8.00">
+        <request index="0" response="0000" foes="0000" cont="0"/>
+        <request index="1" response="0000" foes="0000" cont="0"/>
+        <request index="2" response="0000" foes="0000" cont="0"/>
+        <request index="3" response="0000" foes="0000" cont="0"/>
+    </junction>
+    <junction id="1.begin" type="dead_end" x="0.00" y="0.00" incLanes="" intLanes="" shape="0.00,8.00 0.00,-8.00"/>
+    <junction id="1.end" type="dead_end" x="2000.00" y="0.00" incLanes="-1.1500.00_0 -1.1500.00_1 -1.1500.00_2 -1.1500.00_3" intLanes="" shape="2000.00,-8.00 2000.00,8.00"/>
+
+    <connection from="-1.0.00" to="-1.500.00" fromLane="0" toLane="0" via=":1.500.00_0_0" dir="s" state="M"/>
+    <connection from="-1.0.00" to="-1.500.00" fromLane="1" toLane="1" via=":1.500.00_0_1" dir="s" state="M"/>
+    <connection from="-1.0.00" to="-1.500.00" fromLane="2" toLane="2" via=":1.500.00_0_2" dir="s" state="M"/>
+    <connection from="-1.0.00" to="-1.500.00" fromLane="3" toLane="3" via=":1.500.00_0_3" dir="s" state="M"/>
+    <connection from="-1.1000.00" to="-1.1500.00" fromLane="0" toLane="0" via=":1.1500.00_0_0" dir="s" state="M"/>
+    <connection from="-1.1000.00" to="-1.1500.00" fromLane="1" toLane="1" via=":1.1500.00_0_1" dir="s" state="M"/>
+    <connection from="-1.1000.00" to="-1.1500.00" fromLane="2" toLane="2" via=":1.1500.00_0_2" dir="s" state="M"/>
+    <connection from="-1.1000.00" to="-1.1500.00" fromLane="3" toLane="3" via=":1.1500.00_0_3" dir="s" state="M"/>
+    <connection from="-1.500.00" to="-1.1000.00" fromLane="0" toLane="0" via=":1.1000.00_0_0" dir="s" state="M"/>
+    <connection from="-1.500.00" to="-1.1000.00" fromLane="1" toLane="1" via=":1.1000.00_0_1" dir="s" state="M"/>
+    <connection from="-1.500.00" to="-1.1000.00" fromLane="2" toLane="2" via=":1.1000.00_0_2" dir="s" state="M"/>
+    <connection from="-1.500.00" to="-1.1000.00" fromLane="3" toLane="3" via=":1.1000.00_0_3" dir="s" state="M"/>
+
+    <connection from=":1.1000.00_0" to="-1.1000.00" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":1.1000.00_0" to="-1.1000.00" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":1.1000.00_0" to="-1.1000.00" fromLane="2" toLane="2" dir="s" state="M"/>
+    <connection from=":1.1000.00_0" to="-1.1000.00" fromLane="3" toLane="3" dir="s" state="M"/>
+    <connection from=":1.1500.00_0" to="-1.1500.00" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":1.1500.00_0" to="-1.1500.00" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":1.1500.00_0" to="-1.1500.00" fromLane="2" toLane="2" dir="s" state="M"/>
+    <connection from=":1.1500.00_0" to="-1.1500.00" fromLane="3" toLane="3" dir="s" state="M"/>
+    <connection from=":1.500.00_0" to="-1.500.00" fromLane="0" toLane="0" dir="s" state="M"/>
+    <connection from=":1.500.00_0" to="-1.500.00" fromLane="1" toLane="1" dir="s" state="M"/>
+    <connection from=":1.500.00_0" to="-1.500.00" fromLane="2" toLane="2" dir="s" state="M"/>
+    <connection from=":1.500.00_0" to="-1.500.00" fromLane="3" toLane="3" dir="s" state="M"/>
+
+</net>

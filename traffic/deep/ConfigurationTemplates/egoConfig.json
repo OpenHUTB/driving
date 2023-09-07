@@ -1,0 +1,182 @@
+{
+  "NumberEgos": 2,
+  "Ego": [
+    {
+      "Name": "ego01",
+      "ModelType": "Bicycle",
+      "ActionType": "Continuous",
+      "VehicleType": "DEFAULT_VEHTYPE",
+      "Route": "random",
+      "Color": [
+        0,
+        1,
+        0
+      ],
+      "SpawnOptions": {
+        "departLane": "random",
+        "departPos": "random_free",
+        "departSpeed": "random",
+        "arrivalLane": "random",
+        "arrivalPos": "max",
+        "arrivalSpeed": "random"
+      },
+      "Lidar": [
+        {
+          "config": {}
+        },
+        {
+          "config": {
+            "SensorIndex": 3,
+            "SensorLocation": [
+              0,
+              0
+            ],
+            "Height": 0,
+            "HasEgoVehicle": false
+          }
+        }
+      ],
+      "Vision": [
+        {
+          "config": {
+            "SensorIndex": 4,
+            "SensorLocation": [
+              1.35,
+              0
+            ],
+            "Height": 1.1
+          }
+        },
+        {
+          "config": {
+            "SensorIndex": 5,
+            "SensorLocation": [
+              0.36,
+              0
+            ],
+            "Yaw": 180,
+            "Height": 1.1
+          }
+        }
+      ],
+      "Radar": [
+        {
+          "config": {
+            "SensorIndex": 6,
+            "RangeLimits": [
+              0,
+              174
+            ],
+            "MountingLocation": [
+              3.4,
+              0,
+              0.2
+            ],
+            "FieldOfView": [
+              20,
+              5
+            ]
+          }
+        },
+        {
+          "config": {
+            "SensorIndex": 7,
+            "RangeLimits": [
+              0,
+              30
+            ],
+            "MountingLocation": [
+              -1,
+              0,
+              0.2
+            ],
+            "FieldOfView": [
+              90,
+              5
+            ],
+            "MountingAngles": [
+              180,
+              0,
+              0
+            ]
+          }
+        },
+        {
+          "config": {
+            "SensorIndex": 7,
+            "RangeLimits": [
+              0,
+              30
+            ],
+            "MountingLocation": [
+              0,
+              0.9,
+              0.2
+            ],
+            "FieldOfView": [
+              90,
+              5
+            ],
+            "ReferenceRange": 50,
+            "MountingAngles": [
+              120,
+              0,
+              0
+            ],
+            "AzimuthResolution": 10,
+            "RangeResolution": 1.25
+          }
+        },
+        {
+          "config": {
+            "SensorIndex": 8,
+            "RangeLimits": [
+              0,
+              30
+            ],
+            "MountingLocation": [
+              0,
+              -0.9,
+              0.2
+            ],
+            "FieldOfView": [
+              90,
+              5
+            ],
+            "ReferenceRange": 50,
+            "MountingAngles": [
+              -120,
+              0,
+              0
+            ],
+            "AzimuthResolution": 10,
+            "RangeResolution": 1.25
+          }
+        }
+      ]
+    },
+    {
+      "Name": "ego02",
+      "ModelType": "SUMO",
+      "ActionType": "Discrete-MetaAction",
+      "VehicleType": "DEFAULT_VEHTYPE",
+      "Route": "random",
+      "Color": [
+        1,
+        0,
+        0
+      ],
+      "SpawnOptions": {
+        "departLane": "random",
+        "departPos": "random_free",
+        "departSpeed": "random",
+        "arrivalLane": "random",
+        "arrivalPos": "max",
+        "arrivalSpeed": "random"
+      },
+      "Lidar": [],
+      "Vision": [],
+      "Radar": []
+    }
+  ]
+}

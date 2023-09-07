@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2021-06-30 15:50:44 by Eclipse SUMO netedit Version 1.9.2
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/netconvertConfiguration.xsd">
+
+    <input>
+        <sumo-net-file value="./env/highwayStraight/network.net.xml"/>
+    </input>
+
+    <output>
+        <output-file value="./env/highwayStraight/network.net.xml"/>
+    </output>
+
+    <processing>
+        <geometry.min-radius.fix.railways value="false"/>
+        <geometry.max-grade.fix value="false"/>
+        <offset.disable-normalization value="true"/>
+        <lefthand value="false"/>
+    </processing>
+
+    <junctions>
+        <no-turnarounds value="true"/>
+        <junctions.corner-detail value="5"/>
+        <junctions.limit-turn-speed value="5.5"/>
+        <rectangular-lane-cut value="true"/>
+    </junctions>
+
+    <pedestrian>
+        <walkingareas value="false"/>
+    </pedestrian>
+
+    <netedit>
+        <route-files value="C:\Users\achaveza\OneDrive%20-%20MathWorks\Documents\codes\itn-school\HighwayEnvironment\env\highwayStraight\vehiclesRoutes.rou.xml"/>
+    </netedit>
+
+    <report>
+        <aggregate-warnings value="5"/>
+    </report>
+
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="truck" vClass="trailer" length="16.0" width="2.55" maxSpeed="25.0" speedFactor="1.0" speedDev="0.3" carFollowModel="Krauss" minGap="2.5" accel="1.1" decel="4.0" emergencyDecel="9.0" sigma="0.2" tau="1.8" color="1,0,0" laneChangeModel="LC2013" lcStrategic="0" lcCooperative="0" lcSpeedGain="1.0" lcKeepRight="0" lcOvertakeRight="0" lcOpposite="1.0" lcLookaheadLeft="2.0" lcSpeedGainRight="1.0" lcAssertive="1.0" lcMaxSpeedLatFactor="1.0" lcSigma="0.5" probability="0.1"/>
+    <vType id="car" vClass="passenger" length="4.8" width="1.8" maxSpeed="100.0" speedFactor="2.0" speedDev="0.6" carFollowModel="Krauss" minGap="2.5" accel="2.6" decel="4.5" emergencyDecel="9.0" sigma="0.3" tau="1.8" laneChangeModel="LC2013" lcStrategic="0" lcCooperative="0" lcSpeedGain="1.0" lcKeepRight="0" lcOvertakeRight="0" lcOpposite="1.0" lcLookaheadLeft="2.0" lcSpeedGainRight="1.0" lcAssertive="1.0" lcMaxSpeedLatFactor="1.0" lcSigma="0.5" probability="0.9" />
+    <vTypeDistribution id="typedist" vTypes="truck car"/>
+    <route edges="-1.0.00 -1.500.00 -1.1000.00 -1.1500.00" color="magenta" id="route0"/>
+</routes>

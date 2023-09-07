@@ -1,0 +1,23 @@
+{
+  "NumberEgos": 1,
+  "Ego": {
+    "Name": "ego01",
+    "ModelType": "Bicycle",
+    "ActionType": "Discrete",
+    "VehicleType": "DEFAULT_VEHTYPE",
+    "Route": "random",
+    "Color": [
+      0,
+      1,
+      0
+    ],
+    "SpawnOptions": {
+      "departLane": "0",
+      "departPos": "random_free",
+      "departSpeed": "random",
+      "arrivalLane": "random",
+      "arrivalPos": "max",
+      "arrivalSpeed": "random"
+    }
+  }
+}

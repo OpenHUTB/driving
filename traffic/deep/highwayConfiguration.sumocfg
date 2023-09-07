@@ -1,0 +1,23 @@
+<configuration>
+    <input>
+        <net-file value="env\highwayStraight\network.net.xml"/>
+        <route-files value="env\highwayStraight\vehiclesRoutes.rou.xml"/>
+        <gui-settings-file value="env\highway.settings.xml"/>
+    </input>
+    <time>
+        <begin value="0"/>
+        <end value="30"/>
+    </time>
+    <processing>
+        <lanechange.overtake-right value="true"/>
+        <emergencydecel.warning-threshold value="10"/>
+        <collision.action value="warn"/>
+        <no-step-log value="true"/>
+        <random value="true"/>
+        <quit-on-end value="true"/>
+    </processing>
+    <report>
+        <xml-validation value="never"/>
+        <duration-log.disable value="true"/>
+    </report>
+</configuration>

@@ -1,0 +1,17 @@
+{
+  "VehicleType": "DEFAULT_VEHTYPE",
+  "NumberVehicles": 0,
+  "RandomTraffic": true,
+  "BoundsRandomTraffic": [
+    20,
+    30
+  ],
+  "SpawnOptions": {
+    "departLane": "random",
+    "departPos": "random_free",
+    "departSpeed": "random",
+    "arrivalLane": "random",
+    "arrivalPos": "max",
+    "arrivalSpeed": "random"
+  }
+}
