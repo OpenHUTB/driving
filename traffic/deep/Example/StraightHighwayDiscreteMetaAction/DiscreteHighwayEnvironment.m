@@ -1,6 +1,5 @@
 classdef DiscreteHighwayEnvironment < rl.env.MATLABEnvironment
-    %HIGHWAYENVIRONMENT: Template for defining custom environment in MATLAB
-    % using Deep Traffic Lab
+    %HIGHWAYENVIRONMENT: 定义定制环境的模块
     
     %% Properties (set properties' attributes accordingly)
     properties               

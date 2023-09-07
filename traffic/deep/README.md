@@ -1,20 +1,25 @@
  
-# **Deep Traffic Lab** 
+# **交通工具** 
 
-Deep Traffic Lab (DTL) is an end-to-end learning platform for traffic navigation based on MATLAB&reg;. DTL uses the Automated Driving Toolbox&trade; from MATLAB, in conjunction with several other toolboxes, to provide a platform using a cuboid world that is suitable to test learning algorithms for Autonomous Driving. Additionally, DTL uses SUMO traffic simulator to model and define road traffic actors on the simulator so the user can focus on providing a solution for the Ego Vehicle.
+该项目是一个基于 MATLAB® 的端到端交通导航学习平台，使用 MATLAB 的 自动驾驶工具箱以及其他几个工具箱，提供一个使用适合测试自动驾驶学习算法的长方体世界的平台。
+此外，交通工具使用 SUMO 交通模拟器在模拟器上建模和定义道路交通参与者，以便用户可以专注于为 Ego Vehicle 提供解决方案。
 
-Additionally, DTL simulator provides an out-of-the-box environment compatible with the Reinforcement Learning Toolbox&trade; from MATLAB that allows the user to easily train a "ego vehicle" agent on how to navigate traffic. Similarly, DTL allows the user to define his own controller algorithms for autonomous driving in any traffic situation by letting the user create their own road topologies, and define traffic interactions. 
+此外，交通工具模拟器提供了一个与 MATLAB 的强化学习工具箱™兼容的开箱即用环境，允许用户轻松训练“自我车辆”代理如何导航交通。
+同样，交通工具允许用户通过创建自己的道路拓扑并定义交通交互来定义自己的控制器算法，以便在任何交通情况下实现自动驾驶。
 
-DTL defines "ego vehicles" within MATLAB and updates the ego vehicles' states on SUMO to simulate traffic interations. Similarly,  DTL syncronizes vehicles defined within SUMO ecosystems with MATLAB driving scenario actors to define and control road traffic actors. 
+交通工具在 MATLAB 中定义“自我车辆”，并在 SUMO 上更新自我车辆的状态以模拟交通交互。
+同样，交通工具将 SUMO 生态系统中定义的车辆与 MATLAB 驾驶场景参与者同步，以定义和控制道路交通参与者。
 
-In order to provide custom topologies interactively, Deep Traffic Lab uses **Driving Scenario Designer Application** to provide a driving scenario and a road topology that is later converted to a SUMO .net file using an OpenDRIVE&reg; export file and SUMO's [netconvert](https://sumo.dlr.de/docs/netconvert.html). For more information refer to  the documentation  [here](https://www.mathworks.com/help/driving/ref/drivingscenariodesigner-app.html).
+为了以交互方式提供自定义拓扑，深度交通实验室使用驾驶场景设计器应用程序提供驾驶场景和道路拓扑，随后使用 OpenDRIVE® 导出文件和 SUMO 的 [netconvert](https://sumo.dlr.de/docs/netconvert.html) 将其转换为 SUMO .net 文件。
+有关详细信息，请参阅 [此处](https://www.mathworks.com/help/driving/ref/drivingscenariodesigner-app.html) 的文档。
+
 
 <p align="center">
 <img src="./figures/AppleHill.gif" alt="logo"  width = "1000"/>
 </p>
 
-## MATLAB&reg; Toolbox Dependencies
-Requires MATLAB release R2021a or newer with the following toolboxes:
+## MATLAB&reg; 工具箱依赖项
+需要 MATLAB R2021a 或更高版本以及以下工具箱：
 - [Automated Driving Toolbox&trade;](https://www.mathworks.com/products/automated-driving.html)
 - [Navigation Toolbox&trade;](https://www.mathworks.com/products/navigation.html#:~:text=Navigation%20Toolbox%E2%84%A2)
 - [Robotics Systems Toolbox&trade;](https://www.mathworks.com/products/robotics.html)
@@ -24,106 +29,108 @@ Requires MATLAB release R2021a or newer with the following toolboxes:
 - [Reinforcement Learning Toolbox&trade;](https://www.mathworks.com/products/reinforcement-learning.html)
 - [Deep Learning Toolbox&trade;](https://www.mathworks.com/products/deep-learning.html)
 
-## Third Party Products:
-Deep Traffic Lab uses the following external dependencies 
+## 第三方产品：
+该项目使用以下外部依赖项：
 - [SUMO](https://www.eclipse.org/sumo/) (1.9.2 or newer)
 - [TraCI4Matlab](https://www.mathworks.com/matlabcentral/fileexchange/44805-traci4matlab)
 - [INPOLY](https://github.com/dengwirda/inpoly)
 
-**NOTE:** Currently Deep Traffic Lab supports Windows 10 only. Support for macOS and Linux will come in the future.
+**注意：** 目前 Deep Traffic Lab 仅支持 Windows 10。
 
-## Setup 
-To install:
-1. Install SUMO 1.9.2 or newer ([instructions](https://sumo.dlr.de/docs/Installing/index.html)) 
-2. Configure SUMO_HOME as an environment variable ([instructions](https://sumo.dlr.de/docs/Basics/Basic_Computer_Skills.html#windows))
-3. Clone Git repository
+## 设置 
+安装：
+1. 安装 SUMO 1.9.2 或更高版本 ([指导](https://sumo.dlr.de/docs/Installing/index.html)) 
+2. 将 SUMO_HOME 配置为环境变量 ([指导](https://sumo.dlr.de/docs/Basics/Basic_Computer_Skills.html#windows))
+3. 克隆 Git 存储库
 ```
 git clone <[URL to Git repo]>
 ```
-4. Initialize submodules by running
+4. 通过运行初始化子模块
 ```
 git submodule update --init
 ```
-5. Open MATLAB
-6. Navigate to Open Traffic Lab repository
-7. Run ./scripts/install.m
+5. 打开 MATLAB
+6. 进入该目录下
+7. 运行 ./scripts/install.m
 
-**Note:** Step 7 needs to be run every time that the MATLAB path resets
+**注意：** 每次 MATLAB 路径重置时都需要运行步骤 7
 
-## Getting Started 
+## 入门
 
-Deep traffic lab follows the workflow as shown below:
+该项目遵循如下所示的工作流程：
 <p align="center">
 <img src="./figures/Workflow.PNG" alt="workflow"  />
 </p>
 
 
-### *Reinforcement Learning:*
-In order to run a reinforcement learning training, the user can refer to the [example](./Example/StraightHighwayDiscreteMetaAction/main.m) that comes with this repository. 
+### *强化学习：*
+为了运行强化学习训练，用户可以参考此存储库附带的 [示例](./Example/StraightHighwayDiscreteMetaAction/main.m) 。
 
-To be able to run a reinforcement learning training, the user needs to define a MATLAB compatible environment. This can be done by modifying the template environment that comes with this repository ([DiscreteHighwayEnvironment.m](Example/StraightHighwayDiscreteMetaAction/DiscreteHighwayEnvironment.m)) and  can be used as template to modify and use custom applications as needed by user.
+为了能够运行强化学习训练，用户需要定义一个 MATLAB 兼容环境。这可以通过修改此存储库附带的模板环境 ([DiscreteHighwayEnvironment.m](Example/StraightHighwayDiscreteMetaAction/DiscreteHighwayEnvironment.m)) 来完成，并且可以用作模板来根据用户的需要修改和使用自定义应用程序。
 
-The provided example comes with a default .json configuration for Ego Vehicles and for traffic vehicles. However, if needed the user can modify the configuration files by modifying the provided templates to define [EgoVehicles](Example\StraightHighwayDiscreteMetaAction\SingleEgoMinimalSensorsConfigTemplate.m) and to define [TrafficVehicles](Example/StraightHighwayDiscreteMetaAction/TrafficConfigTemplate.m). 
+提供的示例附带了 Ego 车辆和交通车辆的默认 .json 配置。但是，如果需要，用户可以通过修改提供的模板来修改配置文件以定义 [EgoVehicles](Example\StraightHighwayDiscreteMetaAction\SingleEgoMinimalSensorsConfigTemplate.m) 和 [TrafficVehicles](Example/StraightHighwayDiscreteMetaAction/TrafficConfigTemplate.m) 。 
 
-Additionally, inside the EgoConfig.json file, the user needs to properly define the sensors to be used by the Ego Vehicle. For a list of available sensors, refer to the [EgoTemplate](ConfigurationTemplates/TwoEgoSensorsConfigTemplate.m) file, where an array of Cameras, Lidars, and Radars are defined. These sensors will be used as part of the observation space for the reinforcement learning environment.
+此外，在 egoConfig.json 文件中，用户需要正确定义 Ego 车辆要使用的传感器。有关可用传感器的列表，请参阅 [EgoTemplate](ConfigurationTemplates/TwoEgoSensorsConfigTemplate.m) 文件，其中定义了相机、激光雷达和雷达的数组。这些传感器将用作强化学习环境观察空间的一部分。
 
-For more details on how to generate a neural netrwork for your RL agent, please see [here](https://www.mathworks.com/help/reinforcement-learning/ug/create-agent-using-deep-network-designer-and-train-using-image-observations.html)
+有关如何为强化学习代理生成神经网络的更多详细信息，请参阅 [此处](https://www.mathworks.com/help/reinforcement-learning/ug/create-agent-using-deep-network-designer-and-train-using-image-observations.html)
 
 <p align="center">
 <img src="./Example/StraightHighwayDiscreteMetaAction/result/result_media/result.gif" alt="RL Training"  />
 </p>
 
-***Note:*** Despite the ability to define more than just one ego vehicle, Deep Traffic Lab does not support multi-agent reinforcement learning training at the moment since current support for multi-agent environment training is done using Simulink&reg;. Official support from Deep Traffic Lab for multi-agent may come in the future
-### *Discrete/Continuous Control:*
-Deep Traffic Lab can be used with a control mechanism instead of a learning mechanism. In [this](TestScripts\TestContinuousModelStanley\TestModelStanleyController.m) example, a stanley controller is used on the ego vehicle. The controlled vehicle uses a discrete bicycle model to follow a set of waypoints on a straight road.
+***注意：*** 尽管能够定义不止一种自我车辆，但 Deep Traffic Lab 目前不支持多智能体强化学习训练，因为当前对多智能体环境训练的支持是使用 Simulink® 完成的。
+
+### *离散/连续控制：*
+该工具箱可以使用控制机制而不是学习机制。在 [该](TestScripts\TestContinuousModelStanley\TestModelStanleyController.m) 示例中，自主车辆上使用了 stanley 控制器。受控车辆使用离散自行车模型沿着笔直道路上的一组路点行驶。
 
 <p align="center">
 <img src="./figures/Stanley/stanleyGif.gif" alt="Stanley Controller"  />
 </p>
 
-### *Defining Custom Networks:*
-Deep Traffic Lab uses [Driving Scenario Designer App](https://www.mathworks.com/help/driving/ref/drivingscenariodesigner-app.html) to define roads interactively. To define custom scenarios follow the instructions depicted below
+### *定义自定义网络：*
+该工具箱使用 [Driving Scenario Designer App](https://www.mathworks.com/help/driving/ref/drivingscenariodesigner-app.html) 以交互方式定义道路。要定义自定义场景，请按照下面描述的说明进行操作
 
-1. Create the road topology as described [here](https://www.mathworks.com/videos/driving-scenario-designer-1529302116471.html)
-2. If a straight road is defined, it is a good practice to split the roads into more than one segments to be able to define routes laters
-3. Export scenario into MATLAB function 
-4. Export road topology to OpenDRIVE
+1. 按照 [此处](https://www.mathworks.com/videos/driving-scenario-designer-1529302116471.html) 所述创建道路拓扑
+2. 如果定义了一条直路，最好将道路分成多个路段，以便稍后定义路线
+3. 将场景导出到 MATLAB 函数
+4. 将道路拓扑导出到 OpenDRIVE
 <p align="center">  
 <img src="./figures/CustomTopologyInstructions/1.PNG" width = "1200">
 </p>
 
-4. Open [scripts/GenerateEnvrionmentFiles.m](scripts/GenerateEnvironmentFiles.m) 
-5. Specify paths to generated .xodr files and target folders to generate network files
+5. 打开 [scripts/GenerateEnvrionmentFiles.m](scripts/GenerateEnvironmentFiles.m) 
+6. 指定生成的 .xodr 文件的路径和目标文件夹以生成网络文件
 
 <p align="center">  
 <img src="./figures/CustomTopologyInstructions/2.PNG" width = "1200">
 </p>
 
-6. First, a SUMO .net.xml file will be created using SUMO's [netconvert](https://sumo.dlr.de/docs/netconvert.html) tool. After the conversion, SUMO's [Netedit](https://sumo.dlr.de/docs/Netedit/index.html#changing_connections]) will pop up.
-7. Define traffic rules such as speed limits, and allowed vehicles on each road as shown below
+7. 首先，将使用 SUMO 的 [netconvert](https://sumo.dlr.de/docs/netconvert.html) 工具创建 SUMO .net.xml 文件。转换完成后，会弹出SUMO的 [Netedit](https://sumo.dlr.de/docs/Netedit/index.html#changing_connections]) 。
+8. 定义交通规则，例如速度限制以及每条道路上允许的车辆，如下所示
 
 <p align="center">  
 <img src="./figures/CustomTopologyInstructions/3.PNG" width = "1200">
 </p>
 
 
-8. Go to Demand tab inside of NETEDIT
-9. Select Route icon 
-10. Define available routes by selecting edges
+9. 转到 NETEDIT 内的“Demand”选项卡
+10. 选择路线图标
+11. 通过选择边定义可用路线
 
 <p align="center">  
 <img src="./figures/CustomTopologyInstructions/4.PNG" width = "1200">
 </p>
 
-10.  If a route should be exclusively defined for ego vehicles, define the route ID as "ego_route". Deep Traffic Lab will only spawn ego_vehicles within this route
-10. Save network and route file as "network.net.xml" and "Routes.rou.xml" respectively
-11. In order to be able to use the newly created environment, a SUMO configuration file needs to be created. The user can modigy the [.sumocfg](highwayConfiguration.sumocfg) file that comes with this repository. For more information on how to create a .sumocfg file please refer to SUMO documentation.
+12. 如果应专门为自我车辆定义路线，请将路线 ID 定义为“ego_route”。深度交通实验室只会在此路线内生成 ego_vehicles
+13. 将网络和路由文件分别保存为 "network.net.xml" 和 "Routes.rou.xml"。
+14. 为了能够使用新创建的环境，需要创建 SUMO 配置文件。用户可以修改此存储库附带的 [.sumocfg](highwayConfiguration.sumocfg) 。有关如何创建 .sumocfg 文件的更多信息，请参阅 SUMO 文档。
 
-### *Defining Configuration Files:*
 
-Deep Traffic Lab uses a SUMO configuration file to call the corresponding SUMO network and route files (see SUMO documentation for more information). However, in order to specify the details and configurations for the Ego Vehicles and Traffic Vehicles, DTL uses .json files as a standard. In order to create the JSON configuration files, a template script is provided for the Ego Vehicles and Traffic Vehicles respectively. For more information on how to use them, please go to [ConfigurationTemplates](ConfigurationTemplates) folder.
+### *定义配置文件：*
 
-The overall structure of each configuration file is shown as follows:
+该工具使用 SUMO 配置文件来调用相应的 SUMO 网络和路由文件（有关更多信息，请参阅 SUMO 文档）。但是，为了指定 Ego 车辆和交通车辆的详细信息和配置，DTL 使用 .json 文件作为标准。为了创建 JSON 配置文件，分别为 Ego 车辆和交通车辆提供了模板脚本。有关如何使用它们的更多信息，请转到 [ConfigurationTemplates](ConfigurationTemplates) 文件夹。
+
+各个配置文件的整体结构如下所示：
 
 <p align="center">  
 <img src="./figures/trafficJson.PNG" width = "1200">
@@ -133,14 +140,15 @@ The overall structure of each configuration file is shown as follows:
 <img src="./figures/egoJson.PNG" width = "1200">
 </p>
 
-An example of two ego configuration files is shown as follows:
+两个ego配置文件示例如下：
 
 <p align="center">  
 <img src="./figures/egoJsonEg.PNG" width = "1200">
 </p>
 
-### *Defining Traffic Environment:*
-In order to be able to run Deep Traffic Lab, the simulator requires a set of configuration files in addition to the simulation StopTime, SampleTime, and a boolean indicating if SUMO gui should be invoqued as shown on the code snippet below. 
+
+### *定义交通环境：*
+为了能够运行该工具箱，除了模拟 StopTime、SampleTime 以及指示是否应调用 SUMO gui 的布尔值之外，模拟器还需要一组配置文件，如下面的代码片段所示。
 ```
 scenario = highwayStraight();
 SampleTime = 0.1; %[sec]
@@ -156,14 +164,14 @@ highwayEnv = TrafficEnvironment(scenario, ...
     'SumoVisualization', true);
 ```
 
-The variable "scenario" corresponds to the road topology defined programmatically or using Driving Scenario Designer App and describes the same road topology that is used by SUMO. Make sure that the .sumocfg file routes and network correspond to the same network.
+变量“scenario”对应于以编程方式或使用 Driving Scenario Designer 应用程序定义的道路拓扑，并描述 SUMO 使用的相同道路拓扑。确保 .sumocfg 文件路由和网络对应于同一网络。
 
-After *"TrafficEnvrionment"* has been defined, the user can call a visualization of the environment by choosing a vehicle randomly 
+定义 *"TrafficEnvrionment"* 后，用户可以通过随机选择车辆来调用环境的可视化
 
 ```
 highwayEnv.create_random_visualization;
 ```
-or by calling the name of an specific vehicle 
+或通过呼叫特定车辆的名称
 
 ```
 highwayEnv.create_chase_visualization('ego01');
@@ -173,69 +181,68 @@ highwayEnv.create_chase_visualization('ego01');
 <img src="./figures/visualizationEgo.png">
 </p>
 
-In order to deploy traffic, the following member method can be called
+为了部署流量，可以调用以下成员方法
 
 ```
 [hasBeenCreated, numberOfTrafficActors, egos] = highwayEnv.deploy_traffic();
 ```
 
-*"deploy_traffic"* method, as it names suggests, deploys traffic on the scenario. Additionally, it returns the following parameters: 
+*"deploy_traffic"* 方法，顾名思义，在场景上部署流量。此外，它还返回以下参数：
 
-- *hasBeenCreated:* boolean that specifies wether the creation of the environment has been successfull
-- *numberOfTrafficActors:* Integer describing how many actors were created
-- *egos:* a cell list that contains a handle to the ego vehicles. Using this handle, the user can monitor the ego states, current status, and call the step function for the ego, which takes a control input as its parameters
+- *hasBeenCreated:* 布尔值，指定环境创建是否成功
+- *numberOfTrafficActors:* 描述创建了多少个 Actor 的整数
+- *egos:* 包含 ego 车辆句柄的单元格列表。使用此句柄，用户可以监视自我状态、当前状态，并调用自我的步骤函数，该函数将控制输入作为其参数
 
-Additionally, when *"deploy_traffic"* method is called, the current traffic is despawned, so this method also works as a reset function.
+此外，当调用 *"deploy_traffic"* 法时，当前流量将消失，因此该方法也可用作重置功能。
 
-## Examples
-To learn how to use this in testing workflows, see [Examples](/examples/) or [TestScripts](TestScripts/). 
 
-## Architecture
-Deep Traffic Lab uses three main classes that define the architecture of the environment without taking into account the RLEnv class which serves as template for the users to define an environment according to their needs. The functionality of each class is described below.
+## 示例
+要了解如何在测试工作流程中使用它，请参阅 [Examples](/examples/) 或 [TestScripts](TestScripts/). 
 
-- **TrafficEnvironment:** This class is the one in charge to define the connection between the environment in MATLAB and SUMO respectively. Additionally, it uses the configuration files, specified by the user, to create and deploy traffic according to the specifications from the user. This class is also in charge of creating chase plot visualizations within the driving scenario in MATLAB. *TraffiicEnvironment* allows the user to define the lane changing model within SUMO, this can be a sublane model, or a prespecified fixed time lane changing time window. For more details refer to [SUMO Documentations](https://sumo.dlr.de/docs/Simulation/SublaneModel.html) and the [Class Documentation](lib/@TrafficEnvironment/TrafficEnvironment.m) on the constructor method.
-- **TrafficVehicle:** This class represent each of the vehicles in the simulation. Thus, it is in charge of defining the physical properties of the vehicle in the simulation and synchronize it between SUMO and MATLAB. Due to the architecture from Driving Scenario World in MATLAB, actors in MATLAB that have finished their route in SUMO, are placed in a location far away from the scenario. *TrafficVehicle* class recycles "despawned" vehicles when a new instance of a vehicle is created inside SUMO.
-- **EgoVehicle:** This class inherits from *TrafficVehicle* class and uses the same methods as the parent class. However, this class is also in charge of defining the vehicle model (SUMO, Bicycle) used to control the "Ego Vehicles" using the defined action space (DiscreteMeta-Action, Discrete, Continuous) specified by the user on the configuration files. Additionally, this class is in charge of defining the sensors and observations that the ego vehicle will use during the simulation (ideal, lidar, radar, camera, occupancy grid).
+## 架构
+该工具使用三个主要类来定义环境的架构，而不考虑 RLEnv 类，该类充当用户根据自己的需求定义环境的模板。每个类的功能描述如下。
 
-A diagram with the public methods that each class uses is shown below
+- **TrafficEnvironment:** 该类分别负责定义 MATLAB 和 SUMO 中环境之间的连接。此外，它还使用用户指定的配置文件来根据用户的规范创建和部署流量。该类还负责在 MATLAB 的驾驶场景中创建追逐图可视化。TraffiicEnvironment允许用户在 SUMO 中定义车道变换模型，这可以是子车道模型，也可以是预先指定的固定时间车道变换时间窗口。有关更多详细信息，请参阅 [SUMO 文档](https://sumo.dlr.de/docs/Simulation/SublaneModel.html) 和有关构造函数方法的 [Class Documentation](lib/@TrafficEnvironment/TrafficEnvironment.m) 。
+- **TrafficVehicle:** 此类代表模拟中的每辆车辆。因此，它负责在仿真中定义车辆的物理属性，并在 SUMO 和 MATLAB 之间进行同步。由于 MATLAB 中驾驶场景世界的架构，MATLAB 中的参与者在 SUMO 中完成路线后，会被放置在远离场景的位置。当在 SUMO 中创建新的车辆实例时，TrafficVehicle类会回收“已消失”的车辆。
+- **EgoVehicle:** 该类继承自TrafficVehicle类，并使用与父类相同的方法。然而，此类还负责定义车辆模型（SUMO、自行车），用于使用用户在配置文件上指定的已定义动作空间（DiscreteMeta-Action、离散、连续）来控制“自我车辆”。此外，此类负责定义自我车辆在模拟期间将使用的传感器和观察结果（理想、激光雷达、雷达、摄像头、占用网格）。
+
+下面显示了每个类使用的公共方法的图表
 
 <p align="center">  
 <img src="./figures/class.PNG" width="1500">
 </p>
 
-Similarly, the initialization architecture for Deep Traffic Lab is described on the diagram below
+同样，该工具箱的初始化架构如下图所示
 
 <p align="center">  
 <img src="./figures/initializationArch.PNG" width="1500">
 </p>
 
-where the available options are as follows
+其中可用选项如下
+
 <p align="center">  
 <img src="./figures/initializationArchOptions.PNG" width="1500">
 </p>
 
-Once the environment has been fully specified, the runtime synchronization is described on the diagram below
+完全指定环境后，运行时同步如下图所示
+
 <p align="center">  
 <img src="./figures/RuntimeArch.PNG" width="1500">
 </p>
 
 
 
-## Current Limitations
-- RL training only supports single agent environments
-- Parallel training of RL Agents is not currently supported 
-- The specified number of traffic actors withing trafficConfig.json file, may differ from the actual number of spawned vehicles due to space limitations inside of road
-- SUMO road topologies might differ from MATLAB road topologies due to issues when exporting Driving Scenario Designer topology to OpenDRIVE's .xodr file. For more information see [here](https://www.mathworks.com/help/driving/ref/drivingscenario.export.html#mw_fea198e6-827f-49bd-a1f5-4c953b2139b1).
-- SUMO induction loops, or flows are not supported
-- Lidar point clouds might throw an error due a bug. This bug has been fixed for future releases (MATLAB r2021b)
-- When defining a continuous model for the ego vehicle, there exist a two step delay on the Ego Vehices due to synchronization architecture between SUMO and DSD. Thus, it is advised to use a small time step
+## 目前的限制
+- RL 训练仅支持单代理环境
+- 目前不支持 RL Agent 的并行训练 
+- 由于道路内部空间限制，trafficConfig.json 文件中指定的交通参与者数量可能与生成车辆的实际数量不同
+- 由于将驾驶场景设计器拓扑导出到 OpenDRIVE 的 .xodr 文件时出现问题，SUMO 道路拓扑可能与 MATLAB 道路拓扑不同。欲了解更多信息，请参见 [此处](https://www.mathworks.com/help/driving/ref/drivingscenario.export.html#mw_fea198e6-827f-49bd-a1f5-4c953b2139b1).
+- 不支持 SUMO 感应环或流
+- 激光雷达点云可能会因错误而引发错误。此错误已在未来版本中修复 (MATLAB r2021b)
+- 在为自我车辆定义连续模型时，由于 SUMO 和 DSD 之间的同步架构，自我车辆上存在两步延迟。因此，建议使用较小的时间步长
 
 
 
-## License
-The license for Deep Traffic Lab is available in the [LICENSE.TXT](LICENSE.TXT) file in this GitHub repository.
+## 参考
+[深度交通实验室](https://github.com/mathworks/deep-traffic-lab)
 
-## Community Support
-[MATLAB Central](https://www.mathworks.com/matlabcentral)
-
-Copyright 2021 The MathWorks, Inc.
