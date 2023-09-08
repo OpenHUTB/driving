@@ -1,17 +1,13 @@
 classdef DrivingStrategy < driving.scenario.MotionStrategy...
         & driving.scenario.mixin.PropertiesInitializableInConstructor
 %DrivingStrategy Driving Strategy
-%   DrivingStrategy is used to control vehicles in an OppenTrafficLab
-%   simulation. The driving logic consists of car following behavior,
-%   suitably modified to react to open or closed lanes ahead.
-%   To implemnent a custom driving strategy, use this class as a parent
-%   class and override the relevant methods
+%   DrivingStrategy 用于在仿真中控制车辆。
+%   驾驶逻辑包括车辆跟随行为，适当地修改以对前方开放或关闭的车道作出反应。
+%   要实现自定义驾驶策略，请将此类用作父类并覆盖相关方法。
 %   
-%   strategy = DrivingStrategy(vehicle) creates a nominal driving strategy
-%   for the actor vehicle
+%   strategy = DrivingStrategy(vehicle) 为参与者车辆创建名义驾驶策略
 %   
-%   strategy = DrivingStrategy(...,Name,Value) creates a nominal driving strategy
-%   for the actor vehicle
+%   strategy = DrivingStrategy(...,Name,Value) 为参与者车辆创建名义驾驶策略
 % 
 %   Overview
 %   DrivingStrategy controls the vehicles in its move method, which is
