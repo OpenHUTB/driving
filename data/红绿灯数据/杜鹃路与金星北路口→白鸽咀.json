@@ -1,0 +1,10 @@
+location:112.940532,28.236505[{"linkid":15794014850,"outlinkids":[15279385260,16477383410],"timestamp":1691038725,"road_flow_direction":"11","comfrom":0,"lamp_status_1":21,"count_down_1":63,"period_1":63,"lamp_status_2":23,"count_down_2":56,"period_2":53}
+{"linkid":15794014850,"outlinkids":[16602179610],"timestamp":1691038725,"road_flow_direction":"12","comfrom":0,"lamp_status_1":21,"count_down_1":125,"period_1":125,"lamp_status_2":23,"count_down_2":29,"period_2":26};
+
+location:112.940536,28.231313{"linkid":15793778510,"outlinkids":[16863745110,16863744980],"timestamp":1691038735,"road_flow_direction":"11","comfrom":0,"lamp_status_1":21,"count_down_1":28,"period_1":28,"lamp_status_2":23,"count_down_2":56,"period_2":53};
+{"linkid":15793778510,"outlinkids":[15280334260],"timestamp":1691038735,"road_flow_direction":"12","comfrom":0,"lamp_status_1":21,"count_down_1":89,"period_1":89,"lamp_status_2":23,"count_down_2":27,"period_2":24};
+
+location:112.94081,28.228143{"linkid":16611000020,"outlinkids":[15911013700,15454985180],"timestamp":1691038735,"road_flow_direction":"11","comfrom":0,"lamp_status_1":21,"count_down_1":64,"period_1":64,"lamp_status_2":23,"count_down_2":46,"period_2":43};
+
+location:112.940922,28.22383{"linkid":15793718290,"outlinkids":[15911014050],"timestamp":1691038733,"road_flow_direction":"11","comfrom":0,"lamp_status_1":23,"count_down_1":27,"period_1":24,"lamp_status_2":23,"count_down_2":10000,"period_2":7}
+{"linkid":15793718290,"outlinkids":[15280918170],"timestamp":1691038733,"road_flow_direction":"12","comfrom":0,"lamp_status_1":21,"count_down_1":31,"period_1":31,"lamp_status_2":23,"count_down_2":10000,"period_2":20}]}
