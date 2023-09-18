@@ -36,20 +36,31 @@
 % 中的默认位置。
 % 
 % 指定现有项目的路径。例如，此代码显示位于|C:\RR\MyProject|。
-rrProj = "C:\RR\MyProject";
+rrProj = "D:\ue\roadrunner";
 % 该函数返回一个 |roadrunner| 对象|rrApp|，该对象提供用于执行基本工作流任务（例如打开、关闭和保存场景和项目）的函数。
-rrApp = roadrunner(rrProj, InstallationFolder=fullfile(matlabroot, 'software', 'RoadRunner_2022b', 'bin', 'win64'));
+rrApp = roadrunner(rrProj, InstallationFolder=fullfile(matlabroot, 'software', 'roadrunner', 'bin', 'win64'));
 
-% 将场景文件拷贝到本地的项目路径下
-copyfile(fullfile(fileparts(mfilename("fullpath")), 'HUTB_roadnetwork.rrscene'), fullfile(rrProj, "RRScene"), 'f');
-copyfile(fullfile(fileparts(mfilename("fullpath")), 'HUTB_roadnetwork.rrscenario'), fullfile(rrProj, "Scenarios"), 'f');
+
+%% 将场景文件拷贝到本地的项目路径下
+copyfile(fullfile(fileparts(mfilename("fullpath")), 'HUTB.rrscene'), fullfile(rrProj, "RRScene"), 'f');
+copyfile(fullfile(fileparts(mfilename("fullpath")), 'HUTB.rrscenario'), fullfile(rrProj, "Scenarios"), 'f');
+
+proj_dir = fileparts(fileparts(mfilename('fullpath')));
+addpath(genpath(fullfile(proj_dir, 'utils')));
+assets = RangTraversal(fullfile(proj_dir, 'roadrunner', 'XXXXXXXX'));
+
+for i = 1 : numel(assets)
+    cur_asset = assets{i};
+end
+
+
 
 
 %% 
 % |openScenario|  在 RoadRunner Scenario 中使用函数打开已有场景，指定要打开的 |rrApp| 对象和具体场景。|filename| 
 % 比如打开 |TrajectoryCutIn| 场景文件，这是 RoadRunner 工程中默认包含的场景。此函数通过 MATLAB 在 RoadRunner 
 % Scenario 应用程序中打开所需的场景。
-openScenario(rrApp, "HUTB_roadnetwork.rrscenario"); % 位于工程路径下的Scenarios目录下
+openScenario(rrApp, "HUTB.rrscenario"); % 位于工程路径下的Scenarios目录下
 
 
 %% *模拟场景*
