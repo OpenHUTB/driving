@@ -1,4 +1,4 @@
-# 虚幻引擎
+# Carla
 
 
 ## 环境配置
@@ -19,6 +19,9 @@ simulink模块增加转发像素流参数的位置：
 ```shell
 matlab\toolbox\shared\sim3d\sim3d\+sim3d\World.m -> asCommand(self)
 ```
+
+## 交通管理程序
+交通管理程序的说明[手册](https://carla.readthedocs.io/en/latest/adv_traffic_manager/) 。
 
 
 ## 关卡切换
