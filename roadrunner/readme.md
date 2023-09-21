@@ -1,6 +1,6 @@
 ## **路网更新**
 
-岳麓区静态路网实时更新，分享的文件：Scence
+岳麓区静态路网实时更新分享的文件：Scence
 链接：https://pan.baidu.com/s/1MVE6IRsXaMEF6FGz0bTdXw 
 提取码：592g 
 
