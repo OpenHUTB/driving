@@ -1,14 +1,20 @@
 ## **路网更新**
 
+打开AutoVrtlEnv场景，利用Simulink中Unreal Editor打开AutoVrtlEnv.uproject即可，已将HUTB的虚幻场景导入，但打包失败。
+
+**场景文件**链接：https://pan.baidu.com/s/1vfOiR5Z-Z9kiYpUNZv83bg?pwd=kkkk 
+提取码：kkkk 
+
 岳麓区静态路网实时更新分享的文件：Scence
 链接：https://pan.baidu.com/s/1MVE6IRsXaMEF6FGz0bTdXw 
 提取码：592g 
 
+RoadRunner的资产文件放置于Asset：
 
+资产文件链接：https://pan.baidu.com/s/1xN3gXs1AZonkPfoewRRRvg?pwd=kkkk 
+提取码：kkkk 
 
 ------
-
-
 
 ## 一、对于RoadRunner仿真使用
 
