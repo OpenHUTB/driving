@@ -9,9 +9,9 @@
 链接：https://pan.baidu.com/s/1MVE6IRsXaMEF6FGz0bTdXw 
 提取码：592g 
 
-RoadRunner的资产文件放置于Asset：
+RoadRunner的资产文件放置于Assets：
 
-资产文件链接：https://pan.baidu.com/s/1xN3gXs1AZonkPfoewRRRvg?pwd=kkkk 
+链接：https://pan.baidu.com/s/1SlNbPIkc3pSZVsrdUaw7_A?pwd=kkkk 
 提取码：kkkk 
 
 ------
