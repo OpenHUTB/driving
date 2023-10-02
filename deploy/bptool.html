@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Bond Pricing Tool</title>
+</head>
+<body>
+    <!-- Embed the JavaScript code here by referencing calculatePrice.js -->
+    <script src="calculatePrice.js" type="text/javascript"></script>
+    <script>
+        //Helper Code: Execute JavaScript immediately after the page has been loaded
+        window.onload = function() {
+            printValue('coupon_payment_slider', 'coupon_payment_value');
+            printValue('num_payments_slider', 'num_payments_value');
+            printValue('interest_rate_slider', 'interest_rate_value');
+            printValue('facevalue_slider', 'facevalue_value');
+            calculatePrice();
+        }
+    </script>
+    <h1><a>Bond Pricing Tool</a></h1>
+    <h2></h2>
+    This example shows an application that calculates a bond price from a simple formula.<p>
+    You run this example by entering the following known values into a simple graphical interface:<p>
+      <ul>
+        <li>Face Value (or value of bond at maturity) - M</li>
+        <li>Coupon payment - C</li>
+        <li>Number of payments - N</li>
+        <li>Interest rate - i</li>
+      </ul>
+      The application calculates price (P) based on the following equation:<p>
+      P = C * ( (1 - (1 + i)^-N) / i ) + M * (1 + i)^-N<p>
+      <hr>
+      <h3>M: Face Value </h3>
+      <input id="facevalue_value" type="number" maxlength="4" oninput="updatePrice('facevalue_value', 'facevalue_slider')"/>
+      <input type="range" id="facevalue_slider" value="0" min="0" max="10000" onchange="updatePrice('facevalue_slider', 'facevalue_value')"/>
+
+      <h3>C: Coupon Payment </h3>
+      <input id="coupon_payment_value" type="number" maxlength="4" oninput="updatePrice('coupon_payment_value', 'coupon_payment_slider')" />
+      <input type="range" id="coupon_payment_slider" value="0" min="0" max="1000" onchange="updatePrice('coupon_payment_slider', 'coupon_payment_value')"/>
+            
+      <h3>N: Number of payments  </h3>
+      <input id="num_payments_value" type="number" maxlength="4" oninput="updatePrice('num_payments_value', 'num_payments_slider')"/>
+      <input type="range" id="num_payments_slider" value="0" min="0" max="1000" onchange="updatePrice('num_payments_slider', 'num_payments_value')"/>
+      
+      <h3>i: Interest rate </h3>
+      <input id="interest_rate_value" type="number" maxlength="4" step="0.01" oninput="updatePrice('interest_rate_value', 'interest_rate_slider')"/>
+      <input type="range" id="interest_rate_slider" value="0" min="0" max="1" step="0.01" onchange="updatePrice('interest_rate_slider', 'interest_rate_value')"/>
+
+    <h2>BOND PRICE</h2>
+    <p id="price_of_bond_value" style="font-weight: bold">
+    <p id="error" style="color:red">
+
+    <hr>
+    <h3>Request to MPS Server</h3>
+    <p id="request">
+    
+    <h3>Response from MPS Server</h3>
+    <p id="response">
+    <hr>
+</body>
+</html>
