@@ -1,7 +1,10 @@
 # 程序的部署
 
 ## 安装 
-Production Server 2016b
+1. 安装 Production Server 2016b
+
+2. 部署代码
+参考[链接](https://github.com/OpenHUTB/matlab/blob/master/help/compiler_sdk/mps_restfuljson/example-web-based-bond-pricing-tool-using-javascript_zh_CN.html) 进行代码的部署。
 
 
 ## 启动
@@ -10,12 +13,12 @@ Production Server 2016b
 mps-setup "C:\Program Files\MATLAB\MATLAB Runtime\v91"
 ```
 
-3. 新建一个实例
+2. 新建一个实例
 ```shell
 mps-new D:\project\mps_instances\demo
 ```
 
-2. 启动实例
+3. 启动实例
 ```shell
 mps-start -f -C D:\project\mps_instances\demo
 ```
