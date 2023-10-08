@@ -39,7 +39,9 @@
     <img src=fig/west_gate.jpg width="380"/><img src=fig/business_building.png width="380"/>
 </figure>
 
-<img src=fig/crossroads.png alt="图片替换文本" width="380" />
+<figure class="half">
+    <img src=fig/hutb_scenario.gif width="380" />
+</figure>
 
 ## 车流诱导
 
@@ -109,6 +111,10 @@ uiopen('{REPOSITORY_PATH}\utils\mlpkginstall\adtunrealengine4.mlpkginstall',1)
 main.mlx
 ```
 5. 运行后等待出现"In Unreal Editor, select 'Play' to view the scene"后再在虚幻编辑器中点击“运行”。
+
+## 场景编辑
+参考 [链接](https://github.com/OpenHUTB/driving/tree/master/roadrunner) 中的`路网更新`和`一、对于RoadRunner仿真使用`进行roadrunner环境的配置，并打开场景文件[`HUTB-Scronaio-完善版.rrscene`](https://github.com/OpenHUTB/driving/blob/master/roadrunner/HUTB-Scronaio-%E5%AE%8C%E5%96%84%E7%89%88.rrscene) 。
+
 
 ## 贡献指南
 在进行代码之前，请阅读 [贡献指南](https://github.com/OpenHUTB/bazaar/blob/master/CONTRIBUTING.md) 文档。
