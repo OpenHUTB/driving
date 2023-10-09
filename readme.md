@@ -39,7 +39,9 @@
     <img src=fig/west_gate.jpg width="380"/><img src=fig/business_building.png width="380"/>
 </figure>
 
-<img src=fig/crossroads.png alt="图片替换文本" width="380" />
+<figure class="half">
+    <img src=fig/hutb_scenario.gif width="380" />
+</figure>
 
 ## 车流诱导
 
@@ -80,35 +82,48 @@
 
 相关软件和数据位于[链接](https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb) 下。
 ```text
-matlab_2022b_win_run.zip 为matlab运行版本。
+“matlab_2022b_win_run.zip”为matlab运行版本。
 
-RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip 为RoadRunner的运行版本，
+“RoadRunner_2022b_运行bin.win64.AppRoadRunner.exe_激活文件为license.lic.zip” 为RoadRunner的运行版本
 
-RoadRunner.zip 为RoadRunner工程，
+“虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip” 为虚幻引擎工程（需要从matlab中打开）
 
-虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip 为虚幻引擎工程（需要从matlab中打开）
+“RoadRunner.zip” 为RoadRunner工程，
 
-parking 文件夹为停车管理系统的相关软件
+“parking”为停车管理系统的相关软件
 
-crossrods 交叉路口视频
+“crossrods”为交叉路口视频
 
-osm OpenStreetMap相关数据
+“osm”夹为OpenStreetMap相关数据
+
+“学习”夹为相关的学习资料
+
+“工程”为相关大项目的工程文件
+
+“视频图像素材”为录制的相关演示图片和视频
 ```
 
-1. 安装虚幻引擎4.26。
+1. 使用 [安装包](https://www.unrealengine.com/zh-CN/download) 或从 [源代码](https://github.com/OpenHUTB/engine) 安装虚幻引擎4.26。
 
 2. Matlab安装连接虚幻引擎的插件：
 ```markdown
-uiopen('{REPOSITORY_PATH}\utils\mlpkginstall\adtunrealengine4.mlpkginstall',1)
+uiopen('utils\mlpkginstall\adtunrealengine4.mlpkginstall',1)
 ```
 
-3. 下载百度网盘中的文件`虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip`并解压到目录`C:/buffer`。
+3. 下载百度网盘中的文件`虚幻引擎/AutoVrtlEnv_接受到虚幻引擎的相机数据_2023-3-17 175651.zip`并解压到特定目录，比如：`C:/buffer`。
 
-4. 安装虚幻引擎4.26后，在`matlab`中运行脚本以下脚本：
+4. 在`matlab`中运行脚本以下脚本：
 ```commandline
 main.mlx
 ```
-5. 运行后等待出现"In Unreal Editor, select 'Play' to view the scene"后再在虚幻编辑器中点击“运行”。
+如果出现错误，打开 Simulink 模块`TLNWithUnrealTestBench/Sensor and Environment`，并双击打开`Simulation 3D Scene Configuration`模块，确保`Project`参数为第 3 步所解压的目录中的文件`C:\buffer\AutoVrtlEnv\AutoVrtlEnv.uproject`；
+
+运行后等待出现`In Unreal Editor, select 'Play' to view the scene`后再在虚幻编辑器中点击“运行”，随后出现本项目`系统概述`中`区域信控`所示的仿真界面。
+
+
+## 场景编辑
+参考 [链接](https://github.com/OpenHUTB/driving/tree/master/roadrunner) 中的`路网更新`和`一、对于RoadRunner仿真使用`进行roadrunner环境的配置，并打开场景文件[`HUTB-Scronaio-完善版.rrscene`](https://github.com/OpenHUTB/driving/blob/master/roadrunner/HUTB-Scronaio-%E5%AE%8C%E5%96%84%E7%89%88.rrscene) 。运行成功将出现本项目`系统概述`中`数字孪生`所示的场景。
+
 
 ## 贡献指南
 在进行代码之前，请阅读 [贡献指南](https://github.com/OpenHUTB/bazaar/blob/master/CONTRIBUTING.md) 文档。
