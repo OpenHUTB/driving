@@ -1,6 +1,19 @@
 ## **路网更新**
 
-打开AutoVrtlEnv场景，利用Simulink中Unreal Editor打开AutoVrtlEnv.uproject即可，已将HUTB的虚幻场景导入，但打包失败。
+打开AutoVrtlEnv场景，利用Simulink中Unreal Editor打开AutoVrtlEnv.uproject即可，已将HUTB的虚幻场景导入,并打包而成。
+
+AutoVrtlEnv以及可转发像素流的exe的HutbCity：
+
+​	链接：https://pan.baidu.com/s/1NKF6-ukO_xOPbCWY2IobdA?pwd=aucv 
+提取码：aucv
+
+并且Simulunk测试通过；转发像素流成功：
+
+![Simulation 3D](D:\RoadProject\driving\roadrunner\images\Simulation 3D.png)
+
+
+
+
 
 **场景文件**链接：https://pan.baidu.com/s/1vfOiR5Z-Z9kiYpUNZv83bg?pwd=kkkk 
 提取码：kkkk 
