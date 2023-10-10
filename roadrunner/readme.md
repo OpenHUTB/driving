@@ -9,11 +9,7 @@ AutoVrtlEnv以及可转发像素流的exe的HutbCity：
 
 并且Simulunk测试通过；转发像素流成功：
 
-![Simulation 3D](D:\RoadProject\driving\roadrunner\images\Simulation 3D.png)
-
-
-
-
+![img](https://github.com/champion123456/driving/blob/master/roadrunner/images/Simulation%203D.png)
 
 **场景文件**链接：https://pan.baidu.com/s/1vfOiR5Z-Z9kiYpUNZv83bg?pwd=kkkk 
 提取码：kkkk 
