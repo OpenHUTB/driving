@@ -1,0 +1,2 @@
+Path	Symbol	Reason
+toolbox\driving\supportpackages\variantgenerator\+matlabshared\+supportpkg\+internal\+sppkglegacy\VariantGenerator.m	matlabshared.supportpkg.internal.sppkglegacy.SupportPackageRegistryPluginBase	undeployable
