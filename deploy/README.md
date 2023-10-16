@@ -40,3 +40,39 @@ mps-stop -C D:\project\mps_instances\demo
 ```shell
 chrome.exe --disable-site-isolation-trials --disable-web-security --user-data-dir="D:\temp"
 ```
+查找报错信息参考 [链接](https://ww2.mathworks.cn/help/mps/restfuljson/troubleshooting-restful-api-errors.html) 。
+
+
+## 代理安装
+
+1. 安装webpack 命令行工具
+```shell
+npm install webpack webpack-dev-server webpack-cli --save-dev
+```
+
+2. 创建webpack配置文件`webpack.config.js`在根目录下并配置
+```
+const path = require('path');
+
+module.exports = {
+  
+  devServer: {
+    contentBase: path.join(__dirname, 'public'), 
+    compress: true,
+    port: 9000,  // 端口
+    proxy: {
+      '/api': { 
+        target: 'https://target-server.com',  // 服务器地址
+        secure: false,
+        changeOrigin: true,
+        pathRewrite: {'^/api' : ''}
+      }
+    }
+  }
+};
+```
+
+3. 启动webpack服务器
+```shell
+npx webpack serve --config webpack.config.js
+```
