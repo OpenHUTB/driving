@@ -33,3 +33,10 @@ mps-stop -C D:\project\mps_instances\demo
 ```
 
 注意：所使用的MCR版本也要是2016b。
+
+## 问题
+1. 浏览器访问报错：`has been blocked by CORS policy`
+使用以下参数启动chrome浏览器（参考 [链接](https://stackoverflow.com/questions/3102819/disable-same-origin-policy-in-chrome) ：
+```shell
+chrome.exe --disable-site-isolation-trials --disable-web-security --user-data-dir="D:\temp"
+```
