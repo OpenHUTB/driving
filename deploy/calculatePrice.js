@@ -9,7 +9,20 @@ function calculatePrice()
 	// A new XMLHttpRequest object
 	var request = new XMLHttpRequest();
 	//Use MPS RESTful API to specify URL
-	var url = "http://localhost:9910/BondTools/pricecalc";
+	//var url = "http://localhost:9910/BondTools/pricecalc";
+	var url = "http://localhost:3000/BondTools/pricecalc";
+	
+	if (window.location.protocol == "file:"){
+		// Logic for when the page is accessed via file://
+		url = "http://localhost:9910/BondTools/pricecalc";
+		console.log("Opened via file protocol");
+	} else if(window.location.origin == "http:") {
+		// Logic for when the page is accessed via http://127.0.0.1:3000
+		url = "http://localhost:3000/BondTools/pricecalc";
+		console.log("Opened via local server");
+	} else {
+		// console.log("something wrong with the path");
+	}
 	
 	//Use MPS RESTful API to specify params using JSON
 	var params = { "nargout":1,
