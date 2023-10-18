@@ -17,7 +17,8 @@ AutoVrtlEnv以及可转发像素流的exe的HutbCity：
 **暂时能实现加车场景：**链接：https://pan.baidu.com/s/1Bz4Sqlt7GJGOh_3FmRlEoA 
 提取码：3ke5 
 
-岳麓区静态路网实时更新分享的文件：Scence
+岳麓区静态路网实时更新分享的文件：Scence以及部分分好的场景
+分享的文件：Scence
 链接：https://pan.baidu.com/s/1MVE6IRsXaMEF6FGz0bTdXw 
 提取码：592g 
 
