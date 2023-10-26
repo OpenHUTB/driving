@@ -49,6 +49,9 @@ world.add(plane);
 
 world.UserData.Step = 0;
 
+client = tcpclient("localhost",30000);
+world.UserData.client = client;
+
 
 %% 设置查看器窗口视角
 % 如果不创建视口，则视点设置为 0, 0 ,0，并且可以使用方向键和指针在三维仿真查看器窗口中导航。
@@ -62,7 +65,7 @@ viewport = createViewport(world);
 %% 运行动画
 % 运行仿真集 10 秒，采样时间为 0.01 秒。
 
-run(world, 0.01, 7)
+run(world, 0.01, 60)
 
 
 %% 删除世界
@@ -90,10 +93,18 @@ end
 
 function outputImpl(world)
 
-if world.UserData.Step == 600  % 到仿真500步时就加入一辆车
+
+data = read(world.UserData.client);
+if ~isempty(data)
     actor = sim3d.ActorFactory.createVehicleUtil('auto', 'PassengerVehicle', 'MuscleCar');
     world.add(actor);
 end
+% clear client
+
+% if world.UserData.Step == 600  % 到仿真500步时就加入一辆车
+%     actor = sim3d.ActorFactory.createVehicleUtil('auto', 'PassengerVehicle', 'MuscleCar');
+%     world.add(actor);
+% end
 
 end
 
