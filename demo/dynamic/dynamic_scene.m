@@ -10,7 +10,8 @@
 %     'Update' , @updateImpl);
 
 world = sim3d.World('Map', "/Game/Maps/USCityBlock", ...
-    'Update' , @updateImpl);
+    'Update' , @updateImpl, ...
+    'Output',@outputImpl);
 
 
 %% 构建球和平面参与者
@@ -20,8 +21,6 @@ world = sim3d.World('Map', "/Game/Maps/USCityBlock", ...
 % vehicle_1 = HutbVehicle(); % 'ActorName','vehicle1'
 % vehicle_2 = self@sim3d.auto.WheeledVehicle();
 % sedan_1 =  sim3d.ActorFactory.createWheeledVehicle('sim3d.auto.Tractor');
-actor = sim3d.ActorFactory.createVehicleUtil('auto', 'PassengerVehicle', 'MuscleCar');
-
 
 ball1 = sim3d.Actor('ActorName', 'Ball1');
 ball1.createShape('sphere', [0.5 0.5 0.5]);
@@ -34,7 +33,7 @@ ball2.Translation = [0, 0, 3];
 world.add(ball1);
 world.add(ball2);
 
-world.add(actor);
+
 
 
 %% 
@@ -43,10 +42,14 @@ world.add(actor);
 plane = sim3d.Actor('ActorName', 'Plane1');
 plane.createShape('plane', [5 5 0.1]);
 world.add(plane);
+
+
 %% 
 % 将用户数据结构初始化为零。在更新函数中，将使用此结构从世界中删除参与者之前插入延迟。
 
 world.UserData.Step = 0;
+
+
 %% 设置查看器窗口视角
 % 如果不创建视口，则视点设置为 0, 0 ,0，并且可以使用方向键和指针在三维仿真查看器窗口中导航。
 % 
@@ -54,14 +57,19 @@ world.UserData.Step = 0;
 % 对象。
 
 viewport = createViewport(world);
+
+
 %% 运行动画
 % 运行仿真集 10 秒，采样时间为 0.01 秒。
 
 run(world, 0.01, 7)
+
+
 %% 删除世界
 % 删除世界对象。
-
 delete(world);
+
+
 %% *读取相机更新的函数*
 % 使用更新函数在每个仿真步骤读取数据。|updateImpl| 函数从虚幻引擎中的 |MainCamera1| 读取图像数据并从场景中删除球体参与者。
 
@@ -78,5 +86,16 @@ if any(actorPresent) && (world.UserData.Step == 500)  % 到仿真500步时就删
 end
 
 end
+
+
+function outputImpl(world)
+
+if world.UserData.Step == 600  % 到仿真500步时就加入一辆车
+    actor = sim3d.ActorFactory.createVehicleUtil('auto', 'PassengerVehicle', 'MuscleCar');
+    world.add(actor);
+end
+
+end
+
 %% 
 %
