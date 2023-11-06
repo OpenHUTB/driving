@@ -92,8 +92,7 @@ end
 
 
 function outputImpl(world)
-
-
+% 利用客户端world.UserData.client，向服务端读取数据
 data = read(world.UserData.client);
 if ~isempty(data)
     actor = sim3d.ActorFactory.createVehicleUtil('auto', 'PassengerVehicle', 'MuscleCar');

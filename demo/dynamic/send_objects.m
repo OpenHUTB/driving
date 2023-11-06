@@ -1,5 +1,5 @@
 % 启动服务
-server = tcpserver("0.0.0.0",30000);
+server = tcpserver("0.0.0.0",30000, 'Timeout', 99999);
 
 %% 从客户端读取数据
 % data = read(server,server.NumBytesAvailable,"double");
