@@ -36,3 +36,8 @@ matlab\toolbox\shared\sim3d\sim3d\+sim3d\World.m -> asCommand(self)
 [ue4官方文档](https://docs.unrealengine.com/4.26/zh-CN/)
 
 [为虚幻编辑器准备自定义车辆网格](https://ww2.mathworks.cn/support/search.html/videos/preparing-custom-vehicle-mesh-for-the-unreal-editor-1645163589268.html) 
+
+
+## 问题
+
+`WindowsNoEditor\CarlaUE4\Content\Carla\Maps\OpenDrive\hutb_test.xodr`拷贝到`WindowsNoEditor\CarlaUE4\Content\RoadRunner\Maps\OpenDrive`（没有的话就新建）。

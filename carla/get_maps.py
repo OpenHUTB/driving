@@ -13,9 +13,9 @@ print(world.get_map())  # 获取当前使用地图名
 # 注意：客户端默认加载使用Town10HD_Opt地图，Opt后缀表示可分层(Optional)地图。
 
 # world = client.load_world('Town10HD')  # 高精度地图城市
-# CarlaUE4.exe /Game/Carla/Maps/Town07
-# world = client.load_world('Town07')
-world = client.load_world('Town12')
+# world = client.load_world('Town02')
+# world = client.load_world('/Game/Carla/Maps/Town02')
+# world = client.load_world('/Game/Carla/Maps/roundaboutA/roundaboutA')
 print(world.get_map())
-world.unload_map_layer(carla.MapLayer.All) # 隐藏所有层
+# world.unload_map_layer(carla.MapLayer.All) # 隐藏所有层
 
