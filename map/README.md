@@ -14,5 +14,15 @@
 
 3. 通过[geoserver](https://mapserver.org/download.html) 发布mbtiles。
 
-## 三维建模
+
+## 三维场景构建
+[卫星图像建筑检测](https://github.com/motokimura/spacenet_building_detection)
+
+[matlab 卫星影像目标检测](https://ww2.mathworks.cn/help/vision/ug/object-detection-in-large-satellite-imagery-using-deep-learning.html)
+
+[可以飞行的三维地球仪](https://github.com/google/earthenterprise)
+
+[谷歌三维卫星地图模式](https://github.com/retroplasma/earth-reverse-engineering) 
+
+[Blender导入谷歌地球的插件](https://github.com/imagiscope/EarthStudioTools) 
 
