@@ -61,7 +61,7 @@ maxLat =  42.3027;
 minLon = -83.6996;
 maxLon = -83.6965;
 bbox = [minLat maxLat;minLon maxLon];
-scenario = helperOSMImport(bbox); % 需要安装variantgenerator.mlpkginstall，否则出现无法解析名称 'variantgenerator.internal.getRoadInfoFromScenario'
+scenario = helperOSMImport(bbox); % 需要安装[variantgenerator.mlpkginstall](https://github.com/OpenHUTB/utils/blob/master/mlpkginstall%2Fvariantgenerator.mlpkginstall)，否则出现无法解析名称 'variantgenerator.internal.getRoadInfoFromScenario'
 % Create another scenario object for plotting purposes
 scenario_in = helperOSMImport(bbox);
 %% 
